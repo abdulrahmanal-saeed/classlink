@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "348156909165",
+    "project_id": "newz-2ce75",
+    "storage_bucket": "newz-2ce75.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348156909165:android:b7cb4afb304fda30f31164",
+        "android_client_info": {
+          "package_name": "com.example.classlink"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348156909165-8df2boc1p1govje4hd3i6kabcq2g9juq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjNC5dJqyYuiXIFQwlbqsCoxTFwC0bq3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348156909165-8df2boc1p1govje4hd3i6kabcq2g9juq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "348156909165-l0or9seiddmp56a2mmb41tj5idn95hoe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.newz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
