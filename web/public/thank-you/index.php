@@ -1,15 +1,17 @@
 <?php
 /**
- * /thank-you?ref={checkoutReference}
+ * /thank-you?ref={checkoutReference}&intent_id={paymentIntentId}
  *
- * Reaching this page never means payment is paid. Without webhook/API
- * verification, the purchase is moved to pending_verification only.
+ * Reaching this page never means payment is paid. If Ziina Payment Intent API
+ * is configured, the page checks the intent status server-side. Only completed
+ * becomes paid. Otherwise it stays pending_verification.
  */
 
 require_once __DIR__ . '/../../../backend/php/shared/CheckoutFlow.php';
 require_once __DIR__ . '/../../../web/components/layout/public_layout.php';
 
 $reference = preg_replace('/[^A-Z0-9\-]/', '', strtoupper($_GET['ref'] ?? ''));
+$intentId = preg_replace('/[^a-zA-Z0-9_\-]/', '', $_GET['intent_id'] ?? '');
 
 if ($reference === '') {
     http_response_code(404);
@@ -18,7 +20,7 @@ if ($reference === '') {
     exit;
 }
 
-checkout_mark_pending_verification($reference);
+$verifiedStatus = checkout_verify_ziina_status($reference, $intentId ?: null);
 $purchase = checkout_find_purchase_by_reference($reference);
 
 if (!$purchase) {
@@ -28,7 +30,8 @@ if (!$purchase) {
     exit;
 }
 
-$setupMissing = ($_GET['setup'] ?? '') === 'missing_payment_link';
+$setupMissing = ($_GET['setup'] ?? '') === 'missing_payment_setup';
+$statusLabel = $verifiedStatus ?: $purchase['status'];
 
 ob_start();
 ?>
@@ -40,16 +43,20 @@ ob_start();
       <p class="hero-subtitle">Your Arabic learning journey has started 🎉</p>
 
       <?php if ($setupMissing): ?>
-        <div class="alert alert-warning">Payment link is not configured yet. Your checkout was saved for Owner review and testing.</div>
+        <div class="alert alert-warning">Payment setup is not configured yet. Your checkout was saved for Owner review and testing.</div>
       <?php endif; ?>
 
-      <div class="alert alert-light border">
-        Your payment may still be pending verification. Reaching this page does not automatically mark the payment as paid.
-      </div>
+      <?php if ($statusLabel === 'paid'): ?>
+        <div class="alert alert-success">Your payment was verified successfully.</div>
+      <?php elseif ($statusLabel === 'failed'): ?>
+        <div class="alert alert-danger">The payment was not completed. Please contact us or try again.</div>
+      <?php else: ?>
+        <div class="alert alert-light border">Your payment may still be pending verification. Reaching this page does not automatically mark the payment as paid.</div>
+      <?php endif; ?>
 
       <div class="row g-3 my-4">
         <div class="col-md-6"><div class="status-box h-100"><strong>Package</strong><br><?= htmlspecialchars($purchase['plan_name'] ?? 'Selected package', ENT_QUOTES, 'UTF-8') ?></div></div>
-        <div class="col-md-6"><div class="status-box h-100"><strong>Status</strong><br><?= htmlspecialchars($purchase['status'], ENT_QUOTES, 'UTF-8') ?></div></div>
+        <div class="col-md-6"><div class="status-box h-100"><strong>Status</strong><br><?= htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8') ?></div></div>
       </div>
 
       <h2 class="h4 fw-bold mb-3">Next steps</h2>
