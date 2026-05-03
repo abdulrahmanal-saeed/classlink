@@ -36,14 +36,17 @@ ob_start();
     <?php foreach ($children as $child): ?>
       <div class="col-md-6">
         <div class="status-box h-100">
-          <h2 class="h5 fw-bold"><?= htmlspecialchars($child['child_name'] ?? $child['child_name'] ?? 'Child learner', ENT_QUOTES, 'UTF-8') ?></h2>
+          <h2 class="h5 fw-bold"><?= htmlspecialchars($child['child_name'] ?? 'Child learner', ENT_QUOTES, 'UTF-8') ?></h2>
           <div class="small text-muted mb-2"><?= htmlspecialchars($child['child_email'] ?? '', ENT_QUOTES, 'UTF-8') ?></div>
-          <dl class="row mb-0 small">
+          <dl class="row mb-3 small">
             <dt class="col-5">Level</dt><dd class="col-7"><?= htmlspecialchars($child['current_level'] ?? '-', ENT_QUOTES, 'UTF-8') ?></dd>
             <dt class="col-5">Goal</dt><dd class="col-7"><?= htmlspecialchars($child['learning_goal'] ?? '-', ENT_QUOTES, 'UTF-8') ?></dd>
             <dt class="col-5">Package</dt><dd class="col-7"><?= htmlspecialchars($child['package_name'] ?? '-', ENT_QUOTES, 'UTF-8') ?></dd>
             <dt class="col-5">Credits</dt><dd class="col-7"><?= htmlspecialchars((string) ($child['remaining_credits'] ?? '-'), ENT_QUOTES, 'UTF-8') ?> / <?= htmlspecialchars((string) ($child['total_credits'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></dd>
           </dl>
+          <?php if (!empty($child['child_user_id'])): ?>
+            <a class="btn btn-sm btn-outline-brand" href="/parent/child/balance?id=<?= (int) $child['child_user_id'] ?>">View balance</a>
+          <?php endif; ?>
         </div>
       </div>
     <?php endforeach; ?>
