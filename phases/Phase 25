@@ -1,0 +1,80 @@
+PHASE 25 — Full UX Audit, User Journey Improvements, and Interface Polish
+
+Goal:
+Improve the user experience across the entire platform so every user knows what to do next.
+
+This is a UX improvement phase, not a new feature phase.
+
+Main UX principle:
+Every page should answer:
+1. Where am I?
+2. What is the status?
+3. What should I do next?
+4. What happens after I click?
+
+Audit and improve:
+- Public visitor journey
+- Checkout journey
+- Post-payment onboarding
+- Adult level check
+- Child literacy check
+- Booking journey
+- Student dashboard
+- Parent dashboard
+- Owner dashboard
+- Academy partner brief flow
+- Homework submission flow
+- Scenario recording flow
+- Review/test result flow
+- Materials page
+- Settings pages
+
+UX improvements:
+- Clear step indicators.
+- Clear empty states.
+- Better status badges.
+- Better CTAs.
+- Remove duplicate/confusing buttons.
+- Improve form grouping.
+- Add helper text where needed.
+- Add confirmation dialogs for risky actions.
+- Add success messages after actions.
+- Add friendly error messages.
+- Improve mobile tables/cards.
+- Improve dashboard hierarchy.
+- Improve navigation labels.
+- Make next action obvious.
+
+Owner dashboard UX:
+- Prioritize pending actions.
+- Show urgent items first.
+- Add quick actions.
+- Avoid clutter.
+
+Student UX:
+- Show today’s tasks clearly.
+- Make homework/scenario/review actions obvious.
+- Show progress and encouragement.
+
+Parent UX:
+- Show child progress and payment/session balance clearly.
+- Make booking/contact actions easy.
+
+Acceptance criteria:
+- Main user journeys feel clear.
+- No page feels like a dead end.
+- Important actions are easy to find.
+- Risky actions have confirmation.
+- Empty states tell users what to do next.
+- Mobile UX is clean.
+
+Manual test checklist:
+- Walk through visitor → checkout → thank-you → student form → level check → booking.
+- Walk through Owner approval.
+- Walk through student homework submission.
+- Walk through parent checking child progress.
+- Walk through academy brief submission.
+- List any remaining UX confusion.
+
+Stop condition:
+Stop here. Test this phase before continuing.
