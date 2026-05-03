@@ -2,8 +2,9 @@
 /**
  * /checkout?plan=single|monthly|bundle
  *
- * Collects pre-payment learner/contact data and creates a secure checkout
- * reference. It does not mark any payment as paid.
+ * Collects pre-payment learner/contact data, creates a secure checkout
+ * reference, then creates a Ziina Payment Intent when ZIINA_API_TOKEN exists.
+ * It does not mark any payment as paid.
  */
 
 require_once __DIR__ . '/../../../backend/php/shared/CheckoutFlow.php';
@@ -47,18 +48,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (empty($_POST['policy_agreement'])) {
         $error = 'You must agree to the policies before continuing.';
     } else {
-        $checkout = checkout_create_purchase($data, $plan);
-        $paymentLink = trim((string) setting_get('payment.ziina_link', ''));
+        try {
+            $checkout = checkout_create_purchase($data, $plan);
 
-        if ($paymentLink !== '') {
-            $separator = str_contains($paymentLink, '?') ? '&' : '?';
-            header('Location: ' . $paymentLink . $separator . 'ref=' . urlencode($checkout['reference']));
+            if (ziina_is_configured()) {
+                $intent = checkout_create_ziina_intent($checkout['reference']);
+                header('Location: ' . $intent['redirect_url']);
+                exit;
+            }
+
+            $paymentLink = trim((string) setting_get('payment.ziina_link', ''));
+
+            if ($paymentLink !== '') {
+                $separator = str_contains($paymentLink, '?') ? '&' : '?';
+                header('Location: ' . $paymentLink . $separator . 'ref=' . urlencode($checkout['reference']));
+                exit;
+            }
+
+            header('Location: /thank-you?ref=' . urlencode($checkout['reference']) . '&setup=missing_payment_setup');
             exit;
+        } catch (Throwable $exception) {
+            $error = 'Checkout could not be completed. Please try again or contact us. ' . $exception->getMessage();
         }
-
-        $setupMessage = 'Payment link is not configured yet. The order was created as pending. Continue to thank-you for testing and Owner manual review.';
-        header('Location: /thank-you?ref=' . urlencode($checkout['reference']) . '&setup=missing_payment_link');
-        exit;
     }
 }
 
@@ -77,7 +88,7 @@ ob_start();
             <li><?= (int) $plan['included_sessions'] ?> session(s)</li>
             <li><?= (int) $plan['session_minutes'] ?> minutes per session</li>
           </ul>
-          <div class="alert alert-light border small mb-0">Payment status starts as pending. It is not marked paid until verified or manually approved by the Owner.</div>
+          <div class="alert alert-light border small mb-0">Payment status starts as pending. It is not marked paid until verified by Ziina API or manually approved by the Owner.</div>
         </div>
       </div>
       <div class="col-lg-7">
