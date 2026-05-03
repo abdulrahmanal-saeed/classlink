@@ -1,0 +1,166 @@
+PHASE 22 — Full Mobile App with React Native / Expo
+
+Goal:
+Build a mobile app using React Native/Expo connected to the same backend.
+
+Important:
+The web platform remains the source of truth.
+
+Mobile app users:
+- Owner/Teacher first
+- Student second
+- Parent third if time allows
+
+Owner/Teacher mobile features:
+- Login
+- Dashboard
+- Today’s lessons
+- Student list
+- Student profile summary
+- Homework submissions
+- Scenario submissions
+- Level check alerts
+- Push notifications
+- WhatsApp quick actions
+- Add lesson notes
+- Mark attendance/no-show
+
+Student mobile features:
+- Login
+- Upcoming lesson
+- Homework
+- Scenario recording
+- Practice words/flashcards
+- Notifications
+- Package balance
+
+Parent mobile features:
+- Child dashboard
+- Upcoming lesson
+- Homework status
+- Notes
+- Booking/reschedule
+- Balance
+
+API requirements:
+- Use existing backend auth/API.
+- Mobile-specific endpoints may be added if needed.
+- Do not duplicate business logic.
+
+Push:
+- Register device token.
+- Receive FCM notifications.
+
+Acceptance criteria:
+- Mobile app runs in Expo.
+- Owner can log in.
+- Owner sees today’s lessons.
+- Owner receives/opens notifications.
+- Student can log in and view homework.
+- Scenario recording works if implemented.
+
+Manual test checklist:
+- Run Expo app.
+- Login as Owner.
+- Login as Student.
+- Open dashboard.
+- Test push token registration.
+- Test API sync.
+
+Stop condition:
+Stop here. Test this phase before continuing.
+```
+
+---
+
+# PART 4 — SHORT CONTROL PROMPTS FOR REPLIT
+
+Use these after each phase if needed.
+
+## Continue to next phase
+
+```text
+The previous phase passed testing. Continue with the next phase only. Do not rebuild previous phases unless required. Keep existing data and functionality safe.
+```
+
+## Fix bugs only
+
+```text
+Do not add new features. Fix only the bugs I list below. After fixing, report files changed, cause of bug, and how to test.
+
+Bugs:
+1. ...
+2. ...
+```
+
+## Improve UI only
+
+```text
+Do not change database or business logic. Improve only the UI/UX for the pages listed below. Keep the same functionality.
+
+Pages:
+1. ...
+2. ...
+
+Style: clean SaaS, mobile responsive, teal/green brand feel, light/dark mode, Arabic/English RTL/LTR friendly.
+```
+
+## Add audit logging to a missing action
+
+```text
+Add audit logging to this action only:
+[describe action]
+
+Log actor, role, action, entity type, entity id, before/after if useful, and timestamp. Do not change unrelated features.
+```
+
+## Add a setting instead of hardcoding
+
+```text
+This value is currently hardcoded or should not be hardcoded:
+[value/feature]
+
+Move it into Owner Settings. Add validation, default value, and audit logging when changed. Do not break existing behavior.
+```
+
+## Check security
+
+```text
+Review the current phase for security issues only:
+- role-based access
+- data ownership checks
+- payment status safety
+- upload validation
+- secret handling
+- AI auto-publish prevention
+- audit logging
+
+Report issues found and fix only high-priority issues.
+```
+
+---
+
+# PART 5 — FINAL BUILD PRIORITY
+
+Even though all features are included, build in order.
+
+Best priority order:
+
+1. Foundation and auth
+2. Public website and pricing
+3. Checkout and onboarding
+4. Level checks
+5. Approval and account creation
+6. Lesson credits and booking
+7. Student/parent portals
+8. Homework/scenarios/reviews
+9. Progress, flashcards, badges
+10. AI tools
+11. Communication
+12. Referral
+13. Analytics
+14. Push notifications
+15. Cron jobs
+16. Mobile app
+
+Do not start the mobile app until the web platform and API are stable.
