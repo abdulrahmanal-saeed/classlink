@@ -2,7 +2,7 @@
 /**
  * /owner/cms/videos
  *
- * Owner-only video manager for Phase 3. Supports create and publish/draft basics
+ * Owner-only video manager for Phase 3. Supports create, edit, and publish/draft basics
  * from one page to keep the phase small and testable.
  */
 
@@ -99,7 +99,7 @@ ob_start();
             <td><strong><?= htmlspecialchars($video['title_en'] ?? '', ENT_QUOTES, 'UTF-8') ?></strong></td>
             <td><span class="badge text-bg-light border"><?= htmlspecialchars($video['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
             <td><code><?= htmlspecialchars($video['slug'] ?? '', ENT_QUOTES, 'UTF-8') ?></code></td>
-            <td><form method="post" class="d-inline"><input type="hidden" name="form_action" value="status"><input type="hidden" name="video_id" value="<?= (int) $video['id'] ?>"><input type="hidden" name="status" value="<?= $video['status'] === 'published' ? 'draft' : 'published' ?>"><button class="btn btn-sm btn-outline-brand" type="submit"><?= $video['status'] === 'published' ? 'Move to draft' : 'Publish' ?></button></form><?php if ($video['status'] === 'published' && !empty($video['slug'])): ?><a class="btn btn-sm btn-link" href="/videos/<?= urlencode($video['slug']) ?>" target="_blank">View</a><?php endif; ?></td>
+            <td><a class="btn btn-sm btn-outline-brand" href="/owner/cms/videos/edit?id=<?= (int) $video['id'] ?>">Edit</a> <form method="post" class="d-inline"><input type="hidden" name="form_action" value="status"><input type="hidden" name="video_id" value="<?= (int) $video['id'] ?>"><input type="hidden" name="status" value="<?= $video['status'] === 'published' ? 'draft' : 'published' ?>"><button class="btn btn-sm btn-outline-brand" type="submit"><?= $video['status'] === 'published' ? 'Move to draft' : 'Publish' ?></button></form><?php if ($video['status'] === 'published' && !empty($video['slug'])): ?><a class="btn btn-sm btn-link" href="/videos/<?= urlencode($video['slug']) ?>" target="_blank">View</a><?php endif; ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody></table></div>
