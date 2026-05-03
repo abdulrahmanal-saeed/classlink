@@ -1,0 +1,68 @@
+PHASE 19 — Advanced Analytics
+
+Goal:
+Build analytics for marketing, conversion, revenue, and engagement.
+
+Track public events:
+- page_view
+- pricing_view
+- checkout_start
+- checkout_submit
+- payment_pending
+- student_form_submit
+- level_check_start
+- level_check_submit
+- booking_request
+- article_open
+- video_play
+- testimonial_submit
+
+Track learning events:
+- login
+- homework_submit
+- scenario_submit
+- review_submit
+- flashcard_review
+- session_completed
+- badge_earned
+
+Owner analytics pages:
+- /owner/analytics
+- /owner/analytics/marketing
+- /owner/analytics/students
+- /owner/analytics/revenue
+- /owner/analytics/content
+
+Metrics:
+- Visitors
+- Conversion funnel
+- Checkout conversion
+- Payment status breakdown
+- Revenue by plan
+- Active students
+- Lesson completion
+- Homework submission rate
+- Student engagement
+- Low activity students
+- Article/video performance
+- Referral performance
+
+Privacy:
+- Do not expose private data publicly.
+- Avoid tracking sensitive unnecessary data.
+
+Acceptance criteria:
+- Events are recorded.
+- Owner sees analytics dashboard.
+- Funnel is visible.
+- Student engagement metrics show useful data.
+
+Manual test checklist:
+- Visit public pages.
+- Start checkout.
+- Submit level check.
+- Submit homework.
+- Check analytics dashboard.
+
+Stop condition:
+Stop here. Test this phase before continuing.
