@@ -1,0 +1,52 @@
+PHASE 21 — Automated Cron Reminders and Scheduled Jobs
+
+Goal:
+Build scheduled reminders and cron-compatible jobs.
+
+Jobs:
+- Lesson reminder 24 hours before
+- Lesson reminder 1 hour before
+- Level check reminder if not completed
+- Student form reminder if not completed
+- Homework reminder
+- Low credits reminder
+- Weekly AI summary generation queue
+- Streak/badge checks
+- Referral qualification checks
+
+Important:
+- Jobs should be safe to run multiple times.
+- Prevent duplicate reminders.
+- Use sent log table.
+- Timezone default: Asia/Dubai.
+
+Pages:
+- /owner/settings/cron
+- /owner/jobs
+- /owner/jobs/logs
+
+API/cron endpoints:
+- /api/cron/send-lesson-reminders
+- /api/cron/send-homework-reminders
+- /api/cron/check-badges
+- /api/cron/weekly-summaries
+
+Security:
+- Cron endpoints must use secret token or server-only mechanism.
+- Do not expose open cron endpoints publicly without protection.
+
+Acceptance criteria:
+- Reminder jobs run manually in development.
+- Duplicate reminders are prevented.
+- Job logs are visible.
+- Owner sees setup instructions.
+
+Manual test checklist:
+- Create upcoming lesson.
+- Run reminder job.
+- Confirm notification/email log.
+- Run again and confirm no duplicate.
+- Check job logs.
+
+Stop condition:
+Stop here. Test this phase before continuing.
