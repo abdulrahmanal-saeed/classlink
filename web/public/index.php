@@ -1,90 +1,112 @@
 <?php
 /**
- * Phase 0000 public landing placeholder.
+ * Public homepage.
  *
- * This is not the final website. It only proves that the bilingual web shell,
- * brand colors, and translation files are connected correctly before building
- * real public pages in later phases.
+ * Phase 3 turns the placeholder into a real marketing homepage. Sections are
+ * controlled by settings so the Owner can hide/show parts later without code edits.
  */
 
-$lang = $_GET['lang'] ?? 'en';
-$lang = in_array($lang, ['ar', 'en'], true) ? $lang : 'en';
-$isArabic = $lang === 'ar';
+require_once __DIR__ . '/../../backend/php/shared/PublicContent.php';
+require_once __DIR__ . '/../../web/components/layout/public_layout.php';
+
+$plans = public_plans();
+$articles = public_setting_enabled('homepage.show_articles') ? published_articles(3) : [];
+$videos = public_setting_enabled('homepage.show_videos') ? published_videos(3) : [];
+$testimonials = public_setting_enabled('homepage.show_testimonials') ? approved_testimonials(3) : [];
+
+ob_start();
 ?>
-<!doctype html>
-<html lang="<?= htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') ?>" dir="<?= $isArabic ? 'rtl' : 'ltr' ?>">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Habiba Nabil Arabic Academy</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap<?= $isArabic ? '.rtl' : '' ?>.min.css" rel="stylesheet">
-  <link href="assets/css/app.css" rel="stylesheet">
-</head>
-<body>
-  <main class="app-shell">
-    <section class="foundation-card">
-      <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
-        <div class="d-flex align-items-center gap-3">
-          <div class="brand-mark">ض</div>
-          <div>
-            <div class="fw-bold" data-i18n="common.brandName">Habiba Nabil Arabic Academy</div>
-            <div class="text-muted" data-i18n="common.tagline">Learn Arabic the Smart Way</div>
-          </div>
-        </div>
-        <a class="btn btn-sm btn-outline-brand" href="?lang=<?= $isArabic ? 'en' : 'ar' ?>">
-          <?= $isArabic ? 'English' : 'العربية' ?>
-        </a>
-      </div>
-
-      <div class="row align-items-center g-4">
-        <div class="col-lg-7">
-          <div class="badge text-bg-light border mb-3" data-i18n="common.phase">Phase 0000 Foundation</div>
-          <h1 class="hero-title display-5 mb-3" data-i18n="home.heroTitle">
-            Build Arabic confidence with a smart learning platform
-          </h1>
-          <p class="hero-subtitle mb-4" data-i18n="home.heroSubtitle">
-            A bilingual foundation for students, parents, academy partners, and the Owner/Teacher dashboard.
-          </p>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-brand" href="#" data-i18n="home.primaryCta">Start Foundation Check</a>
-            <a class="btn btn-outline-brand" href="../../backend/php/api/public/health.php" data-i18n="home.secondaryCta">View API Health</a>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="status-box">
-            <h2 class="h4 fw-bold" data-i18n="home.statusTitle">Foundation is ready</h2>
-            <p class="mb-0 text-muted" data-i18n="home.statusBody">
-              The repository now has the first clean structure for PHP, MySQL, Flutter, Firebase support, and bilingual UI.
-            </p>
-          </div>
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <div class="badge text-bg-light border mb-3">Learn Arabic the Smart Way</div>
+        <h1 class="hero-title display-4 mb-3">Personalized Arabic lessons for real-life speaking confidence</h1>
+        <p class="hero-subtitle mb-4">Start from your real level, not automatically from zero. Learn practical Arabic with clear homework, speaking scenarios, and progress tracking.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-brand btn-lg" href="/pricing">Start Now — Pay Securely</a>
+          <a class="btn btn-outline-brand btn-lg" href="/articles">Read articles</a>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="col-lg-5">
+        <div class="foundation-card">
+          <div class="brand-mark mb-3">ض</div>
+          <h2 class="h4 fw-bold">Arabic learning built around you</h2>
+          <p class="text-muted mb-0">Speaking-first lessons, practical vocabulary, light grammar, and personalized feedback for adults, children, and academy partners.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-  <script src="assets/js/lang/<?= $isArabic ? 'ar' : 'en' ?>.js"></script>
-  <script>
-    /**
-     * Simple translation binder.
-     *
-     * We keep this small for Phase 0000. Later phases can replace it with a
-     * stronger i18n helper while keeping the same ar.js/en.js concept.
-     */
-    document.querySelectorAll('[data-i18n]').forEach((element) => {
-      const path = element.getAttribute('data-i18n').split('.');
-      let value = window.APP_LANG;
+<section class="py-5 bg-white border-top border-bottom">
+  <div class="container">
+    <h2 class="h1 hero-title text-center mb-4">How it works</h2>
+    <div class="row g-3">
+      <?php foreach (['Choose your package', 'Pay securely', 'Complete your student form', 'Choose your lesson time', 'Start your personalized Arabic lesson'] as $index => $step): ?>
+        <div class="col-md">
+          <div class="status-box h-100">
+            <div class="fw-bold mb-2">Step <?= $index + 1 ?></div>
+            <div><?= htmlspecialchars($step, ENT_QUOTES, 'UTF-8') ?></div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
 
-      path.forEach((key) => {
-        value = value && value[key] ? value[key] : null;
-      });
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end gap-3 flex-wrap mb-4">
+      <div>
+        <h2 class="h1 hero-title mb-1">Launch pricing</h2>
+        <p class="text-muted mb-0">Limited-time prices for personalized 1-on-1 Arabic lessons.</p>
+      </div>
+      <a class="btn btn-outline-brand" href="/pricing">View all plans</a>
+    </div>
+    <div class="row g-4">
+      <?php foreach (array_slice($plans, 0, 3) as $plan): ?>
+        <div class="col-md-4">
+          <div class="foundation-card h-100">
+            <h3 class="h4 fw-bold"><?= htmlspecialchars($plan['name_en'], ENT_QUOTES, 'UTF-8') ?></h3>
+            <div class="display-6 fw-bold my-3">AED <?= htmlspecialchars((string) (int) $plan['price_amount'], ENT_QUOTES, 'UTF-8') ?></div>
+            <p class="text-muted"><?= htmlspecialchars($plan['description_en'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+            <a class="btn btn-brand w-100" href="/checkout?plan=<?= urlencode(strtolower(str_replace(' ', '_', $plan['name_en']))) ?>">Start Now — Pay Securely</a>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
 
-      if (value) {
-        element.textContent = value;
-      }
-    });
-  </script>
-</body>
-</html>
+<?php if ($testimonials): ?>
+<section class="py-5 bg-white border-top border-bottom">
+  <div class="container">
+    <h2 class="h1 hero-title mb-4">What learners say</h2>
+    <div class="row g-3">
+      <?php foreach ($testimonials as $testimonial): ?>
+        <div class="col-md-4"><div class="status-box h-100"><p>“<?= htmlspecialchars($testimonial['body'], ENT_QUOTES, 'UTF-8') ?>”</p><strong><?= htmlspecialchars($testimonial['name'], ENT_QUOTES, 'UTF-8') ?></strong></div></div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<section class="py-5">
+  <div class="container">
+    <h2 class="h1 hero-title mb-4">FAQ</h2>
+    <div class="row g-3">
+      <?php foreach ([
+        'Can I reschedule?' => 'Yes, cancellation and rescheduling rules will follow the lesson cancellation policy set by the academy.',
+        'Do I need to know Arabic before starting?' => 'No. Every learner starts from their real level after a level check.',
+        'Is this suitable for children?' => 'Yes. Child learners can follow a literacy-focused path with parent access.',
+        'Will I get homework?' => 'Yes. Homework and speaking scenarios are part of the learning system.'
+      ] as $question => $answer): ?>
+        <div class="col-md-6"><div class="foundation-card h-100"><h3 class="h5 fw-bold"><?= htmlspecialchars($question, ENT_QUOTES, 'UTF-8') ?></h3><p class="text-muted mb-0"><?= htmlspecialchars($answer, ENT_QUOTES, 'UTF-8') ?></p></div></div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php
+$content = ob_get_clean();
+render_public_layout('Habiba Nabil Arabic Academy | Learn Arabic the Smart Way', 'Personalized Arabic lessons for non-native speakers with speaking-first learning, homework, scenarios, and progress tracking.', $content, true);
