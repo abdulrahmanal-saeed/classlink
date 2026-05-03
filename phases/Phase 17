@@ -1,0 +1,119 @@
+PHASE 17 — Email, WhatsApp Templates, Notifications, and Communication Center
+
+Goal:
+Build communication tools.
+
+What to build:
+- Email templates.
+- WhatsApp templates.
+- Copy WhatsApp message buttons.
+- Internal notification center.
+- Email log fallback.
+- Template variables.
+
+Templates:
+Email:
+- Payment Confirmation
+- Student Form Received
+- Lesson Time Confirmation
+- Level Check Reminder
+- After First Lesson
+- Homework Corrected
+- Weekly Summary Ready
+
+WhatsApp:
+- After Payment
+- Lesson Confirmation
+- Level Check Received
+- Homework Published
+- Scenario Published
+- Review Published
+- Reminder 24h
+- Reminder 1h
+- Low Credits
+
+Pages:
+- /owner/communication
+- /owner/settings/email-templates
+- /owner/settings/whatsapp-templates
+- /owner/email-logs
+- /student/notifications
+- /parent/notifications
+
+Rules:
+- If email provider is not configured, log email and do not fail main flow.
+- WhatsApp buttons open pre-filled message.
+- Messages use variables like [Name], [Lesson Date], [Booking Link].
+
+Acceptance criteria:
+- Owner edits templates.
+- System logs emails if provider missing.
+- WhatsApp copy/open buttons work.
+- Students/parents receive internal notifications.
+
+Manual test checklist:
+- Edit template.
+- Trigger email log.
+- Copy WhatsApp message.
+- Open wa.me link.
+- View notification as student/parent.
+
+Important notification requirement:
+
+All internal notifications must be actionable.
+
+Each notification should include:
+- title
+- message
+- type
+- targetRole: student / parent / owner
+- relatedEntityType: homework / scenario / review / material / booking / payment / badge
+- relatedEntityId
+- actionLabel
+- actionUrl
+- read/unread status
+- createdAt
+
+Examples:
+
+New homework assigned:
+actionLabel = "Open Homework"
+actionUrl = "/student/homework/[homeworkId]"
+
+Homework corrected:
+actionLabel = "View Result"
+actionUrl = "/student/homework/[homeworkId]/result"
+
+New scenario assigned:
+actionLabel = "Start Scenario"
+actionUrl = "/student/scenarios/[scenarioId]"
+
+Scenario corrected:
+actionLabel = "View Feedback"
+actionUrl = "/student/scenarios/[scenarioId]/result"
+
+New review/test assigned:
+actionLabel = "Start Review"
+actionUrl = "/student/reviews/[reviewId]"
+
+Review/test corrected:
+actionLabel = "View Result"
+actionUrl = "/student/reviews/[reviewId]/result"
+
+New material assigned:
+actionLabel = "Open Material"
+actionUrl = "/student/materials/[materialId]"
+
+For parent notifications, actionUrl must point to the linked child route, for example:
+"/parent/child/[childId]/homework/[homeworkId]/result"
+
+Rules:
+- Do not create notifications without useful action buttons when the notification is related to homework, scenario, review, material, booking, badge, or payment.
+- Notification action URLs must respect role permissions.
+- Student cannot open another student's links.
+- Parent cannot open an unlinked child's links.
+- Owner notifications should link to the correct Owner review/correction page.
+- Clicking the notification can mark it as read.
+
+Stop condition:
+Stop here. Test this phase before continuing.
