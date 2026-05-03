@@ -1,0 +1,72 @@
+PHASE 16 — AI Teacher and Marketing Tools
+
+Goal:
+Build AI tools with strict preview, logging, and cost control.
+
+AI tools:
+1. Analyze Student
+2. Plan Remaining Sessions
+3. Prepare Next Lesson
+4. Generate Homework
+5. Generate Scenario
+6. Generate Weekly Student Summary
+7. Generate Article
+8. Generate Article Cover Image Prompt
+
+Global AI rules:
+- Save prompt.
+- Save response.
+- Save estimated tokens/cost if possible.
+- Save tool name and related student/article/homework ID.
+- Enforce regenerate limits from settings.
+- Output preview only.
+- Never auto-publish.
+- Owner must click Apply/Save.
+- AI output status starts as draft.
+
+Pages:
+- /owner/ai
+- /owner/ai/logs
+- /owner/students/[id]/ai
+- /owner/weekly-summaries
+- /owner/cms/articles/generate
+
+Generate Article output:
+- Arabic title
+- English title optional
+- slug
+- SEO meta title
+- SEO meta description
+- excerpt
+- full article
+- CTA
+- target audience
+- keywords
+- suggested cover image prompt
+- status draft
+
+Weekly Summary includes:
+- This week summary
+- What went well
+- Areas to focus on
+- Suggested focus next week
+- Engagement level: High/Medium/Low
+
+Acceptance criteria:
+- Owner can run each AI tool.
+- AI output is previewed.
+- Owner can apply/save draft.
+- AI usage log records prompt/response.
+- Regenerate limit works.
+- Generated article is draft only.
+
+Manual test checklist:
+- Generate student analysis.
+- Generate homework but do not apply.
+- Apply after preview.
+- Generate weekly summary.
+- Generate article draft.
+- Check AI logs.
+
+Stop condition:
+Stop here. Test this phase before continuing.
