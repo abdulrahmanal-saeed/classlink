@@ -1,0 +1,54 @@
+PHASE 18 — Referral System
+
+Goal:
+Build student referral links and reward tracking.
+
+How it works:
+1. Student gets referral code.
+2. Student shares link.
+3. Visitor lands with ?ref=CODE.
+4. Referral code stored through checkout.
+5. If payment is verified/approved, referral is recorded.
+6. Owner manually applies reward.
+
+Settings:
+- Referral program enabled/disabled
+- Reward type: free session / AED discount / both
+- Reward value
+- Terms text
+
+Student pages:
+- /student/referrals
+
+Parent pages:
+- /parent/referrals optional
+
+Owner pages:
+- /owner/referrals
+- /owner/settings/referrals
+
+Referral statuses:
+- pending
+- qualified
+- reward_pending
+- reward_applied
+- rejected
+
+Acceptance criteria:
+- Student has referral code/link.
+- Checkout stores referral code.
+- Paid/verified order creates referral record.
+- Owner can apply reward.
+- Reward can add credit or discount record.
+- Audit log records reward.
+
+Manual test checklist:
+- Copy referral link.
+- Open public site with ref.
+- Complete checkout.
+- Mark payment paid.
+- Confirm referral appears.
+- Apply reward.
+
+Stop condition:
+Stop here. Test this phase before continuing.
