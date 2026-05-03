@@ -1,0 +1,57 @@
+PHASE 20 — Firebase Push Notifications
+
+Goal:
+Add push notification foundation for web/mobile, especially Owner/Teacher mobile app later.
+
+What to build:
+- FCM configuration using env variables.
+- Device token registration API.
+- Notification sending helper.
+- Push notification log.
+- Owner notification preferences.
+
+Events for Owner push:
+- New payment pending verification
+- Student form submitted
+- Level check submitted
+- Homework submitted
+- Scenario submitted
+- Review submitted
+- Testimonial submitted
+- Academy brief submitted
+- Booking requested
+
+Events for Student/Parent push later:
+- Lesson confirmed
+- Lesson reminder
+- Homework published
+- Homework corrected
+- Scenario feedback ready
+- Low credits
+
+Security:
+- Do not expose Firebase service account.
+- Store secrets in environment variables.
+
+Pages:
+- /owner/settings/notifications
+- /owner/notifications
+
+API:
+- POST /api/push/register-device
+- POST /api/push/test
+
+Acceptance criteria:
+- Device token can be registered.
+- Test push can be sent.
+- Push events are logged.
+- Notification preferences are respected.
+
+Manual test checklist:
+- Register token.
+- Send test push.
+- Trigger homework submission notification.
+- Confirm log entry.
+
+Stop condition:
+Stop here. Test this phase before continuing.
