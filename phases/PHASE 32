@@ -1,0 +1,348 @@
+PHASE 32 — Final QA, Production Build, Code Audit, and Downloadable Website Package
+
+Goal:
+Prepare the full Habiba Nabil Arabic Academy web platform for final handoff as a downloadable, production-ready package.
+
+Important:
+Do not add new features in this phase.
+Do not redesign the app.
+Do not break existing functionality.
+Do not delete existing files.
+This phase is only for final checking, fixing, documenting, building, and packaging.
+
+==================================================
+PART 1 — FULL PROJECT INSPECTION
+==================================================
+
+Inspect the full project and create a final readiness report.
+
+Check:
+- Project structure
+- Package/dependency files
+- Environment variable usage
+- Database/ORM configuration
+- Auth system
+- Role permissions
+- Public pages
+- Owner/Teacher dashboard
+- Student portal
+- Parent portal
+- Academy partner portal
+- Checkout/payment flow
+- Onboarding flow
+- Level checks
+- Homework/scenario/review systems
+- Materials system
+- Notifications
+- AI tools
+- Analytics
+- Push/cron setup if implemented
+- Mobile app folder if implemented
+
+Do not assume everything works.
+Actually inspect and run the available checks.
+
+==================================================
+PART 2 — CODE QUALITY CHECK
+==================================================
+
+Run all relevant checks available in the project.
+
+Run where applicable:
+- npm install or package install check
+- npm run lint
+- npm run typecheck
+- npm run build
+- npm test if tests exist
+- ORM validation/generation
+- database migration validation
+- npm audit or dependency security check if practical
+
+If a command does not exist:
+- Do not invent fake success.
+- Report that the command is missing.
+- Add useful scripts if safe and appropriate.
+
+Fix:
+- TypeScript errors
+- Build errors
+- Broken imports
+- Dead routes
+- Obvious runtime errors
+- Missing environment variable documentation
+- Broken links in main navigation
+- Permission mistakes
+- Major console errors
+
+Do not make risky rewrites.
+
+==================================================
+PART 3 — SECURITY CHECK
+==================================================
+
+Review security before packaging.
+
+Check:
+- No secrets are hardcoded
+- No .env file is included in final zip
+- .env.example exists
+- Auth-protected routes are protected
+- Student cannot access another student’s data
+- Parent cannot access unlinked child data
+- Academy partner cannot access other academy data
+- Owner-only pages are protected
+- Payment is not marked paid without verification/manual approval
+- Upload validation exists
+- Dangerous file types are blocked
+- AI output does not auto-publish
+- Audit log exists for important actions
+- Cron endpoints are protected with secret token if implemented
+- Firebase/AI/Ziina secrets are not exposed
+
+Fix high-priority security issues before packaging.
+
+==================================================
+PART 4 — MANUAL FLOW CHECKLIST
+==================================================
+
+Create a final manual test checklist and test as much as possible with demo data.
+
+Test these flows:
+
+Public:
+1. Homepage opens
+2. Pricing page opens
+3. Pricing CTA goes to checkout
+4. Articles/videos pages open
+5. Testimonials page works
+6. Legal pages open
+
+Checkout/onboarding:
+1. Checkout form submits
+2. Policy checkbox is required
+3. Thank-you page opens
+4. Payment status stays pending_verification unless manually approved
+5. Student form submits
+6. Adult level check submits
+7. Child literacy check submits
+8. Booking request works
+
+Owner/Teacher:
+1. Owner login works
+2. Dashboard opens
+3. Payment review works
+4. Onboarding approval works
+5. Student account creation works
+6. Parent account creation works
+7. Booking confirmation works
+8. Homework correction works
+9. Scenario correction works
+10. Review correction/manual override works
+
+Student:
+1. Student login works
+2. Dashboard opens
+3. Homework opens/submits
+4. Scenario opens/submits
+5. Review opens/submits
+6. Materials open
+7. Progress opens
+8. Notifications action buttons work
+
+Parent:
+1. Parent login works
+2. Parent sees linked child only
+3. Parent sees child homework
+4. Parent sees child progress
+5. Parent sees balance
+6. Parent cannot access unlinked child
+
+Academy:
+1. Academy login works
+2. Brief submission works
+3. Academy sees only own briefs
+
+Settings:
+1. Pricing settings work
+2. Email/WhatsApp templates work
+3. Badge settings work
+4. Availability settings work
+5. AI settings are protected
+
+==================================================
+PART 5 — PERFORMANCE AND UX CHECK
+==================================================
+
+Check:
+- Homepage performance
+- Pricing page performance
+- Checkout performance
+- Dashboard loading
+- Large tables pagination
+- Mobile layout
+- RTL/LTR layout
+- Arabic/English switch
+- Broken layout issues
+- Missing loading states
+- Missing empty states
+- Broken buttons
+- Duplicate confusing buttons
+
+Fix obvious issues only.
+
+==================================================
+PART 6 — FINAL DOCUMENTATION
+==================================================
+
+Create or update these files:
+
+1. README.md
+Must include:
+- Project overview
+- Tech stack
+- How to install
+- How to run locally
+- How to build
+- How to deploy
+- Required environment variables
+- Demo accounts
+- Main roles
+- Main routes
+- Database setup
+- Known limitations
+
+2. .env.example
+Must include placeholders only:
+- DATABASE_URL
+- AUTH_SECRET / SESSION_SECRET
+- AI_API_KEY placeholder
+- ZIINA keys/placeholders
+- EMAIL provider placeholders
+- FIREBASE placeholders if implemented
+- CRON_SECRET if implemented
+- APP_URL
+
+Never include real secrets.
+
+3. DEPLOYMENT_CHECKLIST.md
+Must include:
+- Install dependencies
+- Setup database
+- Run migrations
+- Add env variables
+- Run build
+- Test login
+- Test checkout
+- Test protected routes
+- Test uploads
+- Test payment status workflow
+- Backup instructions
+
+4. FINAL_QA_REPORT.md
+Must include:
+- Checks run
+- Passed checks
+- Failed checks
+- Fixed issues
+- Remaining known issues
+- Manual test checklist
+- Production readiness notes
+
+5. ROUTES_OVERVIEW.md
+Must include:
+- Public routes
+- Owner routes
+- Student routes
+- Parent routes
+- Academy routes
+- API routes
+- Protected route notes
+
+==================================================
+PART 7 — CREATE DOWNLOADABLE PACKAGE
+==================================================
+
+Create a final release folder:
+
+/release
+
+Inside it include:
+- project source code
+- README.md
+- .env.example
+- DEPLOYMENT_CHECKLIST.md
+- FINAL_QA_REPORT.md
+- ROUTES_OVERVIEW.md
+- database migration files
+- seed/demo data script if available
+
+Exclude:
+- node_modules
+- .env
+- real secrets
+- .git if not needed
+- build cache folders
+- temporary logs
+- local database files
+- uploaded test files if unsafe/heavy
+- any private credentials
+
+Create a zip file named:
+
+habiba-nabil-arabic-academy-final-release.zip
+
+If zip command is available, create the zip file inside /release or project root.
+
+If zip command is not available:
+- Create the /release folder cleanly
+- Tell me exactly how to download it from Replit
+- Do not claim a zip was created if it was not created
+
+==================================================
+PART 8 — FINAL RESPONSE REQUIRED
+==================================================
+
+At the end, report clearly:
+
+1. Final build status:
+- Passed / Failed / Passed with warnings
+
+2. Commands run:
+- list every command and result
+
+3. Files created:
+- README.md
+- .env.example
+- DEPLOYMENT_CHECKLIST.md
+- FINAL_QA_REPORT.md
+- ROUTES_OVERVIEW.md
+- release zip/folder
+
+4. Issues fixed:
+- list fixes
+
+5. Remaining warnings:
+- list honestly
+
+6. Download instructions:
+- Exact file name
+- Exact location
+- How to download from Replit
+
+7. Production notes:
+- What I must configure before going live
+- Which env variables are required
+- Which payment/Firebase/AI/email settings are still placeholders
+
+Acceptance criteria:
+- Project builds successfully or failures are clearly reported.
+- No secrets are included in export.
+- README exists.
+- .env.example exists.
+- Deployment checklist exists.
+- Final QA report exists.
+- Downloadable zip or clean release folder exists.
+- Replit gives honest final status.
+
+Stop condition:
+Stop here. Do not add new features after this phase.
