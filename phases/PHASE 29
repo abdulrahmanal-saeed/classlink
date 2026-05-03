@@ -1,0 +1,414 @@
+PHASE 29 — Media Buyer / Marketing Partner Dashboard, Tracking, Analytics, and Commission System
+
+Goal:
+Build a dedicated dashboard for media buyers / marketing partners who promote Habiba Nabil Arabic Academy and earn commission from paid orders.
+
+Important:
+Do not give media buyers Owner access.
+Media buyers should only see their own campaign performance, attributed orders, revenue, and commissions.
+They must not see private student/parent learning data.
+
+Add a new role:
+MEDIA_BUYER
+or
+MARKETING_PARTNER
+
+==================================================
+PART 1 — MEDIA BUYER ROLE
+==================================================
+
+Create a new role:
+MEDIA_BUYER
+
+Media Buyer can:
+- Log in
+- View own dashboard
+- View own tracking links
+- View own campaigns
+- View own attributed orders
+- View own commission summary
+- View payout history
+- Export own summary if allowed
+
+Media Buyer cannot:
+- View student private data
+- View parent private data
+- View homework/scenario/review/level test details
+- View Owner settings
+- Change pricing
+- Change payment status
+- Access other media buyers’ data
+
+Routes:
+- /media/dashboard
+- /media/campaigns
+- /media/links
+- /media/orders
+- /media/commissions
+- /media/payouts
+- /media/settings
+
+==================================================
+PART 2 — TRACKING LINKS
+==================================================
+
+Build tracking links for each media buyer.
+
+Support:
+- partner code
+- referral code
+- UTM source
+- UTM campaign
+- UTM content
+- UTM medium
+- coupon code optional
+
+Example links:
+https://mshabibanabil.com/pricing?partner=ahmed
+https://mshabibanabil.com/pricing?utm_source=facebook&utm_campaign=kids_arabic&partner=ahmed
+
+When a visitor lands with partner/utm data:
+- Store tracking data in cookie/local storage.
+- Attach tracking data to checkout order if user purchases.
+- Do not overwrite tracking source too aggressively.
+- Store first-touch and last-touch if practical.
+
+Tracking fields:
+- mediaBuyerId
+- partnerCode
+- utmSource
+- utmMedium
+- utmCampaign
+- utmContent
+- utmTerm
+- landingPage
+- firstTouchAt
+- lastTouchAt
+
+==================================================
+PART 3 — ATTRIBUTED ORDERS
+==================================================
+
+When checkout order is created, attach attribution data.
+
+Order attribution should include:
+- mediaBuyerId
+- campaignId optional
+- partnerCode
+- UTM data
+- firstTouch / lastTouch
+- selected plan
+- amount
+- payment status
+
+Commission should only be calculated when:
+paymentStatus = paid
+
+Do not count:
+- pending
+- pending_verification
+- failed
+- cancelled
+- refunded
+
+If order is refunded:
+- adjust commission
+- mark commission as reversed or deducted
+- audit log the change
+
+==================================================
+PART 4 — COMMISSION SETTINGS
+==================================================
+
+Owner can configure commission settings.
+
+Owner page:
+- /owner/settings/media-buyers
+- /owner/media-buyers
+- /owner/media-buyers/[id]
+- /owner/media-commissions
+
+Commission options:
+- global percentage
+- percentage per media buyer
+- percentage per package
+- fixed amount per paid order
+- no commission for refunded orders
+- commission approval required
+- payout cycle: weekly / monthly / manual
+
+Default:
+- commissionType = percentage
+- commissionRate = configurable by Owner
+- calculate on paid revenue only
+- approval required before payout
+
+Package-specific commission optional:
+- Single Session
+- Monthly Plan
+- 30-Hour Bundle
+
+==================================================
+PART 5 — MEDIA BUYER DASHBOARD
+==================================================
+
+Media Buyer dashboard should show:
+
+Overview:
+- Total clicks
+- Leads
+- Checkout starts
+- Paid orders
+- Revenue generated
+- Conversion rate
+- Commission earned
+- Pending commission
+- Approved commission
+- Paid commission
+
+Funnel:
+Clicks → Pricing Views → Checkout Started → Paid Orders → Student Form Submitted → Lesson Booked
+
+Package performance:
+- Single Session orders
+- Monthly Plan orders
+- 30-Hour Bundle orders
+- Revenue by package
+- Commission by package
+
+Campaign performance:
+- Campaign name
+- UTM source
+- UTM campaign
+- Clicks
+- Checkout starts
+- Paid orders
+- Revenue
+- Commission
+- Conversion rate
+
+Orders table:
+- order reference
+- date
+- package
+- amount
+- payment status
+- commission status
+- masked customer name or customer number only
+
+Do not show:
+- full WhatsApp
+- full email
+- student learning details
+- level test answers
+- recordings
+- parent notes
+
+==================================================
+PART 6 — OWNER DASHBOARD FOR MEDIA BUYERS
+==================================================
+
+Owner can see:
+- all media buyers
+- total revenue by media buyer
+- paid orders by media buyer
+- commission due
+- commission approved
+- commission paid
+- refunds/deductions
+- campaign quality
+- customer progression after purchase
+
+Owner can:
+- create media buyer account
+- edit commission rate
+- disable media buyer
+- approve commission
+- reject commission
+- mark commission as paid
+- add internal notes
+- export report
+- view payout history
+
+Owner routes:
+- /owner/media-buyers
+- /owner/media-buyers/new
+- /owner/media-buyers/[id]
+- /owner/media-buyers/[id]/orders
+- /owner/media-buyers/[id]/commissions
+- /owner/media-commissions
+- /owner/media-payouts
+
+==================================================
+PART 7 — COMMISSION RECORDS
+==================================================
+
+Create commission records when payment becomes paid.
+
+CommissionRecord:
+- id
+- mediaBuyerId
+- checkoutOrderId
+- packageName
+- orderAmount
+- commissionType
+- commissionRate
+- commissionAmount
+- status: pending / approved / rejected / paid / reversed
+- reason
+- createdAt
+- approvedAt
+- paidAt
+- reversedAt
+
+PayoutRecord:
+- id
+- mediaBuyerId
+- amount
+- status
+- payoutMethod optional
+- note
+- createdAt
+- paidAt
+
+Rules:
+- Prevent duplicate commission for same order.
+- Refund should reverse commission if applicable.
+- Manual changes require audit log.
+
+==================================================
+PART 8 — ANALYTICS EVENTS
+==================================================
+
+Track:
+- media_link_click
+- pricing_view
+- checkout_start
+- checkout_submit
+- payment_paid
+- payment_failed
+- student_form_submit
+- booking_request
+- first_lesson_booked
+
+Connect these events to:
+- mediaBuyerId
+- campaignId
+- UTM data
+- checkoutOrderId if available
+
+==================================================
+PART 9 — SECURITY
+==================================================
+
+Security:
+- Media buyer can only see own data.
+- Owner can see all.
+- API routes must enforce role and ownership.
+- Do not expose private student data.
+- Do not expose payment provider raw payloads to media buyer.
+- Do not allow media buyer to change orders or payment statuses.
+- Commission changes are Owner-only.
+- Audit log all commission and payout changes.
+
+==================================================
+PART 10 — DATABASE MODELS
+==================================================
+
+Create or extend models:
+
+MediaBuyerProfile:
+- id
+- userId
+- displayName
+- partnerCode
+- commissionType
+- commissionRate
+- status
+- notes
+- createdAt
+- updatedAt
+
+MarketingCampaign:
+- id
+- mediaBuyerId
+- name
+- utmSource
+- utmMedium
+- utmCampaign
+- utmContent
+- landingPage
+- status
+- createdAt
+- updatedAt
+
+AttributionEvent:
+- id
+- mediaBuyerId optional
+- campaignId optional
+- eventType
+- sessionId
+- visitorIdHash
+- checkoutOrderId optional
+- utmData JSON
+- landingPage
+- referrer
+- createdAt
+
+OrderAttribution:
+- id
+- checkoutOrderId
+- mediaBuyerId
+- campaignId optional
+- partnerCode
+- attributionModel: first_touch / last_touch / manual
+- utmData JSON
+- createdAt
+
+CommissionRecord:
+- id
+- mediaBuyerId
+- checkoutOrderId
+- packageName
+- orderAmount
+- commissionType
+- commissionRate
+- commissionAmount
+- status
+- reason
+- createdAt
+- approvedAt
+- paidAt
+- reversedAt
+
+PayoutRecord:
+- id
+- mediaBuyerId
+- amount
+- status
+- payoutMethod
+- note
+- createdAt
+- paidAt
+
+==================================================
+PART 11 — ACCEPTANCE CRITERIA
+==================================================
+
+Phase is complete when:
+
+- Owner can create media buyer account.
+- Media buyer can log in.
+- Media buyer gets tracking/referral links.
+- Visitor tracking data is stored.
+- Checkout order captures media buyer attribution.
+- Paid orders generate commission records.
+- Pending/failed/refunded orders do not count as payable commission.
+- Owner can approve and mark commission as paid.
+- Media buyer can view own dashboard only.
+- Media buyer cannot access private student/parent data.
+- Owner can view all media buyer reports.
+- Audit log records commission changes.
+
+Stop condition:
+Stop here. Test media buyer tracking and commission before continuing.
