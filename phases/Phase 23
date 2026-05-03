@@ -1,0 +1,69 @@
+PHASE 23 — Bilingual Arabic/English Website, RTL/LTR, and Localization QA
+
+Goal:
+Make the entire web platform professionally bilingual in Arabic and English, with correct RTL/LTR support.
+
+Important:
+Previous phases may have basic language support. This phase is a dedicated localization and language quality pass.
+
+What to build/improve:
+- Complete Arabic/English language system across public website, Owner dashboard, Student portal, Parent portal, Academy portal, checkout, onboarding, level checks, homework, reviews, settings, and notifications.
+- Language switcher.
+- Persistent language preference per user.
+- Public visitor language preference using cookie/local storage.
+- RTL layout for Arabic.
+- LTR layout for English.
+- No broken tables/forms/cards in RTL.
+- No mixed-direction text issues for Arabic + English content.
+- Neutral Arabic UX copy, not female-only.
+- Native-level English UX copy.
+
+Pages to audit:
+- Public website
+- Pricing
+- Checkout
+- Thank-you
+- Student form
+- Level check
+- Booking calendar
+- Student portal
+- Parent portal
+- Academy portal
+- Owner dashboard
+- Homework/scenarios/reviews/materials
+- AI tools
+- Settings
+- Notifications
+- Emails/WhatsApp templates
+
+Arabic copy rules:
+- Avoid exclusively feminine forms like: اكتبي / سجّلي / اختاري
+- Use neutral forms like: اكتب / سجّل / اختر
+- Keep copy clear, warm, and professional.
+- Avoid robotic literal translation.
+
+English copy rules:
+- Use natural SaaS-style English.
+- Keep CTAs clear and action-oriented.
+- Avoid long paragraphs inside forms.
+
+Acceptance criteria:
+- User can switch Arabic/English.
+- Language preference persists.
+- Arabic pages render RTL correctly.
+- English pages render LTR correctly.
+- All major UI labels are translated.
+- No broken layout in Arabic.
+- No female-only Arabic copy.
+
+Manual test checklist:
+- Switch to Arabic and browse all main flows.
+- Switch to English and browse all main flows.
+- Test checkout in both languages.
+- Test student dashboard in both languages.
+- Test parent portal in both languages.
+- Test Owner dashboard in both languages.
+- Test mobile view in Arabic and English.
+
+Stop condition:
+Stop here. Test this phase before continuing.
