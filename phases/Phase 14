@@ -1,0 +1,88 @@
+PHASE 14 — Homework, Speaking Scenarios, Reviews/Tests, Materials
+
+Goal:
+Build the learning assignment system.
+
+Homework types:
+- MCQ
+- Reading
+- Listening
+- Writing
+- Speaking
+
+Scenario:
+- Real-life speaking task
+- Situation
+- Prompt
+- Time limit
+- Keywords
+- Model answer optional
+- Student audio recording/upload
+- Owner feedback
+
+Review/Test:
+- MCQ
+- Matching
+- Fill-in-the-blank / Complete the sentence
+- Writing
+- Speaking
+- Manual override by Owner
+
+Materials:
+- Links
+- YouTube/video
+- PDF
+- PowerPoint/file
+- HTML material if supported
+
+Owner pages:
+- /owner/homework
+- /owner/homework/new
+- /owner/homework/[id]
+- /owner/homework/[id]/submissions
+- /owner/scenarios
+- /owner/scenarios/new
+- /owner/scenarios/[id]/submissions
+- /owner/reviews
+- /owner/reviews/new
+- /owner/reviews/[id]/results
+- /owner/materials
+
+Student pages:
+- /student/homework/[id]
+- /student/homework/[id]/result
+- /student/scenarios/[id]
+- /student/scenarios/[id]/result
+- /student/reviews/[id]
+- /student/reviews/[id]/result
+- /student/materials
+
+Important:
+- Student results must show what the student selected, not just A/B/C.
+- Show correct answer if incorrect.
+- Show teacher feedback.
+- Manual override affects Owner view, Student view, and exports later.
+
+Acceptance criteria:
+- Owner creates homework.
+- Student submits homework.
+- Owner corrects homework.
+- Student sees result.
+- Owner creates scenario.
+- Student records scenario.
+- Owner gives feedback.
+- Owner creates review/test.
+- Student takes it.
+- Manual override works.
+- Materials can be assigned.
+
+Manual test checklist:
+- Create homework with all sections.
+- Submit as student.
+- Correct as Owner.
+- Create scenario and submit recording.
+- Create review/test and override answer.
+- Assign material.
+
+Stop condition:
+Stop here. Test this phase before continuing.
