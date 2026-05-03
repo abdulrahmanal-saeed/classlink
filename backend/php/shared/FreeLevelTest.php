@@ -105,7 +105,7 @@ function flt_seed_question_bank_if_empty(): void
     }
 
     $task1 = ['تجربتك في تعلم اللغة العربية','يوم لا تنساه في حياتك','شخص أثّر كثيراً في حياتك','مكان تحبه كثيراً','حلم تريد تحقيقه في المستقبل'];
-    foreach ($task1 as $i => $prompt) {
+    foreach ($task1 as $prompt) {
         db()->prepare('INSERT INTO free_level_test_writing_prompts (task_type, level, title, prompt_text, word_min, word_max, instructions) VALUES ("task1", "all", :title, :prompt, 80, 100, "اكتب 80 إلى 100 كلمة.")')
             ->execute([':title' => $prompt, ':prompt' => $prompt]);
     }
@@ -222,6 +222,18 @@ function flt_percent_to_full_level(float $percent): string
     if ($percent < 70) return 'B2';
     if ($percent < 85) return 'C1';
     return 'C2';
+}
+
+function flt_pick_highest_level(array $levels): string
+{
+    $rank = ['A2 or below' => 0, 'B1' => 1, 'B2' => 2, 'C1' => 3, 'C2' => 4];
+    $best = 'A2 or below';
+    foreach ($levels as $level) {
+        if (($rank[$level] ?? 0) > ($rank[$best] ?? 0)) {
+            $best = $level;
+        }
+    }
+    return $best;
 }
 
 function flt_create_attempt(string $testType, ?int $applicantId, ?string $whatsapp, array $snapshot, string $currentStep = 'listening'): array
