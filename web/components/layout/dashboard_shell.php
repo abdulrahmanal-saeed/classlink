@@ -17,6 +17,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
             ['/owner/payments', 'Payments', 'المدفوعات'],
             ['/owner/onboarding', 'Onboarding', 'المتابعة بعد الدفع'],
+            ['/owner/packages', 'Packages & Credits', 'الباقات والأرصدة'],
             ['/owner/students', 'Students', 'الطلاب'],
             ['/owner/parents', 'Parents', 'أولياء الأمور'],
             ['/owner/level-checks', 'Paid Level Checks', 'اختبارات المستوى المدفوعة'],
@@ -32,6 +33,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         ],
         'student' => [
             ['/student/dashboard', 'Student Dashboard', 'لوحة الطالب'],
+            ['/student/balance', 'My Balance', 'رصيدي'],
         ],
         'parent' => [
             ['/parent/dashboard', 'Parent Dashboard', 'لوحة ولي الأمر'],
@@ -96,7 +98,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 7</div>
+              <div class="badge text-bg-light border mb-3">Phase 8</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
