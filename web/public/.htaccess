@@ -1,5 +1,5 @@
 # Clean URL support for Apache hosting.
-# Public article/video detail pages use rewrites while files stay organized.
+# Public detail pages use rewrites while files stay organized.
 
 Options -Indexes
 
@@ -14,6 +14,9 @@ Options -Indexes
   # Public CMS detail routes
   RewriteRule ^articles/([^/]+)/?$ /articles/index.php?slug=$1 [L,QSA]
   RewriteRule ^videos/([^/]+)/?$ /videos/index.php?slug=$1 [L,QSA]
+
+  # Owner clean detail route
+  RewriteRule ^owner/payments/([0-9]+)/?$ /owner/payments/view/index.php?id=$1 [L,QSA]
 
   # Clean page routes are directory-based: /login, /pricing, /owner/dashboard, etc.
 </IfModule>
