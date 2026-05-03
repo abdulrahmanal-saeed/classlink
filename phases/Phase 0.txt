@@ -1,0 +1,71 @@
+PHASE 0 — Product Blueprint, Stack Setup, and Project Skeleton
+
+Build the initial project skeleton only.
+
+Goal:
+Create a clean, scalable foundation for Habiba Nabil Arabic Academy from scratch.
+
+What to build:
+- Next.js/React/TypeScript project structure or your chosen equivalent Replit-friendly stack.
+- Tailwind CSS + shadcn/ui setup.
+- PostgreSQL ORM setup using Prisma or Drizzle.
+- Environment variable structure.
+- Base layout.
+- Light/dark mode foundation.
+- Arabic/English language direction foundation.
+- Shared UI components.
+- Basic navigation placeholders for Public, Owner/Teacher, Student, Parent, Academy Partner.
+- Basic health page to confirm app/database connection.
+
+Pages:
+- /
+- /health
+- /login
+- /owner
+- /student
+- /parent
+- /academy
+
+Database models:
+Create only minimum foundation models:
+- User
+- Role
+- Session/Auth model if needed
+- AuditLog
+- Setting
+
+Roles:
+- OWNER_TEACHER
+- STUDENT
+- PARENT
+- ACADEMY_PARTNER
+
+UI requirements:
+- Clean SaaS style.
+- Mobile responsive.
+- Light/dark mode toggle.
+- Basic RTL/LTR toggle or prepared structure.
+- Empty dashboard placeholders.
+
+Security:
+- No hardcoded secrets.
+- Use env variables.
+- Password hashing prepared, even if login is basic at this phase.
+
+Acceptance criteria:
+- App runs without errors.
+- Database connects successfully.
+- Basic pages render.
+- Role structure exists.
+- AuditLog model exists.
+- Settings model exists.
+
+Manual test checklist:
+- Open homepage.
+- Open /health.
+- Toggle light/dark mode.
+- Confirm DB connection.
+- Confirm no secrets are hardcoded.
+
+Stop condition:
+Stop here. Test this phase before continuing.
