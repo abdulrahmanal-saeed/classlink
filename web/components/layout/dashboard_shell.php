@@ -16,6 +16,10 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
             ['/owner/settings', 'Settings Center', 'مركز الإعدادات'],
+            ['/owner/settings/public-website', 'Public Website Settings', 'إعدادات الموقع العام'],
+            ['/owner/cms/articles', 'CMS Articles', 'إدارة المقالات'],
+            ['/owner/cms/videos', 'CMS Videos', 'إدارة الفيديوهات'],
+            ['/owner/cms/testimonials', 'CMS Testimonials', 'إدارة التقييمات'],
             ['/owner/audit-log', 'Audit Log', 'سجل المراجعة'],
             ['/owner/dev/seed-data', 'Dev Seed Data', 'بيانات تجريبية'],
         ],
@@ -39,6 +43,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?> | Habiba Nabil</title>
+      <meta name="robots" content="noindex, nofollow">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -74,7 +79,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
               <div class="fw-bold mb-3">Navigation</div>
               <div class="list-group list-group-flush">
                 <?php foreach (($items[$user['role']] ?? []) as $item): ?>
-                  <?php $isActive = $currentPath === $item[0]; ?>
+                  <?php $isActive = $currentPath === $item[0] || str_starts_with($currentPath, $item[0] . '/'); ?>
                   <a class="list-group-item list-group-item-action <?= $isActive ? 'active' : '' ?>" href="<?= $item[0] ?>">
                     <?= $isArabic ? $item[2] : $item[1] ?>
                   </a>
@@ -84,7 +89,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 2</div>
+              <div class="badge text-bg-light border mb-3">Phase 3</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
