@@ -1,0 +1,79 @@
+PHASE 15 — Practice Words, Flashcards, Progress, Streaks, Badges, and Badge Settings
+
+Goal:
+Build learning engagement features.
+
+What to build:
+- Practice words list.
+- Flashcard review system.
+- Spaced repetition basics.
+- Activity log.
+- Progress dashboard.
+- Streaks.
+- Badge settings.
+- Student badges.
+- Parent view of child badges/progress.
+
+Flashcard logic:
+- Got it → review in 3 days
+- Almost → review in 1 day
+- Missed it → review today/tomorrow
+
+Activity log sources:
+- Homework submitted
+- Scenario submitted
+- Review/test taken
+- Flashcards reviewed
+- Session completed
+
+Badge settings:
+Owner can manage:
+- name
+- description
+- icon/emoji
+- trigger type
+- required value
+- active/inactive
+- display order
+- visibility
+- color/style
+
+Default badges:
+- First Step
+- 5-Day Streak
+- 10-Day Streak
+- 30-Day Streak
+- 10 Sessions
+- 25 Sessions
+- Vocab Builder
+- Speaking Star
+- Perfect Week
+- First Level Check Completed
+
+Pages:
+- /student/progress
+- /student/flashcards
+- /student/badges
+- /parent/child/[id]/progress
+- /parent/child/[id]/badges
+- /owner/badges/settings
+
+Acceptance criteria:
+- Practice words can be added by Owner.
+- Student reviews flashcards.
+- Next review date updates.
+- Activity log records actions.
+- Streak calculates correctly.
+- Badges are awarded based on active settings.
+- Parent sees child progress.
+
+Manual test checklist:
+- Add practice words.
+- Review flashcards.
+- Confirm due dates.
+- Trigger a badge.
+- Change badge setting.
+- Confirm disabled badge does not award.
+
+Stop condition:
+Stop here. Test this phase before continuing.
