@@ -1,0 +1,323 @@
+## Phase 27 Important AI API Key and Security Requirement:
+
+The platform will include AI tools, but AI must not work unless the Owner/Teacher configures an AI provider and API key.
+
+Do not hardcode any AI API key.
+Do not expose AI API keys in frontend code.
+Do not store secrets in normal client-side settings.
+
+Create an Owner AI Settings page:
+
+/owner/settings/ai
+
+Owner can:
+- Enable/disable AI features
+- Select AI provider: OpenAI / Anthropic Claude / Gemini / Other
+- Add or update API key securely
+- Add model name
+- Set regenerate limits
+- Set monthly usage limit if practical
+- Test AI connection
+- View masked API key only, never full key
+- View AI status: configured / not configured / connection failed
+
+Security rules:
+- API key must be stored securely using environment variables or encrypted server-side storage.
+- Never send the API key to the browser.
+- AI requests must be made server-side only.
+- If no API key is configured, AI buttons should be disabled.
+- Show clear message: “AI is not configured yet. Please add your API key in Owner Settings.”
+- AI usage must be logged.
+- Save prompt, response, tool name, related entity, estimated tokens/cost if possible.
+- AI output must be preview/draft only.
+- Never auto-publish AI output.
+
+Also create:
+/owner/ai/logs
+
+AI logs should show:
+- tool name
+- provider
+- model
+- related student/article/homework if any
+- created date
+- estimated tokens/cost if available
+- status: success / failed
+- error message if failed
+
+Do not continue using AI tools if the key is missing or invalid.
+
+Stop condition:
+Stop here. Test Advanced Testimonials before continuing.
+
+
+
+PHASE 28 — Advanced Materials Library, Uploads, Viewers, and Student Access
+
+Goal:
+Build a complete educational materials system that supports uploaded and created materials such as videos, articles, PowerPoint files, PDFs, images, links, audio, and HTML files.
+
+Important:
+This phase improves and expands the materials system.
+Do not break existing homework, scenarios, reviews, student portal, parent portal, or CMS.
+Use existing auth, roles, upload settings, audit log, and UI style.
+
+Material types to support:
+1. Video upload
+2. YouTube/Vimeo/external video link
+3. Audio upload
+4. PDF
+5. PowerPoint file
+6. Word/document file if safe
+7. Image
+8. External link
+9. Text/article-style material
+10. HTML file
+11. Mixed lesson material page
+
+Owner/Teacher can:
+- Upload material
+- Create text/article-style material
+- Add external link
+- Add YouTube/video embed
+- Upload PowerPoint
+- Upload PDF
+- Upload HTML file
+- Add title
+- Add description
+- Add category
+- Add level
+- Add tags
+- Add language: Arabic / English / Both
+- Add estimated study time
+- Add visibility: draft / published / hidden
+- Assign material to one student, multiple students, child learner, or group if groups exist
+- Attach material to homework, lesson, scenario, or review if useful
+- Preview material before publishing
+- Archive material
+- Delete only if safe
+- See who viewed/downloaded material
+
+Student can:
+- View assigned materials
+- Filter by category/type/level
+- Open video/audio/PDF/images
+- Download allowed files if enabled
+- View text/article-style materials
+- Open PowerPoint file
+- Open HTML material safely
+- Mark material as completed
+- See progress/completion status
+
+Parent can:
+- View child assigned materials
+- See completion status
+- Open child materials
+- Download if allowed
+
+Academy Partner:
+- Should not access student materials unless explicitly assigned later.
+
+Supported viewers:
+- Video: embedded player
+- Audio: audio player
+- PDF: embedded PDF viewer or safe open/download
+- PowerPoint: preview if possible, otherwise download/open file
+- Image: image preview
+- Link: open in new tab
+- Text/article: clean reading page
+- HTML: safe sandboxed viewer if possible
+
+HTML material rules:
+- HTML files can be useful for interactive lessons.
+- Do not execute unsafe scripts directly inside the main app.
+- Prefer sandboxed iframe for HTML preview.
+- If sandboxing is not safe or not supported, show as downloadable file only.
+- Prevent uploaded HTML from accessing app cookies/session.
+- Never allow uploaded HTML to run with full app privileges.
+
+Upload security:
+- Validate file type and MIME.
+- Validate file size using upload settings.
+- Do not allow executable uploads.
+- Block dangerous extensions:
+  .php, .exe, .bat, .cmd, .sh, .js unless explicitly handled safely, .msi, .dll
+- Store original filename, saved filename, MIME type, file size, uploader, created date.
+- Protect private materials from unauthorized users.
+- Student can only access assigned materials.
+- Parent can only access linked child materials.
+
+Recommended material categories:
+- Lesson slides
+- Reading practice
+- Listening practice
+- Speaking support
+- Writing practice
+- Vocabulary
+- Grammar support
+- Child literacy
+- Work Arabic
+- Emirati dialect
+- Egyptian dialect
+- Homework support
+- Review material
+
+Pages:
+
+Owner pages:
+- /owner/materials
+- /owner/materials/new
+- /owner/materials/[id]
+- /owner/materials/[id]/edit
+- /owner/materials/[id]/assign
+- /owner/materials/categories
+- /owner/materials/analytics
+
+Student pages:
+- /student/materials
+- /student/materials/[id]
+
+Parent pages:
+- /parent/child/[id]/materials
+- /parent/child/[id]/materials/[materialId]
+
+Material list UI:
+- Search
+- Filter by type
+- Filter by category
+- Filter by level
+- Filter by assigned/unassigned
+- Status filter
+- Sort by newest / title / level / type
+
+Material detail UI:
+- Title
+- Description
+- Type badge
+- Category
+- Level
+- Estimated study time
+- Viewer/player/download area
+- Completion button
+- Related homework/lesson if linked
+- Teacher notes if added
+
+Material assignment:
+Owner can assign material to:
+- One student
+- Multiple students
+- Child learner through parent
+- All active students if allowed
+- Students by level if practical
+
+Completion tracking:
+Track:
+- viewedAt
+- completedAt
+- download count if practical
+- lastOpenedAt
+
+Notifications:
+Create notifications for:
+- New material assigned
+- Material updated
+- Material linked to homework/lesson
+
+Audit log events:
+- Material created
+- Material uploaded
+- Material edited
+- Material published
+- Material assigned
+- Material viewed
+- Material completed
+- Material archived
+- Material deleted
+
+Database/models:
+Use existing CourseMaterial if available, otherwise create/extend models.
+
+Required model fields or equivalent:
+
+CourseMaterial:
+- id
+- title
+- description
+- type
+- category
+- level
+- tags
+- language
+- estimatedStudyMinutes
+- status
+- fileUrl
+- externalUrl
+- htmlSandboxUrl if applicable
+- thumbnailUrl optional
+- allowDownload
+- createdBy
+- createdAt
+- updatedAt
+
+MaterialAssignment:
+- id
+- materialId
+- studentId
+- assignedBy
+- assignedAt
+- visible
+- notes
+
+MaterialProgress:
+- id
+- materialId
+- studentId
+- viewedAt
+- lastOpenedAt
+- completedAt
+- downloadCount
+- status
+
+MaterialCategory:
+- id
+- name
+- description
+- sortOrder
+- active
+
+Acceptance criteria:
+- Owner can upload video, PDF, PowerPoint, image, audio, and HTML file safely.
+- Owner can create text/article-style material.
+- Owner can add external video/link material.
+- Owner can assign material to a student.
+- Student can view assigned material.
+- Parent can view child assigned material.
+- Student cannot access unassigned private material.
+- Parent cannot access unlinked child material.
+- HTML material is sandboxed or download-only.
+- PowerPoint is previewed if possible or safely downloadable.
+- Material completion is tracked.
+- Notifications are created.
+- Audit log records important actions.
+
+Manual test checklist:
+1. Log in as Owner.
+2. Upload a PDF material.
+3. Upload a PowerPoint material.
+4. Upload a video material.
+5. Add a YouTube link material.
+6. Create a text/article-style material.
+7. Upload an HTML material and confirm safe handling.
+8. Assign materials to demo student.
+9. Log in as student.
+10. Open each material type.
+11. Mark a material as completed.
+12. Log in as parent.
+13. Open child materials.
+14. Try opening material as unassigned student and confirm blocked.
+15. Check audit log.
+16. Check notifications.
+17. Test mobile view.
+
+Stop condition:
+Stop here. Test this Phase before continuing.
