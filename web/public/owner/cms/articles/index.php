@@ -3,7 +3,7 @@
  * /owner/cms/articles
  *
  * Owner-only article manager. Phase 3 keeps this simple: list articles,
- * publish/unpublish, and link to the create page.
+ * edit, publish/unpublish, and link to the create page.
  */
 
 require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
@@ -35,7 +35,7 @@ $articles = db()->query('SELECT * FROM articles ORDER BY id DESC LIMIT 100')->fe
 ob_start();
 ?>
 <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mb-4">
-  <p class="text-muted mb-0">Create, review, and publish Arabic learning articles.</p>
+  <p class="text-muted mb-0">Create, review, edit, and publish Arabic learning articles.</p>
   <a class="btn btn-brand" href="/owner/cms/articles/new">New article</a>
 </div>
 
@@ -55,6 +55,7 @@ ob_start();
             <td><span class="badge text-bg-light border"><?= htmlspecialchars($article['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
             <td class="small text-muted"><?= htmlspecialchars($article['seo_title'] ?? 'No SEO title', ENT_QUOTES, 'UTF-8') ?></td>
             <td>
+              <a class="btn btn-sm btn-outline-brand" href="/owner/cms/articles/edit?id=<?= (int) $article['id'] ?>">Edit</a>
               <form method="post" class="d-inline">
                 <input type="hidden" name="article_id" value="<?= (int) $article['id'] ?>">
                 <input type="hidden" name="action" value="<?= $article['status'] === 'published' ? 'draft' : 'publish' ?>">
