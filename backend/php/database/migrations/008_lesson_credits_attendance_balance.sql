@@ -2,19 +2,18 @@
 -- Run after Phase 7 migration.
 
 -- Upgrade credit transaction enum safely from old Phase 2 values to Phase 8 values.
+-- Legacy values stay allowed for compatibility with older approval code and historic rows.
 ALTER TABLE lesson_credit_transactions
-  MODIFY COLUMN transaction_type ENUM('add','deduct','refund','adjust','purchase_grant','session_deducted','cancellation_return','manual_adjustment','refund_adjustment') NOT NULL;
-
-UPDATE lesson_credit_transactions SET transaction_type = 'purchase_grant' WHERE transaction_type = 'add';
-UPDATE lesson_credit_transactions SET transaction_type = 'session_deducted' WHERE transaction_type = 'deduct';
-UPDATE lesson_credit_transactions SET transaction_type = 'refund_adjustment' WHERE transaction_type = 'refund';
-UPDATE lesson_credit_transactions SET transaction_type = 'manual_adjustment' WHERE transaction_type = 'adjust';
-
-ALTER TABLE lesson_credit_transactions
-  MODIFY COLUMN transaction_type ENUM('purchase_grant','session_deducted','cancellation_return','manual_adjustment','refund_adjustment') NOT NULL,
+  MODIFY COLUMN transaction_type ENUM('add','deduct','refund','adjust','purchase_grant','session_deducted','cancellation_return','manual_adjustment','refund_adjustment') NOT NULL,
   ADD COLUMN IF NOT EXISTS session_id INT UNSIGNED NULL AFTER student_user_id,
   ADD COLUMN IF NOT EXISTS balance_after DECIMAL(8,2) NULL AFTER credits,
   ADD COLUMN IF NOT EXISTS metadata JSON NULL AFTER reason;
+
+UPDATE lesson_credit_transactions
+SET balance_after = (
+  SELECT remaining_credits FROM lesson_packages WHERE lesson_packages.id = lesson_credit_transactions.package_id
+)
+WHERE balance_after IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_credit_tx_session ON lesson_credit_transactions (session_id);
 CREATE INDEX IF NOT EXISTS idx_credit_tx_type_created ON lesson_credit_transactions (transaction_type, created_at);
