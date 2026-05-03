@@ -1,0 +1,71 @@
+PHASE 9 — Real Booking Availability Calendar
+
+Goal:
+Build a real availability and booking calendar.
+
+What to build:
+- Owner availability rules.
+- Blocked times.
+- Available slot generation.
+- Student/Parent booking request.
+- Owner confirmation.
+- Reschedule flow.
+- Meeting link field.
+
+Owner pages:
+- /owner/calendar
+- /owner/availability
+- /owner/bookings
+
+Student pages:
+- /student/book
+- /student/lessons
+
+Parent pages:
+- /parent/book
+- /parent/child/[id]/lessons
+
+Availability settings:
+- Working days
+- Start/end times
+- Session duration default 90 min
+- Buffer time
+- Max sessions per day optional
+- Blocked dates/times
+
+Booking statuses:
+- requested
+- confirmed
+- rejected
+- reschedule_requested
+- rescheduled
+- canceled
+- completed
+- no_show
+
+Rules:
+- Prevent double booking.
+- Prevent booking outside availability.
+- Respect blocked time.
+- Respect cancellation policy.
+- Link booking to lesson package/credits.
+
+Acceptance criteria:
+- Owner creates availability.
+- Student/Parent sees available slots.
+- Booking request created.
+- Owner confirms booking.
+- Confirmed booking appears on dashboards.
+- Double booking is prevented.
+- Reschedule works according to policy.
+
+Manual test checklist:
+- Create availability.
+- Book as student.
+- Book as parent.
+- Confirm as Owner.
+- Try double booking same slot.
+- Reschedule a lesson.
+
+Stop condition:
+Stop here. Test this phase before continuing.
