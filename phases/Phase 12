@@ -1,0 +1,52 @@
+PHASE 12 — Academy Partner Portal
+
+Goal:
+Build academy partner area for submitting and tracking student briefs.
+
+Pages:
+- /academy/dashboard
+- /academy/briefs
+- /academy/briefs/new
+- /academy/briefs/[id]
+- /owner/academy-briefs
+- /owner/academy-briefs/[id]
+
+Brief fields:
+- Student name
+- Age
+- Nationality/country
+- Current Arabic level
+- Goal
+- Speaking ability
+- Reading/writing ability
+- Notes from academy
+- Parent/contact info if child
+- Preferred schedule if known
+
+Statuses:
+- submitted
+- under_review
+- converted_to_student
+- rejected
+
+Owner can:
+- Review brief
+- Add internal notes
+- Convert to onboarding/student
+- Link created student ID
+
+Acceptance criteria:
+- Academy partner submits brief.
+- Academy partner sees only own briefs.
+- Owner sees all briefs.
+- Owner can convert brief.
+- Audit log records conversion.
+
+Manual test checklist:
+- Submit brief as academy.
+- Review as Owner.
+- Convert to student/onboarding.
+- Confirm academy sees status update.
+
+Stop condition:
+Stop here. Test this phase before continuing.
