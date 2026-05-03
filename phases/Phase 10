@@ -1,0 +1,55 @@
+PHASE 10 — Student Portal Core
+
+Goal:
+Build the adult student portal.
+
+Student pages:
+- /student/dashboard
+- /student/profile
+- /student/lessons
+- /student/balance
+- /student/homework
+- /student/scenarios
+- /student/reviews
+- /student/materials
+- /student/practice-words
+- /student/session-notes
+- /student/notifications
+- /student/referrals
+
+Dashboard should show:
+- Upcoming lesson
+- Package balance
+- Current homework
+- Current scenario
+- Review/test notifications
+- Progress summary
+- Streak
+- Badges preview
+- Practice words due
+- Session notes
+
+Security:
+- Student can only see own data.
+
+UI:
+- Mobile-first.
+- Cards.
+- Empty states.
+- Clear direct action buttons.
+
+Acceptance criteria:
+- Student dashboard shows correct data.
+- Student cannot access another student.
+- Student sees package balance.
+- Student sees upcoming lesson.
+- Student sees notifications.
+
+Manual test checklist:
+- Log in as demo student.
+- Open all student pages.
+- Confirm data ownership.
+- Confirm mobile layout.
+
+Stop condition:
+Stop here. Test this phase before continuing.
