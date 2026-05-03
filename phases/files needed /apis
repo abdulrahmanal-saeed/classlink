@@ -5,6 +5,9 @@ HOSTINGER_SSH_PORT= 65002
 HOSTINGER_SSH_USER= u807160300
 HOSTINGER_STAGING_DOMAIN= https://staging.mshabibanabil.com
 HOSTINGER_STAGING_PATH= /home/u807160300/domains/mshabibanabil.com/public_html/staging
+MySQL database name= u807160300_test
+MySQL username = u807160300_test
+Datebase Password = Bebo1259870-
 
 
 ZIINA_API_KEY= o+ijcIA8bKjabcEWqcsyXcOeV4HEPPuJhNsIlEhPIUTPlepCTH9h7X34N2MxI/5s
