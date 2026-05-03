@@ -1,0 +1,48 @@
+PHASE 11 — Parent Portal for Child Learners
+
+Goal:
+Build the parent portal for child learners.
+
+Parent pages:
+- /parent/dashboard
+- /parent/children
+- /parent/child/[id]
+- /parent/child/[id]/progress
+- /parent/child/[id]/lessons
+- /parent/child/[id]/homework
+- /parent/child/[id]/session-notes
+- /parent/child/[id]/balance
+- /parent/book
+- /parent/notifications
+- /parent/contact
+
+Parent dashboard should show:
+- Child progress
+- Upcoming lesson
+- Homework status
+- Teacher notes
+- Payment/package balance
+- Level/literacy check result
+- Recommended first lesson
+- WhatsApp/contact shortcuts
+- Badges/streaks for child
+
+Security:
+- Parent can only see linked child/children.
+
+Acceptance criteria:
+- Parent sees only linked child data.
+- Parent sees child package balance.
+- Parent sees upcoming lessons.
+- Parent can request/book/reschedule lesson.
+- Parent sees homework status and teacher notes.
+
+Manual test checklist:
+- Log in as demo parent.
+- Confirm child dashboard.
+- Try accessing unlinked child URL.
+- Confirm blocked.
+- Book/reschedule child lesson.
+
+Stop condition:
+Stop here. Test this phase before continuing.
