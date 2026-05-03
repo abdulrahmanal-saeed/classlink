@@ -1,0 +1,80 @@
+PHASE 29A — Media Buyer Contract, Terms Acceptance, and Commission Agreement
+
+Goal:
+Add a contract/terms acceptance flow for Media Buyers before they can access their dashboard.
+
+Important:
+This is not legal advice. The contract text should be editable by the Owner and reviewed by a lawyer before real use.
+
+Build:
+1. Owner can create/edit Media Buyer Agreement template.
+2. Media Buyer must accept the agreement before accessing dashboard.
+3. Store accepted agreement snapshot.
+4. Store acceptance date/time.
+5. Store mediaBuyerId.
+6. Store IP hash and userAgent hash if practical.
+7. Store typed legal name.
+8. Optional signature field.
+9. Generate/download PDF copy if practical.
+10. Owner can view acceptance status.
+
+Agreement should cover:
+- scope of marketing services
+- commission rules
+- paid orders only
+- excluded orders: pending, failed, cancelled, refunded
+- refund/chargeback commission reversal
+- payout schedule
+- ad spend responsibility
+- tracking links and attribution
+- dashboard/system as source of truth
+- brand usage rules
+- confidentiality
+- data privacy
+- no access to private student/parent data
+- termination notice
+- governing law/jurisdiction placeholder
+- owner right to approve/reject commissions
+
+Routes:
+- /media/agreement
+- /media/agreement/accept
+- /owner/media-buyers/agreements
+- /owner/media-buyers/[id]/agreement
+
+Rules:
+- Media Buyer cannot access /media/dashboard until agreement is accepted.
+- Owner can update agreement template.
+- If agreement changes materially, Owner can require re-acceptance.
+- Accepted agreement snapshot must not change if template is edited later.
+- Owner can download/view accepted agreement.
+
+Database:
+MediaBuyerAgreementTemplate:
+- id
+- title
+- version
+- content
+- active
+- requiresReacceptance
+- createdAt
+- updatedAt
+
+MediaBuyerAgreementAcceptance:
+- id
+- mediaBuyerId
+- templateId
+- templateVersion
+- acceptedContentSnapshot
+- typedName
+- signatureData optional
+- ipHash
+- userAgentHash
+- acceptedAt
+
+Acceptance criteria:
+- Media Buyer sees agreement on first login.
+- Media Buyer must accept before dashboard access.
+- Owner can view accepted agreement.
+- Agreement snapshot is preserved.
+- Owner can require re-acceptance after template update.
