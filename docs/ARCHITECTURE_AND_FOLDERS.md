@@ -7,6 +7,26 @@ The project must be organized by role and feature.
 
 لازم المشروع يتقسم حسب الرول والفيتشر.
 
+## Active Roles / الرولات المعتمدة حاليًا
+
+```text
+public
+owner-teacher
+student
+parent
+academy-partner
+auth
+shared
+```
+
+There is no separate Admin and Teacher in the current product direction.
+
+لا يوجد Admin منفصل عن Teacher في الاتجاه الحالي للمنتج.
+
+The same user is Owner/Teacher.
+
+نفس المستخدم هو Owner/Teacher.
+
 ## Approved Structure / الهيكل المعتمد
 
 ```text
@@ -18,13 +38,11 @@ backend/
     shared/
     api/
       auth/
-      owner/
-      admin/
-      teacher/
+      public/
+      owner-teacher/
       student/
       parent/
-      media-buyer/
-      public/
+      academy-partner/
     database/
       migrations/
       seeds/
@@ -41,13 +59,11 @@ web/
       images/
   pages/
     auth/
-    owner/
-    admin/
-    teacher/
+    public/
+    owner-teacher/
     student/
     parent/
-    media-buyer/
-    public/
+    academy-partner/
   components/
     layout/
     cards/
@@ -64,34 +80,16 @@ mobile/
       features/
         auth/
         student/
-        teacher/
         parent/
+        owner_teacher/
+        academy_partner/
       l10n/
       services/
         api/
         firebase/
 
 docs/
-```
-
-## Role Rule / قاعدة الرولات
-
-Each role has its own folder.
-
-كل رول له فولدر مستقل.
-
-Approved roles:
-
-```text
-owner
-admin
-teacher
-student
-parent
-media-buyer
-public
-auth
-shared
+phases/
 ```
 
 ## Feature Rule / قاعدة الفيشرز
@@ -103,12 +101,12 @@ Any feature related to a role must live inside that role folder.
 Examples:
 
 ```text
-backend/php/api/teacher/homeworks/
-backend/php/api/teacher/scenarios/
+backend/php/api/owner-teacher/homeworks/
+backend/php/api/owner-teacher/scenarios/
 backend/php/api/student/homeworks/
 backend/php/api/student/scenarios/
-backend/php/api/owner/settings/
-backend/php/api/owner/payments/
+backend/php/api/parent/children/
+backend/php/api/academy-partner/briefs/
 ```
 
 ## Shared Code / الكود المشترك
