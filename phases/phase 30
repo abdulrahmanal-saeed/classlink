@@ -1,0 +1,106 @@
+PHASE 30 — Website Animation, Microinteractions, and Motion Polish
+
+Goal:
+Add professional, lightweight animations and microinteractions across the website and dashboards without hurting performance or usability.
+
+Important:
+- Do not redesign the whole website.
+- Do not add heavy animation libraries unless already used or clearly needed.
+- Keep animations subtle, professional, and fast.
+- Animations must not make the website slower.
+- Respect accessibility and reduced-motion preferences.
+- If user has prefers-reduced-motion enabled, reduce or disable animations.
+- Do not animate critical forms in a way that distracts users.
+
+Where to add animations:
+
+1. Public Website
+- Hero section entrance animation
+- CTA button hover animation
+- Pricing cards hover effect
+- How it works steps reveal
+- Testimonials subtle slide/fade
+- FAQ expand/collapse smooth animation
+- Article/video cards hover effect
+
+2. Checkout and Onboarding
+- Step indicator transitions
+- Form section transitions
+- Thank-you page success animation
+- Level check progress transitions
+- Booking confirmation animation
+
+3. Student Portal
+- Dashboard cards subtle entrance
+- Progress cards animation
+- Badge earned animation
+- Flashcard flip animation
+- Streak celebration animation
+- Homework submission success animation
+
+4. Parent Portal
+- Child progress cards subtle reveal
+- Upcoming lesson highlight
+- Package balance card animation
+- Child badge earned animation
+
+5. Owner/Teacher Dashboard
+- KPI cards entrance animation
+- Pending actions highlight
+- Table row hover polish
+- Modal open/close smooth transition
+- Toast notifications
+
+Animation rules:
+- Use CSS transitions for simple hover/fade effects.
+- Use Framer Motion only if it is already available or easy to add safely.
+- Keep duration between 150ms and 400ms.
+- Avoid excessive bouncing/spinning.
+- Avoid animations that delay user actions.
+- Preserve good performance on mobile.
+
+Accessibility:
+- Support prefers-reduced-motion.
+- Do not rely on animation alone to communicate important information.
+- Keep focus states clear.
+- Do not break keyboard navigation.
+
+Pages to audit:
+- Homepage
+- Pricing
+- Checkout
+- Thank-you
+- Student form
+- Level check
+- Booking calendar
+- Student dashboard
+- Parent dashboard
+- Owner dashboard
+- Homework/scenario/review pages
+- Flashcards
+- Badges
+- Articles/videos pages
+
+Acceptance criteria:
+- Public website feels more polished.
+- Dashboard interactions feel smoother.
+- Flashcards have a smooth flip or reveal.
+- Badge earned moment feels rewarding.
+- Animations do not slow down the site.
+- Reduced-motion preference is respected.
+- No layout shift or broken mobile UI.
+
+Manual test checklist:
+1. Open homepage on desktop and mobile.
+2. Check hero, CTA, pricing cards, FAQ, testimonials.
+3. Complete checkout flow and check transitions.
+4. Open student dashboard.
+5. Review flashcards and check animation.
+6. Trigger badge earned animation.
+7. Open parent dashboard.
+8. Open Owner dashboard and check tables/cards.
+9. Enable reduced-motion in browser/system if possible and confirm animations are reduced.
+10. Check browser console for errors.
+
+Stop condition:
+Stop here. Test Phase 27 before continuing.
