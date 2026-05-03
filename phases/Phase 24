@@ -1,0 +1,73 @@
+PHASE 24 — Website Performance, Speed, and Technical Optimization
+
+Goal:
+Make the website fast, stable, and optimized for real users and search engines.
+
+Important:
+Do not redesign the website in this phase unless needed for performance. Focus on speed, loading, caching, code splitting, and technical health.
+
+What to optimize:
+- Homepage loading speed
+- Pricing page speed
+- Checkout flow speed
+- Student/Parent dashboards
+- Owner dashboard tables
+- Images
+- Videos
+- Fonts
+- JavaScript bundle size
+- API response speed
+- Database queries
+- Mobile performance
+
+Tasks:
+- Add image optimization.
+- Lazy-load non-critical images/videos.
+- Avoid loading heavy dashboard data all at once.
+- Add pagination for large tables.
+- Add search debounce where needed.
+- Add caching where safe.
+- Avoid unnecessary API calls.
+- Optimize database indexes for common queries.
+- Split large components if needed.
+- Reduce unused UI/code.
+- Add loading skeletons for slow sections.
+- Add error boundaries where practical.
+
+Core Web Vitals targets:
+- Fast LCP on homepage and pricing.
+- Low CLS by reserving image/video sizes.
+- Good INP by avoiding heavy client-side rendering.
+
+Pages to prioritize:
+1. Homepage
+2. Pricing
+3. Checkout
+4. Student dashboard
+5. Parent dashboard
+6. Owner dashboard
+7. Homework/scenario/review pages
+8. Articles/videos pages
+
+Acceptance criteria:
+- Homepage feels fast on mobile.
+- Pricing and checkout load quickly.
+- Large tables use pagination or lazy loading.
+- Images are optimized.
+- Videos are lazy-loaded.
+- No obvious layout shift.
+- API calls are not duplicated unnecessarily.
+- Database queries for dashboards are efficient.
+
+Manual test checklist:
+- Test homepage on mobile.
+- Test pricing page.
+- Test checkout.
+- Test Owner dashboard with demo data.
+- Test Student dashboard.
+- Test Parent dashboard.
+- Check browser console for errors.
+- Check network tab for unnecessarily large assets.
+
+Stop condition:
+Stop here. Test this phase before continuing.
