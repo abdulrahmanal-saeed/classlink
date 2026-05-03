@@ -1,0 +1,463 @@
+PHASE 31 — Security Audit, Access Control, Data Protection, and Production Hardening
+
+Goal:
+Perform a full security audit and hardening pass across the entire Habiba Nabil Arabic Academy platform before production launch.
+
+Important:
+Do not add new business features in this phase.
+Do not redesign the app.
+Do not change database provider.
+The active database is Supabase PostgreSQL.
+The app must not use Replit internal @base database.
+Focus only on security, access control, data protection, upload safety, payment safety, and production readiness.
+
+==================================================
+PART 1 — AUTHENTICATION SECURITY
+==================================================
+
+Review and harden authentication.
+
+Check:
+- Password hashing is secure.
+- Demo passwords are only for development/demo.
+- Sessions/JWT are secure.
+- Logout properly clears session.
+- Protected pages require login.
+- Unauthorized users are redirected safely.
+- No protected data appears before auth check.
+- Login errors do not reveal whether email exists.
+- Rate limit login attempts if practical.
+- Add account lockout or cooldown if practical.
+
+Acceptance:
+- Logged-out user cannot access protected dashboards.
+- Student cannot open Owner pages.
+- Parent cannot open Owner pages.
+- Academy partner cannot open Owner pages.
+- Wrong password gives safe generic error.
+- Logout works fully.
+
+==================================================
+PART 2 — ROLE-BASED ACCESS CONTROL
+==================================================
+
+Audit role permissions.
+
+Roles:
+- OWNER_TEACHER
+- STUDENT
+- PARENT
+- ACADEMY_PARTNER
+
+Rules:
+- Owner/Teacher can access all management pages.
+- Student can only access their own data.
+- Parent can only access linked child/children.
+- Academy Partner can only access their own briefs.
+- Public users can only access public pages and public test flows.
+
+Check all routes:
+- /owner/*
+- /student/*
+- /parent/*
+- /academy/*
+- /api/*
+- /level-test/*
+- /checkout/*
+- /thank-you/*
+- upload/download routes
+
+Acceptance:
+- Direct URL access is blocked if role is wrong.
+- API routes enforce the same permissions as pages.
+- Frontend hiding buttons is not enough; backend must check permissions.
+
+==================================================
+PART 3 — DATA OWNERSHIP CHECKS
+==================================================
+
+Audit data ownership.
+
+Student must only access:
+- own homework
+- own scenario
+- own reviews/tests
+- own materials
+- own notifications
+- own package balance
+- own bookings
+- own progress
+- own level checks if linked
+
+Parent must only access:
+- linked child homework
+- linked child scenarios
+- linked child reviews
+- linked child materials
+- linked child progress
+- linked child package balance
+- linked child bookings
+
+Academy Partner must only access:
+- briefs submitted by same academy partner account
+
+Acceptance:
+- Student A cannot open Student B homework/result URLs.
+- Parent A cannot open another parent’s child data.
+- Academy Partner A cannot open Academy Partner B brief.
+- Unauthorized access returns 403 or redirects safely.
+
+==================================================
+PART 4 — DATABASE AND SECRET SECURITY
+==================================================
+
+Check:
+- DATABASE_URL is server-side only.
+- DATABASE_URL_SESSIONPOOLER is server-side only.
+- Ziina API key is server-side only.
+- AI API keys are server-side only.
+- Firebase service account is server-side only.
+- No secrets are committed in source files.
+- No secrets are printed in logs.
+- Startup logs show only safe host names, never passwords.
+- .env.example contains placeholders only.
+- The app ignores Replit internal @base database.
+- Supabase connection uses the correct resolver.
+- Leading/trailing spaces in secrets are trimmed safely.
+
+Acceptance:
+- No full connection strings appear in frontend, browser, logs, or public files.
+- System Health shows safe status only.
+- No secret values are exposed.
+
+==================================================
+PART 5 — PAYMENT SECURITY
+==================================================
+
+Audit Ziina payment flow.
+
+Rules:
+- Never mark payment as paid from frontend redirect alone.
+- Thank-you page can check Ziina status server-side.
+- If payment is not confirmed, status remains pending_verification.
+- Owner manual verification requires confirmation.
+- Manual payment changes are audit logged.
+- No card data is stored.
+- Payment amount cannot be changed from frontend.
+- Plan amount is calculated server-side from database/settings.
+- Checkout reference should be secure and not guessable.
+
+Check:
+- Checkout order creation.
+- Ziina payment intent creation.
+- Payment status check.
+- Owner payment dashboard.
+- Manual mark paid/refunded/failed.
+- Optional webhook route if present.
+
+Acceptance:
+- User cannot fake paid status by editing URL.
+- User cannot change AED 1600 plan into AED 80 from frontend.
+- Payment status changes are audit logged.
+
+==================================================
+PART 6 — UPLOAD SECURITY
+==================================================
+
+Audit all upload features.
+
+Uploads may include:
+- student speaking recordings
+- scenario recordings
+- level test speaking uploads
+- homework files
+- materials
+- PDFs
+- PowerPoint files
+- images
+- testimonial audio/video
+- HTML materials
+
+Rules:
+- Validate MIME type.
+- Validate extension.
+- Validate file size.
+- Block dangerous extensions:
+  .php, .exe, .bat, .cmd, .sh, .msi, .dll, .ps1, .com, .scr
+- Do not allow executable uploads.
+- Do not trust filename from user.
+- Generate safe stored filenames.
+- Store original filename separately.
+- Protect private uploads from unauthorized users.
+- HTML material must be sandboxed or download-only.
+- No uploaded HTML should run with app privileges.
+- Audio/video should not autoplay.
+
+Acceptance:
+- Invalid files are rejected.
+- Oversized files are rejected.
+- Student cannot download another student’s private file.
+- Parent cannot download unlinked child files.
+- Public cannot access unapproved testimonial media.
+
+==================================================
+PART 7 — FREE LEVEL TEST SECURITY
+==================================================
+
+Audit Free Level Test and Quick Check.
+
+Check:
+- Public cannot view other attempts.
+- Secure token/reference is used.
+- Attempt snapshot cannot be modified by user.
+- Correct answers are not exposed before submission.
+- Users cannot skip locked steps.
+- Refresh does not regenerate questions.
+- File uploads are validated.
+- Rate limit/spam protection if practical.
+- Owner review pages are protected.
+
+Acceptance:
+- User cannot open another attempt by changing ID.
+- User cannot see correct answers in frontend data before submitting.
+- User cannot jump directly to Reading/Writing without proper progress.
+
+==================================================
+PART 8 — NOTIFICATION SECURITY
+==================================================
+
+Audit notifications.
+
+Rules:
+- Notification action URLs must respect permissions.
+- Student notification links must only open own data.
+- Parent notification links must only open linked child data.
+- Academy links must only open own briefs.
+- Owner links can open management pages.
+- Mark-as-read must only affect the current user’s notifications.
+
+Acceptance:
+- User cannot read or mark another user’s notifications.
+- Notification action buttons do not bypass route protection.
+
+==================================================
+PART 9 — AI SECURITY
+==================================================
+
+Audit AI tools.
+
+Rules:
+- AI API key is server-side only.
+- AI output is draft/preview only.
+- AI never auto-publishes homework, articles, scenarios, materials, or messages.
+- AI usage logs do not expose secrets.
+- Owner must approve/apply AI output.
+- Regenerate limits work.
+- AI provider can be disabled.
+- If API key is missing, AI tools fail safely.
+
+Acceptance:
+- AI output cannot publish automatically.
+- Student/Parent/Academy cannot access Owner AI tools.
+- AI logs are Owner-only.
+
+==================================================
+PART 10 — ADMIN / OWNER SETTINGS SECURITY
+==================================================
+
+Audit Owner Settings.
+
+Owner-only settings:
+- pricing
+- payment links/API settings
+- Ziina settings
+- AI settings
+- email templates
+- WhatsApp templates
+- homepage toggles
+- SEO settings
+- upload limits
+- cancellation policy
+- referral rewards
+- badge settings
+- availability
+- notification preferences
+- legal pages
+- free level test settings
+
+Acceptance:
+- Only Owner/Teacher can change settings.
+- Every critical settings change is audit logged.
+- Invalid settings are rejected.
+
+==================================================
+PART 11 — AUDIT LOG SECURITY
+==================================================
+
+Audit audit log coverage.
+
+Ensure audit log records:
+- payment status changes
+- owner approval/rejection
+- account creation
+- role changes if any
+- settings changes
+- homework correction
+- scenario correction
+- review manual override
+- material creation/deletion
+- testimonial approval/rejection
+- free level test review
+- package/credit manual adjustment
+- booking confirmation/cancellation
+- AI apply/save action
+
+Acceptance:
+- Critical actions have audit records.
+- Audit log is Owner-only.
+- Audit log cannot be edited by normal users.
+
+==================================================
+PART 12 — PUBLIC WEBSITE SECURITY
+==================================================
+
+Audit public pages.
+
+Check:
+- Forms sanitize input.
+- Testimonial public form is moderated.
+- Contact forms do not expose private data.
+- Articles/videos do not allow unsafe HTML.
+- Public pages do not leak internal API responses.
+- SEO metadata does not expose secrets.
+- Error pages do not reveal stack traces.
+
+Acceptance:
+- Public users only see approved public content.
+- Unapproved testimonials are hidden.
+- Errors are user-friendly and safe.
+
+==================================================
+PART 13 — API SECURITY
+==================================================
+
+Audit API routes.
+
+Check:
+- Auth required where needed.
+- Role checks on every protected API.
+- Input validation.
+- Ownership checks.
+- Safe error messages.
+- No stack traces in production.
+- No secret leaks.
+- Rate limiting for sensitive endpoints if practical:
+  - login
+  - checkout
+  - level test submit
+  - upload
+  - testimonial submit
+  - contact forms
+
+Acceptance:
+- API cannot be called directly to bypass UI restrictions.
+- Invalid input is rejected.
+
+==================================================
+PART 14 — PRODUCTION HARDENING
+==================================================
+
+Prepare production security checklist.
+
+Check:
+- APP_URL is configured for production.
+- Replit dev URLs are not used in production docs except as dev notes.
+- Hostinger environment variables documented.
+- Supabase environment variables documented.
+- Ziina production/test mode documented.
+- CORS is restricted if applicable.
+- Cookies are secure in production.
+- HTTPS required in production.
+- Error logging is safe.
+- Upload folders and permissions documented.
+
+Acceptance:
+- Production checklist exists.
+- Environment variable guide exists.
+- Security notes are documented.
+
+==================================================
+PART 15 — SECURITY TESTING
+==================================================
+
+Run manual/security tests.
+
+Test:
+1. Logged-out user tries /owner/dashboard.
+2. Student tries /owner/dashboard.
+3. Parent tries /student/dashboard.
+4. Student A tries Student B result URL.
+5. Parent tries unlinked child URL.
+6. Academy Partner tries another partner brief.
+7. User tries to fake payment status in URL.
+8. User uploads invalid .php file.
+9. User uploads oversized file.
+10. Public tries to access private upload.
+11. Public tries to access unapproved testimonial.
+12. Public tries to access another level test result.
+13. Student tries another notification action URL.
+14. Missing AI key does not crash AI page.
+15. Missing Ziina key does not crash checkout.
+
+==================================================
+PART 16 — REQUIRED REPORT
+==================================================
+
+Create:
+
+SECURITY_AUDIT_REPORT.md
+
+Include:
+- Summary
+- Checks performed
+- Issues found
+- Issues fixed
+- Remaining risks
+- Routes audited
+- API endpoints audited
+- Upload rules
+- Payment security status
+- Database/secret security status
+- Production security checklist
+
+Also update:
+- README.md
+- DEPLOYMENT_CHECKLIST.md
+- .env.example
+- HOSTINGER_DEPLOYMENT_GUIDE.md if exists
+
+==================================================
+ACCEPTANCE CRITERIA
+==================================================
+
+Phase 29 is complete when:
+
+- Protected routes are secure.
+- API routes enforce roles and ownership.
+- Student/Parent/Academy data isolation is confirmed.
+- Payment cannot be faked.
+- Uploads are validated and dangerous files blocked.
+- Secrets are not exposed.
+- AI keys are server-side only.
+- Free level test attempts are private.
+- Notifications are secure.
+- Owner settings are protected.
+- Audit log covers critical actions.
+- SECURITY_AUDIT_REPORT.md is created.
+- System Health remains OK.
+- Demo logins still work.
+- Supabase remains active database.
+- Ziina checkout still works.
+
+Stop condition:
+Stop here. Do not continue until I review the security report.
