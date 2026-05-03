@@ -45,7 +45,10 @@ ob_start();
             <dt class="col-5">Credits</dt><dd class="col-7"><?= htmlspecialchars((string) ($child['remaining_credits'] ?? '-'), ENT_QUOTES, 'UTF-8') ?> / <?= htmlspecialchars((string) ($child['total_credits'] ?? '-'), ENT_QUOTES, 'UTF-8') ?></dd>
           </dl>
           <?php if (!empty($child['child_user_id'])): ?>
-            <a class="btn btn-sm btn-outline-brand" href="/parent/child/balance?id=<?= (int) $child['child_user_id'] ?>">View balance</a>
+            <div class="d-flex gap-2 flex-wrap">
+              <a class="btn btn-sm btn-outline-brand" href="/parent/child/balance?id=<?= (int) $child['child_user_id'] ?>">View balance</a>
+              <a class="btn btn-sm btn-outline-brand" href="/parent/child/lessons?id=<?= (int) $child['child_user_id'] ?>">View lessons</a>
+            </div>
           <?php endif; ?>
         </div>
       </div>
