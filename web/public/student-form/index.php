@@ -62,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = onboarding_validate_payload($payload, $learnerType);
 
     if (!$errors) {
-        onboarding_save_form($purchase, $learnerType, $payload);
-        header('Location: /level-check-intro?ref=' . urlencode($reference));
+        $intakeId = onboarding_save_form($purchase, $learnerType, $payload);
+        header('Location: /level-check-intro?intakeId=' . urlencode((string) $intakeId));
         exit;
     }
 }
