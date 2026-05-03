@@ -1,0 +1,467 @@
+PHASE 33 — Hostinger Deployment Package, Database Files, and Upload Instructions
+
+Goal:
+Prepare the final website/app package specifically for deployment on Hostinger, including app files, database files, environment variable instructions, and step-by-step Hostinger upload/deployment guide.
+
+Important:
+Do not add new features in this phase.
+Do not redesign the app.
+Do not break the final build.
+This phase is only for Hostinger deployment preparation, database export, documentation, and final packaging.
+
+==================================================
+PART 1 — IDENTIFY DEPLOYMENT TYPE
+==================================================
+
+First, inspect the final project and identify the correct deployment type.
+
+Determine:
+1. Is this a Node.js/Next.js app with backend/API/server rendering?
+2. Is this a static export?
+3. Does it require a database?
+4. Does it require file uploads?
+5. Does it require cron jobs?
+6. Does it require environment variables?
+7. Does it require external services like AI, Ziina, Firebase, Email provider?
+
+Then write a clear recommendation:
+
+Option A:
+Deploy as Hostinger Node.js App if the Hostinger plan supports Node.js apps.
+
+Option B:
+Use Hostinger VPS if full server control is required.
+
+Option C:
+Static upload to public_html only if the project is truly static and does not need backend/auth/API/database.
+
+Important:
+If the app uses login, dashboards, API routes, database, payments, AI, uploads, or cron jobs, do not recommend simple public_html static upload as the main method.
+
+==================================================
+PART 2 — HOSTINGER-READY BUILD CHECK
+==================================================
+
+Run final checks before preparing Hostinger package.
+
+Run where applicable:
+- npm install or npm ci check
+- npm run lint
+- npm run typecheck
+- npm run build
+- npm test if tests exist
+- ORM generate command
+- ORM migration validation
+- database seed validation
+- check for missing env variables
+
+Fix:
+- build errors
+- broken imports
+- TypeScript errors
+- missing package scripts
+- missing env example values
+- broken production start command
+- obvious deployment blockers
+
+Do not claim success if any command fails.
+Report all command results honestly.
+
+==================================================
+PART 3 — DATABASE FILES / DATA FILES
+==================================================
+
+Create a dedicated folder:
+
+/release/database
+
+Inside it include:
+
+1. schema files:
+- ORM schema file, for example prisma/schema.prisma or equivalent
+- migration files
+- database model documentation
+
+2. migration files:
+- all migration files needed to create the production database
+
+3. seed files:
+- demo seed script
+- safe sample data only
+- no real private student data
+- no real emails/phone numbers unless demo placeholders
+
+4. database export:
+If the project uses SQL-compatible database and export is possible:
+- create database_schema.sql
+- create demo_seed_data.sql if practical
+- create full_demo_database.sql if practical
+
+If SQL export is not practical because of ORM/provider:
+- create clear migration instructions instead
+- include exact commands to run migrations and seed data
+
+5. database README:
+Create:
+/release/database/DATABASE_SETUP.md
+
+It must explain:
+- Which database type the app uses
+- Required database name/user/password/env variables
+- How to create the database
+- How to run migrations
+- How to run seed data
+- How to reset demo data in development
+- How to backup the database
+- How to restore the database
+
+Important:
+Do not include real database passwords.
+Do not include real production data.
+Do not include private student information.
+
+==================================================
+PART 4 — HOSTINGER ENVIRONMENT FILES
+==================================================
+
+Create:
+
+/release/.env.example
+
+Include placeholders only:
+
+- APP_URL
+- DATABASE_URL
+- AUTH_SECRET
+- SESSION_SECRET if used
+- AI_API_KEY
+- AI_PROVIDER
+- ZIINA_API_KEY or payment placeholders
+- ZIINA_WEBHOOK_SECRET if used
+- EMAIL_HOST / EMAIL_USER / EMAIL_PASSWORD or email provider placeholders
+- FIREBASE_PROJECT_ID if implemented
+- FIREBASE_CLIENT_EMAIL if implemented
+- FIREBASE_PRIVATE_KEY placeholder
+- CRON_SECRET if implemented
+- UPLOAD_MAX_SIZE settings if used
+
+Also create:
+
+/release/HOSTINGER_ENV_SETUP.md
+
+Explain:
+- Where to add environment variables in Hostinger
+- Which values are required before production
+- Which values are optional
+- Which values are placeholders
+- Never upload real .env publicly
+- Never include .env in zip
+
+==================================================
+PART 5 — HOSTINGER DEPLOYMENT GUIDE
+==================================================
+
+Create:
+
+/release/HOSTINGER_DEPLOYMENT_GUIDE.md
+
+The guide must include step-by-step instructions for Hostinger.
+
+Include two paths:
+
+----------------------------------
+PATH A — Hostinger Node.js App Deployment
+----------------------------------
+
+Use this if Hostinger plan supports Node.js Apps.
+
+Steps should explain:
+1. Prepare final zip or GitHub repository.
+2. Open Hostinger hPanel.
+3. Go to Websites.
+4. Choose the target website/domain.
+5. Open Dashboard.
+6. Choose Node.js Apps / Web Apps if available.
+7. Create or import Node.js app.
+8. Upload project or connect GitHub repository.
+9. Set install command:
+   npm ci
+10. Set build command:
+   npm run build
+11. Set start command:
+   npm run start
+   or the correct production start command for this project.
+12. Set Node version recommended by the project.
+13. Add environment variables.
+14. Configure domain.
+15. Run migrations.
+16. Run seed only if demo data is needed.
+17. Test login.
+18. Test checkout.
+19. Test protected dashboards.
+20. Test file uploads.
+21. Test email/payment placeholders.
+
+Also include:
+- What to do if build fails.
+- What logs to check.
+- What env variables are usually missing.
+- How to redeploy after changes.
+
+----------------------------------
+PATH B — File Manager / public_html Upload
+----------------------------------
+
+Use this only if the project is static or if a static export was intentionally created.
+
+Steps:
+1. Build static export if supported.
+2. Create final static output folder.
+3. Open Hostinger hPanel.
+4. Go to Websites → Dashboard.
+5. Open File Manager.
+6. Open public_html.
+7. Upload the static files/zip.
+8. Extract files inside public_html.
+9. Make sure index.html exists inside public_html.
+10. Test the domain.
+
+Warn clearly:
+This method is not enough for a full app with backend/API/auth/database unless the backend is hosted somewhere else.
+
+----------------------------------
+PATH C — VPS Deployment
+----------------------------------
+
+Use this if Hostinger plan does not support Node.js Apps or if the project needs full server control.
+
+Include high-level steps:
+1. Create VPS.
+2. Install Node.js.
+3. Install package manager.
+4. Upload project or connect GitHub.
+5. Install dependencies.
+6. Build project.
+7. Configure environment variables.
+8. Configure database.
+9. Run migrations.
+10. Start app with process manager.
+11. Configure reverse proxy.
+12. Connect domain.
+13. Enable SSL.
+14. Test production flows.
+
+Do not go too deep into VPS commands unless the project needs it.
+Mention that VPS requires more technical setup.
+
+==================================================
+PART 6 — HOSTINGER DATABASE SETUP GUIDE
+==================================================
+
+Create:
+
+/release/HOSTINGER_DATABASE_GUIDE.md
+
+Important:
+If the project uses PostgreSQL but the current Hostinger plan only provides MySQL, clearly explain the issue and give options:
+- Use an external PostgreSQL provider.
+- Use Hostinger VPS with PostgreSQL.
+- Convert the app database layer to MySQL if requested.
+- Use Hostinger-supported database only if compatible.
+
+If the project uses MySQL/MariaDB:
+Explain:
+1. Create a new database in Hostinger.
+2. Create database user/password.
+3. Open phpMyAdmin.
+4. Import .sql or .sql.zip file if available.
+5. Update DATABASE_URL/env variables.
+6. Test DB connection.
+7. Run migrations if needed.
+
+If database file is large:
+Explain SSH import option if supported.
+
+Do not include real credentials.
+
+==================================================
+PART 7 — FILE UPLOADS AND STORAGE GUIDE
+==================================================
+
+Create:
+
+/release/HOSTINGER_STORAGE_UPLOADS_GUIDE.md
+
+Explain:
+- Where uploaded files are stored in the app
+- Which folders need write permissions
+- How to create upload folders on Hostinger
+- How to protect private uploads
+- Allowed file types
+- Maximum upload sizes
+- How to move existing uploaded materials if any
+- How to back up uploaded files
+
+Include material upload notes:
+- Videos
+- PDFs
+- PowerPoint files
+- HTML files
+- Images
+- Audio files
+
+Warn:
+- Do not allow executable uploads.
+- HTML materials must be sandboxed or download-only.
+- Private student materials must not be publicly accessible without permission.
+
+==================================================
+PART 8 — FINAL RELEASE PACKAGE STRUCTURE
+==================================================
+
+Create final release folder:
+
+/release/hostinger-final
+
+Inside it include:
+
+- app source code or production-ready source
+- package.json
+- lock file
+- config files needed for build
+- database folder
+- README.md
+- .env.example
+- HOSTINGER_DEPLOYMENT_GUIDE.md
+- HOSTINGER_DATABASE_GUIDE.md
+- HOSTINGER_ENV_SETUP.md
+- HOSTINGER_STORAGE_UPLOADS_GUIDE.md
+- DEPLOYMENT_CHECKLIST.md
+- FINAL_QA_REPORT.md
+- ROUTES_OVERVIEW.md
+
+Exclude:
+- node_modules
+- .env
+- real secrets
+- .git
+- build cache
+- temporary logs
+- unsafe uploaded files
+- private student data
+- local database files
+- API keys
+- Firebase service account real file
+
+Create final zip:
+
+habiba-nabil-hostinger-release.zip
+
+If zip command is available:
+- Create the zip file.
+- Put it in /release or project root.
+- Report exact location.
+
+If zip command is not available:
+- Prepare the folder.
+- Tell me exactly how to download the folder/files from Replit.
+- Do not claim zip was created if it was not.
+
+==================================================
+PART 9 — HOSTINGER FINAL CHECKLIST
+==================================================
+
+Create:
+
+/release/HOSTINGER_FINAL_CHECKLIST.md
+
+Checklist:
+
+Before upload:
+- Build passes
+- No secrets in files
+- .env.example ready
+- Database migrations ready
+- README ready
+- Hostinger guide ready
+
+On Hostinger:
+- Domain selected
+- Node.js App available or VPS ready
+- Env variables added
+- Database created
+- Migrations run
+- Upload folders configured
+- SSL enabled
+- App started
+- Logs checked
+
+After deployment:
+- Homepage opens
+- Pricing opens
+- Checkout works
+- Thank-you works
+- Login works
+- Owner dashboard works
+- Student dashboard works
+- Parent dashboard works
+- Academy dashboard works
+- Uploads work
+- Payment status workflow works
+- Email logs work
+- Notifications work
+- No console errors
+- Mobile responsive check done
+
+==================================================
+PART 10 — FINAL RESPONSE REQUIRED
+==================================================
+
+At the end, report:
+
+1. Hostinger deployment readiness:
+- Ready / Ready with warnings / Not ready
+
+2. Recommended Hostinger deployment path:
+- Node.js App / public_html static / VPS / external DB needed
+
+3. Commands run:
+- list every command and result
+
+4. Database files created:
+- list migration files
+- list SQL files if created
+- list seed files
+- list database setup docs
+
+5. Release files created:
+- zip file name
+- folder location
+- docs created
+
+6. Required Hostinger steps:
+- short summary
+
+7. Required environment variables:
+- list required variables
+
+8. Warnings:
+- database compatibility warnings
+- Node.js support warnings
+- payment/AI/Firebase/email placeholders
+
+9. Download instructions:
+- exact zip/folder path
+- how to download from Replit
+
+Acceptance criteria:
+- Hostinger deployment guide exists.
+- Database setup guide exists.
+- Database/migration/seed files are included.
+- .env.example exists.
+- No secrets are included.
+- Final zip or release folder exists.
+- Replit honestly reports if Hostinger plan must support Node.js or VPS.
+
+Stop condition:
+Stop here. Do not add new features.
