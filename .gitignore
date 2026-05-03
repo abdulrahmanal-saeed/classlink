@@ -1,0 +1,26 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# PHP dependencies and logs
+vendor/
+*.log
+logs/
+
+# Local server and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Flutter generated files
+mobile/flutter_app/.dart_tool/
+mobile/flutter_app/build/
+mobile/flutter_app/.packages
+mobile/flutter_app/pubspec.lock
+
+# Uploaded/runtime files
+uploads/
+storage/cache/
+storage/sessions/
