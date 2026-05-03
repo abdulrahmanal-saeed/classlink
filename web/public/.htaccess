@@ -1,5 +1,5 @@
-# Phase 1 clean URL support for Apache hosting.
-# This keeps URLs like /login and /api/auth/login clean while the real files remain organized.
+# Clean URL support for Apache hosting.
+# Public article/video detail pages use rewrites while files stay organized.
 
 Options -Indexes
 
@@ -11,5 +11,9 @@ Options -Indexes
   RewriteRule ^api/auth/logout/?$ /api/auth/logout.php [L]
   RewriteRule ^api/auth/me/?$ /api/auth/me.php [L]
 
-  # Clean page routes are directory-based: /login, /logout, /owner/dashboard, etc.
+  # Public CMS detail routes
+  RewriteRule ^articles/([^/]+)/?$ /articles/index.php?slug=$1 [L,QSA]
+  RewriteRule ^videos/([^/]+)/?$ /videos/index.php?slug=$1 [L,QSA]
+
+  # Clean page routes are directory-based: /login, /pricing, /owner/dashboard, etc.
 </IfModule>
