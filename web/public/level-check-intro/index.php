@@ -1,40 +1,65 @@
 <?php
 /**
- * /level-check-intro?ref={checkoutReference}
+ * /level-check-intro?intakeId={id}
  *
- * Placeholder intro after student form submission. Full level check flow will be
- * built in the level-check phase; this page confirms onboarding status progression.
+ * Intro page before adult level check or child literacy check.
  */
 
-require_once __DIR__ . '/../../../backend/php/shared/Onboarding.php';
+require_once __DIR__ . '/../../../backend/php/shared/LevelCheck.php';
 require_once __DIR__ . '/../../../web/components/layout/public_layout.php';
 
-$reference = onboarding_clean_reference($_GET['ref'] ?? '');
-$purchase = $reference ? onboarding_find_checkout($reference) : null;
+$intakeId = (int) ($_GET['intakeId'] ?? 0);
+$intake = $intakeId ? level_get_intake($intakeId) : null;
 
-if (!$purchase) {
+if (!$intake) {
     http_response_code(404);
-    $content = '<section class="py-5"><div class="container"><div class="foundation-card"><h1 class="hero-title">Reference not found</h1><p class="text-muted">We could not find this onboarding reference.</p></div></div></section>';
-    render_public_layout('Reference not found | Habiba Nabil Arabic Academy', 'Onboarding reference not found.', $content, false);
+    $content = '<section class="py-5"><div class="container"><div class="foundation-card"><h1 class="hero-title">Intake not found</h1><p class="text-muted">We could not find this student form.</p></div></div></section>';
+    render_public_layout('Intake not found | Habiba Nabil Arabic Academy', 'Student form not found.', $content, false);
     exit;
 }
+
+$isChild = str_contains((string) $intake['learner_type'], 'child');
+$checkTitle = $isChild ? 'Child literacy check' : 'Adult Arabic level check';
 
 ob_start();
 ?>
 <section class="py-5">
   <div class="container">
-    <div class="foundation-card" style="max-width: 820px; margin:auto;">
-      <div class="badge text-bg-light border mb-3">Reference: <?= htmlspecialchars($reference, ENT_QUOTES, 'UTF-8') ?></div>
-      <h1 class="hero-title mb-3">Next: Arabic level check</h1>
-      <p class="hero-subtitle">Your student form was received. The full level check will be built in a later phase.</p>
-      <div class="row g-3 my-4">
-        <div class="col-md-6"><div class="status-box"><strong>Student form</strong><br><?= htmlspecialchars($purchase['student_form_status'] ?? 'submitted', ENT_QUOTES, 'UTF-8') ?></div></div>
-        <div class="col-md-6"><div class="status-box"><strong>Level check</strong><br><?= htmlspecialchars($purchase['level_check_status'] ?? 'not_started', ENT_QUOTES, 'UTF-8') ?></div></div>
-      </div>
-      <div class="alert alert-light border">For now, the Owner can review your submission in the onboarding pipeline.</div>
-      <a class="btn btn-brand" href="/">Back to homepage</a>
+    <div class="foundation-card" style="max-width: 900px; margin:auto;">
+      <div class="badge text-bg-light border mb-3">Intake ID: <?= (int) $intakeId ?></div>
+      <h1 class="hero-title mb-3"><?= htmlspecialchars($checkTitle, ENT_QUOTES, 'UTF-8') ?></h1>
+      <p class="hero-subtitle">This check helps the tutor prepare your personalized first lesson. The final level is confirmed by the Owner/Teacher after review.</p>
+
+      <?php if ($isChild): ?>
+        <div class="status-box mb-4">
+          <strong>Child literacy check includes:</strong>
+          <ol class="mb-0 mt-2">
+            <li>Parent questions</li>
+            <li>Letter recognition</li>
+            <li>Similar letters</li>
+            <li>Reading audio upload</li>
+            <li>Writing upload/photo</li>
+            <li>Dictation upload/photo</li>
+          </ol>
+        </div>
+      <?php else: ?>
+        <div class="status-box mb-4">
+          <strong>Adult level check includes:</strong>
+          <ol class="mb-0 mt-2">
+            <li>Self assessment</li>
+            <li>Vocabulary MCQ</li>
+            <li>Sentence building</li>
+            <li>Reading comprehension</li>
+            <li>Writing</li>
+            <li>Speaking audio upload</li>
+          </ol>
+        </div>
+        <div class="alert alert-light border">Important: a high auto score with weak speaking should not over-place the student. Owner final review decides.</div>
+      <?php endif; ?>
+
+      <a class="btn btn-brand btn-lg" href="/level-check?intakeId=<?= (int) $intakeId ?>">Start check</a>
     </div>
   </div>
 </section>
 <?php
-render_public_layout('Level Check Intro | Habiba Nabil Arabic Academy', 'Start your Arabic level check after onboarding.', ob_get_clean(), false);
+render_public_layout($checkTitle . ' | Habiba Nabil Arabic Academy', 'Start your Arabic level or literacy check.', ob_get_clean(), false);
