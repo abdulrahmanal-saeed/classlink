@@ -1,0 +1,494 @@
+Advanced Testimonials: Text, Audio, Video, Student/Parent Submission, and Owner Moderation
+
+Goal:
+Upgrade the testimonial system so students and parents can submit testimonials as text, audio, or video, and the Owner/Teacher can review, approve, reject, and control what appears publicly.
+
+Important:
+Do not auto-publish any testimonial.
+Every testimonial must be reviewed by the Owner/Teacher before it appears on the public website.
+Student and Parent testimonials should be easy to submit from their dashboards.
+Owner/Teacher must receive internal notifications when a new testimonial is submitted.
+
+==================================================
+PART 1 — TESTIMONIAL TYPES
+==================================================
+
+Support testimonial formats:
+
+1. Text testimonial
+2. Audio testimonial
+3. Video testimonial
+4. Mixed testimonial:
+   - text + audio
+   - text + video
+
+Allowed submitters:
+- Student
+- Parent
+- Public visitor if public testimonial form already exists
+
+Submission sources:
+- student_dashboard
+- parent_dashboard
+- public_form
+- owner_manual_entry
+
+==================================================
+PART 2 — STUDENT TESTIMONIAL SUBMISSION
+==================================================
+
+Add a clear CTA/link in Student dashboard:
+
+Label examples:
+- “Share Your Feedback”
+- “Leave a Testimonial”
+- “Tell us about your Arabic learning experience”
+
+Student route:
+- /student/testimonial
+or
+- /student/testimonials/new
+
+Student can submit:
+- Rating 1–5 stars
+- Text testimonial
+- Optional audio recording/upload
+- Optional video upload
+- Permission checkbox:
+  “I allow Habiba Nabil Arabic Academy to publish this testimonial on the website or social media after review.”
+- Display name preference:
+  - Full name
+  - First name only
+  - Anonymous
+- Optional level:
+  - A0
+  - A1
+  - A2
+  - B1
+  - B2
+  - C1
+  - C2
+- Optional learning goal:
+  - Speaking
+  - Reading & Writing
+  - Work Arabic
+  - Child Arabic
+  - Emirati dialect
+  - Other
+
+After submit:
+- Save testimonial as pending_review.
+- Show success message:
+  “Thank you! Your testimonial has been sent for review.”
+- Create Owner notification.
+- Write audit log.
+
+==================================================
+PART 3 — PARENT TESTIMONIAL SUBMISSION
+==================================================
+
+Add a clear CTA/link in Parent dashboard:
+
+Label examples:
+- “Share Your Child’s Progress”
+- “Leave a Parent Testimonial”
+- “Tell us about your child’s Arabic journey”
+
+Parent route:
+- /parent/testimonial
+or
+- /parent/child/[id]/testimonial
+
+Parent can submit:
+- Rating 1–5 stars
+- Text testimonial
+- Optional audio recording/upload
+- Optional video upload
+- Child name display preference:
+  - Show child first name
+  - Show parent first name
+  - Anonymous
+- Permission checkbox:
+  “I allow Habiba Nabil Arabic Academy to publish this testimonial on the website or social media after review.”
+- Child learning focus:
+  - Reading Arabic
+  - Writing Arabic
+  - Speaking Arabic
+  - Letter connection
+  - School support
+  - Quran reading basics
+  - Other
+
+After submit:
+- Save testimonial as pending_review.
+- Link testimonial to parentId and childStudentId.
+- Show success message.
+- Create Owner notification.
+- Write audit log.
+
+==================================================
+PART 4 — OWNER/TEACHER TESTIMONIAL DASHBOARD
+==================================================
+
+Owner pages:
+- /owner/testimonials
+- /owner/testimonials/[id]
+- /owner/testimonials/pending
+
+Owner can:
+- View all testimonials
+- Filter by:
+  - pending_review
+  - approved
+  - rejected
+  - archived
+  - text/audio/video
+  - student/parent/public
+  - rating
+  - date
+- Open testimonial details
+- Play audio
+- Play video
+- Read text
+- See submitter info
+- See permission status
+- Edit public display name
+- Edit public testimonial text if needed
+- Add internal notes
+- Approve
+- Reject
+- Archive
+- Mark as featured
+- Show/hide on homepage
+- Show/hide on testimonials page
+- Choose display order
+- Delete only if safe and confirmed
+
+Important:
+Approval is required before public display.
+
+==================================================
+PART 5 — PUBLIC DISPLAY
+==================================================
+
+Public pages:
+- /testimonials
+- Homepage testimonials section if enabled
+
+Public testimonial cards should support:
+- Text testimonial
+- Audio player if approved and allowed
+- Video player if approved and allowed
+- Rating stars
+- Display name
+- Level/goal if allowed
+- Parent/student label if appropriate
+- Featured badge optional
+
+Public display rules:
+- Only approved testimonials appear publicly.
+- Only testimonials with publish permission can appear.
+- Anonymous preference must be respected.
+- Do not expose private student/parent data.
+- Do not show email, WhatsApp, or internal notes.
+
+Homepage:
+- Show featured approved testimonials only.
+- Keep homepage fast.
+- Lazy-load audio/video testimonials.
+- Do not autoplay audio/video.
+
+==================================================
+PART 6 — UPLOAD AND RECORDING SUPPORT
+==================================================
+
+Audio:
+- Browser audio recording if practical
+- Upload fallback
+- Allowed types: mp3, wav, m4a, webm
+- Max size from upload settings
+
+Video:
+- Upload video if practical
+- Allowed types: mp4, webm, mov if supported
+- Max size from upload settings
+- Show clear size/type guidance
+
+Security:
+- Validate MIME type
+- Validate extension
+- Validate file size
+- Do not allow executable files
+- Store file metadata
+- Protect private files until approved
+- Do not expose unapproved media publicly
+
+Media fields:
+- audioUrl
+- videoUrl
+- originalFilename
+- mimeType
+- fileSize
+- duration optional
+- uploadedAt
+
+==================================================
+PART 7 — NOTIFICATIONS
+==================================================
+
+Create Owner/Teacher internal notifications for:
+
+- New student testimonial submitted
+- New parent testimonial submitted
+- New public testimonial submitted
+- Audio testimonial pending review
+- Video testimonial pending review
+
+Notification must be actionable.
+
+Example:
+Title:
+New testimonial submitted
+
+Message:
+A student submitted a new video testimonial.
+
+Action label:
+Review Testimonial
+
+Action URL:
+/owner/testimonials/[id]
+
+Student/Parent notification optional:
+After Owner approves:
+- “Your testimonial has been approved. Thank you for sharing your experience!”
+
+==================================================
+PART 8 — DATABASE / MODELS
+==================================================
+
+Create or extend Testimonial model.
+
+Required fields or equivalent:
+
+Testimonial:
+- id
+- submitterType: student / parent / public / owner
+- studentId optional
+- parentId optional
+- childStudentId optional
+- source: student_dashboard / parent_dashboard / public_form / owner_manual_entry
+- rating
+- text
+- audioUrl
+- videoUrl
+- mediaType: text / audio / video / mixed
+- displayName
+- displayPreference: full_name / first_name / anonymous
+- level
+- learningGoal
+- permissionToPublish
+- status: pending_review / approved / rejected / archived
+- showOnHomepage
+- showOnTestimonialsPage
+- featured
+- sortOrder
+- ownerNotes
+- approvedAt
+- rejectedAt
+- createdAt
+- updatedAt
+
+Optional:
+TestimonialMedia:
+- id
+- testimonialId
+- type: audio / video
+- fileUrl
+- originalFilename
+- mimeType
+- fileSize
+- duration
+- createdAt
+
+==================================================
+PART 9 — STUDENT/PARENT DASHBOARD LINKS
+==================================================
+
+Add dashboard links/cards:
+
+Student dashboard:
+- Card title: “Share your experience”
+- Description: “Help other Arabic learners understand what learning with Habiba is like.”
+- Button: “Leave a Testimonial”
+
+Parent dashboard:
+- Card title: “Share your child’s progress”
+- Description: “Tell us how your child’s Arabic learning journey is going.”
+- Button: “Leave a Parent Testimonial”
+
+Show only if:
+- User is logged in
+- User has at least one lesson completed OR Owner setting allows anytime
+
+Owner setting:
+- testimonials_from_students_enabled
+- testimonials_from_parents_enabled
+- require_completed_lesson_before_testimonial: true/false
+
+==================================================
+PART 10 — SETTINGS
+==================================================
+
+Add testimonial settings in Owner Settings:
+
+- Enable public testimonial form
+- Enable student testimonials
+- Enable parent testimonials
+- Allow audio testimonials
+- Allow video testimonials
+- Require publish permission checkbox
+- Require completed lesson before testimonial
+- Show testimonials on homepage
+- Show testimonials page
+- Max audio upload size
+- Max video upload size
+- Default moderation status: pending_review
+
+==================================================
+PART 11 — AUDIT LOG
+==================================================
+
+Log:
+- Testimonial submitted
+- Testimonial approved
+- Testimonial rejected
+- Testimonial archived
+- Testimonial edited
+- Testimonial featured/unfeatured
+- Testimonial shown/hidden on homepage
+- Testimonial media uploaded
+- Testimonial deleted
+
+Audit fields:
+- actorId
+- actorRole
+- action
+- entityType = testimonial
+- entityId
+- before/after JSON if useful
+- createdAt
+
+==================================================
+PART 12 — SECURITY AND PRIVACY
+==================================================
+
+Security rules:
+- Student can only submit as self.
+- Parent can only submit for linked child.
+- Public visitors can submit only through public form.
+- Owner can review all.
+- Unapproved testimonials must not appear publicly.
+- Private contact info must never appear publicly.
+- Audio/video files must not be publicly listed before approval.
+- Permission checkbox is required before public publishing.
+- Anonymous display preference must be respected.
+- Uploads must be validated.
+
+==================================================
+PART 13 — UI / UX
+==================================================
+
+Submission UI:
+- Simple and friendly
+- Not too long
+- Mobile friendly
+- Clear privacy/publishing permission
+- Audio/video upload guidance
+- Preview before submit if practical
+- Success message after submit
+
+Owner UI:
+- Clear pending queue
+- Audio/video preview
+- Approve/reject buttons
+- Status badges
+- Filters
+- Internal notes
+- Public preview
+
+Public UI:
+- Beautiful testimonial cards
+- Lazy-loaded media
+- No autoplay
+- Mobile friendly
+
+==================================================
+PART 14 — ACCEPTANCE CRITERIA
+==================================================
+
+Phase is complete when:
+
+Student:
+- Student can open testimonial form from dashboard.
+- Student can submit text testimonial.
+- Student can upload/record audio if enabled.
+- Student can upload video if enabled.
+- Submission becomes pending_review.
+
+Parent:
+- Parent can open testimonial form from dashboard.
+- Parent can submit testimonial for linked child.
+- Parent cannot submit for unlinked child.
+
+Owner:
+- Owner receives actionable notification.
+- Owner can review testimonial.
+- Owner can play audio/video.
+- Owner can approve/reject/archive.
+- Owner can control homepage/testimonials page visibility.
+
+Public:
+- Only approved testimonials appear.
+- Audio/video testimonials display correctly.
+- Unapproved testimonials do not appear.
+- Anonymous preferences are respected.
+
+Security:
+- Upload validation works.
+- Private data is not exposed.
+- Audit log records important actions.
+
+==================================================
+PART 15 — MANUAL TEST CHECKLIST
+==================================================
+
+Test:
+
+1. Log in as Student.
+2. Open Student dashboard.
+3. Click Leave a Testimonial.
+4. Submit text testimonial.
+5. Submit audio testimonial.
+6. Submit video testimonial if enabled.
+7. Confirm success message.
+
+8. Log in as Parent.
+9. Open Parent dashboard.
+10. Submit testimonial for linked child.
+11. Try submitting for unlinked child and confirm blocked.
+
+12. Log in as Owner.
+13. Confirm notification appears.
+14. Click notification action.
+15. Open testimonial review page.
+16. Play audio/video.
+17. Approve testimonial.
+18. Confirm it appears on public testimonials page.
+19. Mark as featured.
+20. Confirm it appears on homepage if enabled.
+21. Reject another testimonial.
+22. Confirm rejected testimonial does not appear publicly.
+23. Test anonymous display preference.
+24. Check audit log.
+25. Test mobile layout.
