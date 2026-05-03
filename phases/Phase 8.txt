@@ -1,0 +1,73 @@
+PHASE 8 — Lesson Credits, Packages, Attendance, and Balance
+
+Goal:
+Build core package balance and lesson credit tracking.
+
+What to build:
+- Lesson packages from purchases.
+- Credit ledger/transactions.
+- Used/remaining sessions.
+- Attendance status.
+- Cancellation/no-show rules.
+- Manual credit adjustment by Owner.
+
+Models:
+- Plan
+- Purchase
+- LessonPackage
+- LessonCreditTransaction
+- LessonSession
+- AttendanceRecord if needed
+
+Session statuses:
+- planned
+- confirmed
+- completed
+- canceled_on_time
+- canceled_late
+- rescheduled
+- no_show
+
+Credit transaction types:
+- purchase_grant
+- session_deducted
+- cancellation_return
+- manual_adjustment
+- refund_adjustment
+
+Rules:
+- Single Session grants 1 credit.
+- Monthly Plan grants 8 credits.
+- 30-Hour Bundle grants 20 credits.
+- Completed session deducts 1 credit.
+- No-show deducts 1 credit by default.
+- Late cancellation deducts 1 credit by default.
+- On-time cancellation returns/keeps credit.
+- Rules editable in Settings.
+
+Pages:
+- /owner/packages
+- /owner/students/[id]/credits
+- /student/balance
+- /parent/child/[id]/balance
+
+Acceptance criteria:
+- Package balance is accurate.
+- Credit ledger shows every change.
+- Owner can manually adjust with reason.
+- Student sees own balance.
+- Parent sees child balance.
+- Audit log records all adjustments.
+
+Manual test checklist:
+- Create package.
+- Mark session completed.
+- Confirm credit deducted.
+- Mark no-show.
+- Confirm credit deducted.
+- Cancel on time.
+- Confirm credit returned/not deducted.
+- Manual adjust credit.
+
+Stop condition:
+Stop here. Test this phase before continuing.

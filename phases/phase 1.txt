@@ -1,0 +1,67 @@
+PHASE 1 — Authentication, Roles, Demo Accounts, and Access Control
+
+Goal:
+Build secure role-based authentication for Owner/Teacher, Student, Parent, and Academy Partner.
+
+What to build:
+- Login/logout.
+- Secure password hashing.
+- Protected routes by role.
+- Demo seed accounts.
+- Role-based navigation.
+- Basic profile dropdown.
+
+Demo accounts:
+- owner@demo.com / demo password
+- adult.student@demo.com
+- parent@demo.com
+- academy@demo.com
+
+Pages:
+- /login
+- /logout
+- /owner/dashboard
+- /student/dashboard
+- /parent/dashboard
+- /academy/dashboard
+- /unauthorized
+
+Database models:
+- User
+- UserProfile if needed
+- ParentChildLink placeholder
+- AcademyPartnerProfile placeholder
+- AuditLog
+
+API/routes:
+- POST /api/auth/login
+- POST /api/auth/logout
+- GET /api/auth/me
+
+UI requirements:
+- Login form with clean validation.
+- Role-specific dashboard shell.
+- Unauthorized page.
+- Loading/error states.
+
+Security:
+- User cannot access dashboard for another role.
+- Sessions/JWT must be secure.
+- No public access to protected dashboards.
+
+Acceptance criteria:
+- Owner can log in and see Owner dashboard.
+- Student can log in and see Student dashboard only.
+- Parent can log in and see Parent dashboard only.
+- Academy Partner can log in and see Academy dashboard only.
+- Unauthorized access redirects safely.
+- Login/logout actions are written to audit log.
+
+Manual test checklist:
+- Try all demo logins.
+- Try opening /owner/dashboard as student.
+- Try opening /student/dashboard while logged out.
+- Confirm logout works.
+
+Stop condition:
+Stop here. Test this phase before continuing.

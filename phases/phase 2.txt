@@ -1,0 +1,92 @@
+PHASE 2 — Database Foundation, Settings Center Foundation, Audit Log, and Seed Data
+
+Goal:
+Create the core data structure for the whole platform and a basic Owner Settings Center.
+
+What to build:
+- Core database models.
+- Audit log viewer.
+- Settings Center foundation.
+- Seed/demo data controls for development.
+
+Database models:
+- User
+- StudentProfile
+- ParentProfile
+- ParentChildLink
+- AcademyPartnerProfile
+- AcademyBrief
+- Plan
+- Purchase
+- PaymentRecord
+- StudentIntakeForm
+- LevelCheckAttempt
+- LevelCheckAnswer
+- LevelCheckUpload
+- LessonPackage
+- LessonCreditTransaction
+- LessonSession
+- AvailabilityRule
+- BlockedTime
+- Booking
+- Homework
+- HomeworkQuestion
+- HomeworkSubmission
+- Scenario
+- ScenarioSubmission
+- ReviewTest
+- ReviewQuestion
+- ReviewSubmission
+- CourseMaterial
+- PracticeWord
+- FlashcardReview
+- BadgeDefinition
+- StudentBadge
+- Notification
+- EmailTemplate
+- WhatsAppTemplate
+- Referral
+- AIUsageLog
+- Article
+- Video
+- Testimonial
+- AnalyticsEvent
+- AuditLog
+- Setting
+
+Pages:
+- /owner/settings
+- /owner/audit-log
+- /owner/dev/seed-data only in development
+
+Settings sections foundation:
+- Pricing
+- Payment
+- Email templates
+- WhatsApp templates
+- SEO
+- AI settings
+- Upload limits
+- Lesson cancellation policy
+- Referral rewards
+- Badge settings
+- Availability
+- Notifications
+- Legal pages
+
+Acceptance criteria:
+- All core models exist.
+- Owner can open settings center.
+- Owner can open audit log.
+- Demo seed data can be created in development.
+- Audit log records settings changes.
+
+Manual test checklist:
+- Open settings.
+- Change a simple setting.
+- Confirm audit log entry appears.
+- Run seed data in development.
+- Confirm demo data appears.
+
+Stop condition:
+Stop here. Test this phase before continuing.

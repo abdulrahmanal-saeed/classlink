@@ -1,0 +1,51 @@
+PHASE 7 — Owner Approval, Student/Parent Account Creation, and Login Details
+
+Goal:
+After payment, form, level check, and schedule request, Owner/Teacher approves and creates accounts.
+
+Rule:
+Teacher approves → Create Student Account → Send login details.
+
+What to build:
+- Approval workflow.
+- Create adult student account.
+- Create child student profile.
+- Create parent account for child learners.
+- Link parent to child.
+- Send/log login details.
+- Welcome email/WhatsApp template.
+
+Pages:
+- /owner/onboarding/[id]/approve
+- /owner/students
+- /owner/students/[id]
+- /owner/parents
+- /owner/parents/[id]
+
+Flow:
+1. Owner reviews payment, intake, level check, schedule.
+2. Owner clicks Approve.
+3. If adult learner: create Student user/account.
+4. If child learner: create Parent user/account and child student profile.
+5. Generate temporary password or magic setup link.
+6. Send/log login details.
+7. Update onboarding status.
+8. Create initial lesson package from purchased plan.
+
+Acceptance criteria:
+- Account is not created before Owner approval.
+- Adult approval creates Student account.
+- Child approval creates Parent account and child profile.
+- Login details are generated.
+- Owner can see created accounts.
+- Audit log records approval/account creation.
+
+Manual test checklist:
+- Approve adult onboarding.
+- Log in as adult student.
+- Approve child onboarding.
+- Log in as parent.
+- Confirm parent sees child only.
+
+Stop condition:
+Stop here. Test this phase before continuing.

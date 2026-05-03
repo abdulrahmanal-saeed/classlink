@@ -1,0 +1,83 @@
+PHASE 5 — Post-Payment Student Form and Onboarding Pipeline
+
+Goal:
+Build the post-payment student information form and Owner onboarding pipeline.
+
+What to build:
+- Student form page using checkout reference.
+- Conditional adult/child/someone_else form.
+- Owner onboarding pipeline page.
+- Status tracking.
+
+Pages:
+- /student-form?ref={checkoutReference}
+- /owner/onboarding
+- /owner/onboarding/[id]
+
+Common form fields:
+- Full name
+- Email
+- WhatsApp
+- Who is learning Arabic?
+- Purchased plan
+
+Adult fields:
+- Age
+- Native language
+- Current Arabic level
+- Can read Arabic?
+- Can write Arabic?
+- Main goal
+- Learning reason
+- Use context
+- Preferred Arabic type
+- Biggest difficulty
+- Difficulty details
+- Scheduling preferences
+- Notes for tutor
+
+Child fields:
+- Parent name
+- Child name
+- Child age
+- Child native language
+- Does child speak Arabic?
+- Can child read Arabic?
+- Can child write Arabic?
+- Child learning goal
+- Studied Arabic before?
+- Struggles
+- Learning style notes
+- Scheduling preferences
+- Notes for tutor
+
+Statuses:
+- student_form_status: not_started / submitted
+- level_check_status: not_started / submitted / reviewed
+- schedule_status: not_selected / requested / confirmed
+- owner_review_status: pending_review / approved / rejected
+
+After submit:
+- Save form.
+- Update checkout/purchase status.
+- Redirect to level check intro.
+- Log email if email provider not configured.
+- Write audit log.
+
+Acceptance criteria:
+- Form loads checkout data by secure reference.
+- Adult fields show for adult.
+- Child fields show for child.
+- Someone_else asks if learner is adult or child.
+- Owner onboarding page shows new submissions.
+- Statuses update correctly.
+
+Manual test checklist:
+- Submit adult form.
+- Submit child form.
+- Submit someone_else form.
+- Confirm Owner can see submissions.
+- Confirm status updates.
+
+Stop condition:
+Stop here. Test this phase before continuing.

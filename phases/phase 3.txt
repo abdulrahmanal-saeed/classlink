@@ -1,0 +1,98 @@
+PHASE 3 — Public Website, Pricing, Legal Pages, and CMS Basics
+
+Goal:
+Build the public marketing website and basic CMS foundations.
+
+What to build:
+- Homepage.
+- Pricing page.
+- Terms, Privacy, Refund pages.
+- Articles listing and article detail.
+- Videos listing and video detail.
+- Testimonials display and public submission form.
+- Owner CMS for articles/videos/testimonials.
+- Homepage section toggles from settings.
+
+Public pages:
+- /
+- /pricing
+- /terms
+- /privacy
+- /refund
+- /articles
+- /articles/[slug]
+- /videos
+- /videos/[slug]
+- /testimonials
+- /submit-testimonial
+
+Owner pages:
+- /owner/cms/articles
+- /owner/cms/articles/new
+- /owner/cms/videos
+- /owner/cms/testimonials
+- /owner/settings/public-website
+
+Pricing content:
+Default plans:
+- Single Session: AED 80 instead of AED 120, one 90-minute lesson.
+- Monthly Plan: AED 640 instead of AED 960, 8 sessions / 12 hours.
+- 30-Hour Bundle: AED 1600 instead of AED 2400, 20 sessions / 30 hours, never expires.
+
+Pricing CTA:
+“Start Now — Pay Securely”
+
+Pricing flow:
+- /checkout?plan=single
+- /checkout?plan=monthly
+- /checkout?plan=bundle
+
+Add “How it works” section:
+1. Choose your package
+2. Pay securely
+3. Complete your student form
+4. Choose your lesson time
+5. Start your personalized Arabic lesson
+
+Add FAQ:
+- Can I reschedule?
+- Do I need to know Arabic before starting?
+- Is this suitable for children?
+- Will I get homework?
+
+SEO:
+- Meta title/description per public page.
+- One H1 per page.
+- Articles/videos have SEO fields.
+- Public pages are indexable.
+- Owner pages are noindex.
+
+UI requirements:
+- Professional academy style.
+- Mobile responsive.
+- Arabic/English ready.
+- Clean CTAs.
+
+Security:
+- CMS protected by Owner role.
+- Public testimonial submissions must be moderated.
+
+Acceptance criteria:
+- Public website works.
+- Pricing buttons route to checkout, not payment directly.
+- Owner can create/edit/publish articles.
+- Owner can create/edit/publish videos.
+- Testimonials require approval before public display.
+- Homepage toggles work.
+
+Manual test checklist:
+- Open homepage mobile and desktop.
+- Open pricing.
+- Click all pricing CTAs.
+- Create article draft.
+- Publish article.
+- Submit testimonial.
+- Approve testimonial.
+
+Stop condition:
+Stop here. Test this phase before continuing.

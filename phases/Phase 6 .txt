@@ -1,0 +1,101 @@
+PHASE 6 — Adult Level Check and Child Literacy Check
+
+Goal:
+Build the adult level check and child literacy check.
+
+Pages:
+- /level-check-intro?intakeId={id}
+- /level-check?intakeId={id}
+- /level-check-thank-you?attemptId={id}
+- /owner/level-checks
+- /owner/level-checks/[id]
+
+Adult Level Check sections:
+1. Self Assessment
+2. Vocabulary MCQ — 10 simple auto-graded questions
+3. Sentence Building — 5 auto-graded questions
+4. Reading Comprehension — short text + 3 questions
+5. Writing — manual review
+6. Speaking — audio recording/upload
+
+Adult auto score placement:
+- 0–30% = A0 Complete Beginner
+- 31–55% = A1
+- 56–75% = A2
+- 76–90% = Strong A2 / B1 Activation
+- 91–100% = B1 / Needs Speaking Assessment
+
+Important note:
+High auto score + weak speaking should not over-place the student. Owner final review decides.
+
+Child Literacy Check sections:
+1. Parent questions
+2. Letter recognition — 10 auto-graded questions
+3. Similar letters
+4. Reading audio recording/upload
+5. Writing upload/photo
+6. Dictation upload/photo
+
+Child literacy levels:
+- Level 0: cannot recognize letters
+- Level 1: recognizes some letters
+- Level 2: recognizes letters but struggles with connections
+- Level 3: can read simple words
+- Level 4: can read/write simple sentences with support
+
+Uploads:
+- Audio: mp3, wav, m4a, webm
+- Images/PDF: jpg, jpeg, png, pdf
+- Enforce size limits
+- Validate MIME types
+
+Owner review page:
+Adult review shows:
+- Student info
+- Plan purchased
+- Intake answers
+- Auto score
+- Vocabulary score
+- Sentence building score
+- Reading score
+- Writing answer
+- Speaking recording
+- Suggested level
+- Recommended first lesson
+- Manual score
+- Final level dropdown
+- Teacher notes
+- Mark reviewed
+
+Child review shows:
+- Parent/child info
+- Parent answers
+- Letter recognition score
+- Similar letter mistakes
+- Reading audio
+- Writing upload
+- Dictation upload
+- Suggested literacy level
+- Recommended first lesson
+- Final literacy level dropdown
+- Teacher notes
+- Mark reviewed
+
+Acceptance criteria:
+- Adult check saves answers and score.
+- Child check saves answers/uploads.
+- Owner can review and override final level.
+- Recommended first lesson is generated or suggested.
+- Level check status updates.
+- Audit log records review.
+
+Manual test checklist:
+- Complete adult check.
+- Upload speaking audio.
+- Complete child check.
+- Upload handwriting image.
+- Review both as Owner.
+- Mark reviewed.
+
+Stop condition:
+Stop here. Test this phase before continuing.

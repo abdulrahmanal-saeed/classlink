@@ -1,0 +1,1448 @@
+PHASE 6A V2 — Free Public Level Tests, Random Question Bank, Audio Bank, and Owner Control
+
+Goal:
+Build a complete free public Arabic level testing system for Habiba Nabil Arabic Academy.
+
+Important:
+This phase is completely separate from the paid post-payment level check.
+Do not require payment.
+Do not create a paid student account automatically.
+Do not create a lesson package.
+Do not mark anything as paid.
+Do not confuse this with the paid onboarding level check after checkout.
+
+This phase is for:
+- Free public lead generation
+- Existing student placement/replacement testing
+- Quick preliminary level checking
+- Full free Arabic placement testing
+- Conversion to booking/payment
+- Owner/Teacher manual review and follow-up
+
+Current project note:
+The app is currently using PostgreSQL in Replit.
+Keep the current PostgreSQL setup.
+Do not migrate the database in this phase.
+Do not change the payment/onboarding flow from Phase 4/5.
+
+There are two free test types:
+
+1. Quick Arabic Level Check
+2. Full Free Arabic Placement Test
+
+This version must use:
+- Question bank
+- Random test generation
+- Anti-repeat logic
+- Owner/Teacher full control
+- Audio file management
+- Reading text management
+- Writing prompt management
+- Speaking prompt management
+
+==================================================
+PART 1 — TEST TYPES
+==================================================
+
+A) Quick Arabic Level Check
+
+Purpose:
+A fast public reading-only test for visitors.
+
+Rules:
+- No registration required.
+- Reading only.
+- Uses random reading passages/questions from the Quick Reading Bank.
+- Around 12 minutes.
+- Instant preliminary CEFR result.
+- Result must clearly say this is preliminary and reading-only.
+- CTA should encourage full assessment, pricing, WhatsApp, or booking.
+
+Routes:
+- /level-test/quick
+- /level-test/quick-result
+
+Old route support or redirects:
+- /leveltest/quick
+- /leveltest/quick-result
+
+B) Full Free Arabic Placement Test
+
+Purpose:
+A full free placement test for serious leads or existing students.
+
+Rules:
+- Free.
+- Requires basic registration for new applicants.
+- Existing student can enter using student code.
+- Includes:
+  1. Listening
+  2. Reading
+  3. Writing
+  4. Speaking
+- Listening and Reading are auto-graded.
+- Writing and Speaking are manually reviewed by Owner/Teacher.
+- Full result is sent within 48 hours by WhatsApp/email.
+- Owner/Teacher confirms final level manually.
+
+Routes:
+- /level-test
+- /level-test/entry
+- /level-test/register
+- /level-test/start
+- /level-test/thank-you
+
+Old route support or redirects:
+- /leveltest/entry.php
+- /leveltest/register.php
+- /leveltest/start.php
+- /leveltest/thankyou.php
+
+==================================================
+PART 2 — ENTRY PAGE
+==================================================
+
+Create a free level test entry page.
+
+The page should show two clear options:
+
+1. Existing Student
+- Student enters student code.
+- If profile is incomplete, send student to complete profile first.
+- Required profile fields:
+  - full name
+  - email if available
+  - WhatsApp
+  - age
+  - country
+
+2. New Student / New Applicant
+- CTA: Start Free Placement Test
+- Explain this is free.
+- Show checklist:
+  - Around 30 minutes
+  - Listening → Reading → Writing → Speaking
+  - Prepare headphones
+  - Find a quiet place
+  - Writing and speaking are reviewed by the teacher
+
+Important:
+Do not create a paid student account here.
+Do not create package/credits here.
+This is a free placement/lead flow only.
+
+==================================================
+PART 3 — FULL TEST REGISTRATION
+==================================================
+
+For new applicant registration, collect:
+
+Required:
+- full_name
+- whatsapp
+
+Optional:
+- email
+- age
+- country
+
+UI copy direction:
+- “Almost Ready!”
+- “Just your name and WhatsApp — we’ll send your results and next step there.”
+- “Auto sections checked instantly.”
+- “Writing + Speaking reviewed by teacher.”
+- “Result and next step within 48h.”
+
+Validation:
+- WhatsApp must include country code.
+- No leading 0.
+- Validate form inputs.
+- Show real error messages, not fake generic connection errors.
+
+After registration:
+- Save applicant/attempt.
+- Generate deviceId cookie if missing.
+- Start full placement test.
+- Generate attempt snapshot.
+- Set currentStep = listening.
+
+==================================================
+PART 4 — RANDOMIZATION REQUIREMENT
+==================================================
+
+The test must not show the exact same questions every time.
+
+Build a random test generator that selects questions from the database question bank.
+
+Important behavior:
+- Every test attempt should generate a fixed snapshot of selected questions.
+- Once an attempt starts, questions must not change on page refresh.
+- Refresh must reload the same attempt snapshot, not regenerate questions.
+- A new attempt should try to avoid repeating the same questions for the same student/device/IP.
+- Do not rely only on IP because IP can change or be shared.
+
+Use a combination of:
+- existingStudentId if logged in
+- WhatsApp number for new applicant
+- deviceId cookie
+- ipHash
+- userAgentHash if practical
+- previous attempt history
+
+Privacy:
+- Do not store raw IP if avoidable.
+- Store ipHash instead.
+- Do not expose device/IP data to public users.
+
+Anti-repeat logic:
+- Track which questions/audio/reading texts were shown in previous attempts.
+- Prefer unseen questions for the same person/device.
+- If not enough unseen questions exist, allow repeats but distribute fairly.
+- Owner can configure anti-repeat window in days.
+
+Important:
+Refresh must never change the current attempt questions.
+
+==================================================
+PART 5 — RANDOMIZATION SETTINGS
+==================================================
+
+Create Owner settings for test randomization.
+
+Owner pages:
+- /owner/settings/level-test
+- /owner/free-level-test/settings
+
+Settings:
+- Enable/disable Full Free Placement Test
+- Enable/disable Quick Level Check
+- Enable/disable randomization
+- Anti-repeat window in days
+- Number of listening audio blocks per level
+- Number of reading passages per level
+- Number of writing Task 1 prompts
+- Number of writing Task 2 prompts
+- Number of speaking prompts per phase
+- Allow retakes: yes/no
+- Minimum days before retake
+- Show Quick Check on homepage: yes/no
+- Show Full Test CTA on homepage: yes/no
+- Result copy
+- WhatsApp follow-up template
+- Email follow-up template
+
+Default full test selection:
+
+Listening:
+- Select 2 active audio blocks from each level:
+  - A2: 2
+  - B1: 2
+  - B2: 2
+  - C1: 2
+  - C2: 2
+- Each audio block has 3 questions.
+- Total = 10 audio blocks × 3 questions = 30 Listening questions.
+
+Reading:
+- Select 1 active reading text from each level:
+  - A2: 1
+  - B1: 1
+  - B2: 1
+  - C1: 1
+  - C2: 1
+- Each reading text has 5 questions.
+- Total = 5 texts × 5 questions = 25 Reading questions.
+
+Writing:
+- Select 1 Task 1 prompt from the general controlled writing bank.
+- Select 1 Task 2 prompt based on the student’s estimated level after Listening + Reading.
+
+Speaking:
+- Select prompts from structured oral interview phases:
+  - Warm-up
+  - Description
+  - Discussion
+  - Abstract / Argument
+- Owner can decide whether all phases appear or speaking adapts based on estimated level.
+
+Quick Check:
+- Select random reading texts/questions.
+- Default: 5 reading texts × 5 questions = 25 questions.
+- Owner can change the number later.
+
+==================================================
+PART 6 — AUDIO FILE NAMING REQUIREMENT
+==================================================
+
+Use this exact audio filename format:
+
+[level]_[scriptNumber].mp3
+
+Important:
+The number does NOT need a leading zero.
+
+Examples:
+- a2_1.mp3
+- a2_2.mp3
+- a2_9.mp3
+- b1_1.mp3
+- b1_10.mp3
+- b2_5.mp3
+- c1_10.mp3
+- c2_10.mp3
+
+Rules:
+- Lowercase only.
+- English letters and numbers only.
+- No Arabic characters.
+- No spaces.
+- No special characters except underscore.
+- Store scriptNumber as an integer in the database.
+- Store display title, dialect, topic, script text, and questions in the database, not in the filename.
+
+==================================================
+PART 7 — AUDIO FILE LIST
+==================================================
+
+A2 has only 9 audio files.
+
+Use exactly these A2 files:
+
+A2:
+- a2_1.mp3
+- a2_2.mp3
+- a2_3.mp3
+- a2_4.mp3
+- a2_5.mp3
+- a2_6.mp3
+- a2_7.mp3
+- a2_8.mp3
+- a2_9.mp3
+
+Do NOT require:
+- a2_10.mp3
+
+Do NOT expect:
+- a2_01.mp3
+- a2_02.mp3
+- etc.
+
+Other levels may have up to 10 files each:
+
+B1:
+- b1_1.mp3
+- b1_2.mp3
+- b1_3.mp3
+- b1_4.mp3
+- b1_5.mp3
+- b1_6.mp3
+- b1_7.mp3
+- b1_8.mp3
+- b1_9.mp3
+- b1_10.mp3
+
+B2:
+- b2_1.mp3
+- b2_2.mp3
+- b2_3.mp3
+- b2_4.mp3
+- b2_5.mp3
+- b2_6.mp3
+- b2_7.mp3
+- b2_8.mp3
+- b2_9.mp3
+- b2_10.mp3
+
+C1:
+- c1_1.mp3
+- c1_2.mp3
+- c1_3.mp3
+- c1_4.mp3
+- c1_5.mp3
+- c1_6.mp3
+- c1_7.mp3
+- c1_8.mp3
+- c1_9.mp3
+- c1_10.mp3
+
+C2:
+- c2_1.mp3
+- c2_2.mp3
+- c2_3.mp3
+- c2_4.mp3
+- c2_5.mp3
+- c2_6.mp3
+- c2_7.mp3
+- c2_8.mp3
+- c2_9.mp3
+- c2_10.mp3
+
+Folder structure:
+
+/public/assets/audio/level-test/listening/a2/
+/public/assets/audio/level-test/listening/b1/
+/public/assets/audio/level-test/listening/b2/
+/public/assets/audio/level-test/listening/c1/
+/public/assets/audio/level-test/listening/c2/
+
+Example physical file:
+/public/assets/audio/level-test/listening/a2/a2_1.mp3
+
+Example stored URL:
+/assets/audio/level-test/listening/a2/a2_1.mp3
+
+==================================================
+PART 8 — LISTENING QUESTION BANK
+==================================================
+
+Listening bank structure:
+- A2 Level: 9 scripts/audio files
+- B1 Level: up to 10 scripts/audio files
+- B2 Level: up to 10 scripts/audio files
+- C1 Level: up to 10 scripts/audio files
+- C2 Level: up to 10 scripts/audio files
+
+Do not assume every level has exactly 10 audio files.
+
+Each active Listening Script has:
+- level
+- scriptNumber
+- audioUrl
+- scriptText
+- dialectStyle:
+  - فصحى
+  - عامية مصرية
+  - إماراتية
+  - عامية شامية
+  - mixed if needed
+- topic
+- title
+- 3 MCQ questions
+- 4 answer options
+- correct answer
+- points
+- active/inactive
+- notes
+
+Default selection:
+- Randomly select 2 active scripts from each level.
+- A2 has 9 active files, which is enough because the test only needs 2 from A2.
+- Total selected scripts = 10.
+- Total questions = 30.
+
+If any level has fewer than the configured number of active audio scripts:
+- Do not crash.
+- Show a clear Owner warning.
+- Select what is available if allowed.
+- Mark attempt as generated_with_warnings if needed.
+- Owner dashboard should show audio availability by level.
+
+Example Owner dashboard message:
+A2:
+9 audio files available
+Required per test: 2
+Status: OK
+
+Important:
+- Store exact selected listening scripts in AttemptQuestionSnapshot.
+- Do not change selected scripts after attempt starts.
+- Audio player must show for each selected block.
+- Student can replay audio unless Owner disables replay later.
+- Missing audio must not be selected in active tests.
+
+Owner can:
+- Add listening script
+- Edit script text
+- Upload/replace audio file
+- Edit questions
+- Edit answer options
+- Set correct answer
+- Set level
+- Set dialect/style
+- Set topic
+- Enable/disable script
+- Preview audio
+- Preview block as student
+
+==================================================
+PART 9 — READING QUESTION BANK
+==================================================
+
+Reading bank structure:
+- A2 Level: 5 texts
+- B1 Level: 5 texts
+- B2 Level: 5 texts
+- C1 Level: 5 texts
+- C2 Level: 5 texts
+
+Each Reading Text has:
+- level
+- textNumber
+- title
+- passageText
+- dialectStyle if relevant:
+  - فصحى
+  - عامية مصرية
+  - إماراتية
+  - عامية شامية
+- topic
+- 5 MCQ questions
+- 4 answer options
+- correct answer
+- points
+- active/inactive
+- notes
+
+Default full test selection:
+- Randomly select 1 active text from each level.
+- Total texts = 5.
+- Total questions = 25.
+
+Quick Check selection:
+- Random reading texts from Quick Check bank or shared Reading Bank.
+- Default total = 25 questions.
+- Owner can configure.
+
+Important:
+- Store exact selected reading texts/questions in AttemptQuestionSnapshot.
+- Do not change selected texts after attempt starts.
+
+Owner can:
+- Add reading passage
+- Edit reading passage
+- Add/edit questions
+- Edit answer options
+- Set correct answer
+- Set level
+- Set topic
+- Enable/disable text
+- Preview as student
+
+==================================================
+PART 10 — FULL TEST STRUCTURE
+==================================================
+
+The full test has 4 main skills:
+
+1. Listening
+2. Reading
+3. Writing
+4. Speaking
+
+Step order:
+Listening → Reading → Writing + Speaking
+
+Do not allow skipping ahead:
+- Cannot access Reading before Listening.
+- Cannot access Writing/Speaking before Listening and Reading.
+
+Progress:
+- Show step indicator.
+- Show progress percentage.
+- Save progress safely.
+- On refresh, load same attempt and same selected questions.
+
+Listening UI:
+- Audio player per block.
+- Arabic questions.
+- A/B/C/D choices.
+- X = I don’t know.
+- Clear progress.
+- Mobile friendly.
+- Headphones reminder.
+
+Reading UI:
+- Passage box.
+- RTL Arabic text.
+- Questions below each passage.
+- A/B/C/D choices.
+- X = I don’t know.
+- Progress indicator.
+- Mobile friendly.
+
+==================================================
+PART 11 — SCORING AND INITIAL LEVEL ESTIMATE
+==================================================
+
+Auto-score:
+- Listening: 30 points
+- Reading: 25 points
+
+After Listening and Reading:
+- Calculate listening score.
+- Calculate reading score.
+- Calculate listening level estimate.
+- Calculate reading level estimate.
+- Use highest estimate or weighted logic to decide Writing Task 2 level.
+
+CEFR levels used in full free test:
+- A2
+- B1
+- B2
+- C1
+- C2
+
+Important:
+This full test primarily starts from A2 and above.
+If a student performs below A2 threshold, Owner/Teacher can manually mark A1/A0 later if needed.
+
+Suggested level mapping per skill:
+- below 40% = A2 or below
+- 40–54% = B1
+- 55–69% = B2
+- 70–84% = C1
+- 85%+ = C2
+
+Store:
+- listeningScore
+- readingScore
+- listeningEstimatedLevel
+- readingEstimatedLevel
+- autoEstimatedLevel
+- writingTargetLevel
+
+Final level is not automatic.
+Owner/Teacher confirms final level after writing/speaking review.
+
+==================================================
+PART 12 — WRITING QUESTION BANK
+==================================================
+
+Writing has two tasks.
+
+Task 1 — Controlled Writing:
+- Selected randomly from Task 1 bank.
+- 80–100 words.
+- Time guidance: 10 minutes.
+
+Task 1 prompt examples:
+- تجربتك في تعلم اللغة العربية
+- يوم لا تنساه في حياتك
+- شخص أثّر كثيراً في حياتك
+- مكان تحبه كثيراً
+- حلم تريد تحقيقه في المستقبل
+
+Task 2 — Adaptive Writing:
+- Based on highest Listening/Reading estimate.
+
+B1:
+- 120–150 words
+
+B2:
+- 150–180 words
+
+C1:
+- 180–220 words
+
+C2:
+- 220–250 words
+
+Task 2 prompt pools:
+
+B1:
+- التكنولوجيا والحياة
+- السفر والتعلم
+- العمل مقابل الدراسة
+- الرياضة والصحة
+- البيئة والمسؤولية
+
+B2:
+- وسائل التواصل الاجتماعي
+- الذكاء الاصطناعي وسوق العمل
+- الهجرة والهوية
+- التعليم والإبداع
+- الثروة والسعادة
+
+C1:
+- حرية التعبير
+- العدالة والمساواة
+- التكنولوجيا والقيم الإنسانية
+- الديمقراطية والمشاركة
+- الهوية في عصر العولمة
+
+C2:
+- الحرية والمسؤولية
+- الحقيقة في عصر المعلومات
+- النجاح والمعنى
+- اللغة والتفكير والهوية
+- الأخلاق والنسبية
+
+Owner can:
+- Add writing prompt
+- Edit writing prompt
+- Set task type: Task 1 / Task 2
+- Set level: all / B1 / B2 / C1 / C2
+- Set word range
+- Set instructions
+- Set diagnostic criteria
+- Enable/disable prompt
+- Preview as student
+
+Owner/Teacher manually reviews writing.
+
+Writing review should include:
+- score
+- suggested writing level
+- grammar notes
+- vocabulary notes
+- coherence notes
+- task achievement
+- teacher feedback
+
+==================================================
+PART 13 — SPEAKING QUESTION BANK
+==================================================
+
+Speaking should use an adaptive structured oral interview bank.
+
+Speaking phases:
+1. Warm-up
+2. Description
+3. Discussion
+4. Abstract / Argument
+
+Speaking assessment rubric:
+- Fluency: 4
+- Grammar accuracy: 4
+- Vocabulary: 4
+- Pronunciation and clarity: 4
+- Depth and organization: 4
+
+Total: 20
+
+Speaking level mapping:
+- 0–6 = A2
+- 7–10 = B1
+- 11–14 = B2
+- 15–17 = C1
+- 18–20 = C2
+
+Warm-up target:
+- A2/B1
+- Self introduction
+- Daily routine
+- Family/home
+- Work/study
+- Hobbies/interests
+
+Description target:
+- B1/B2
+- Describe a picture or scene
+- Explain what is happening
+- Guess what people are doing
+- Predict what may happen next
+
+Discussion target:
+- B2
+- Express opinions
+- Compare
+- Give examples
+- Present argument
+
+Abstract/Argument target:
+- C1/C2
+- Discuss abstract concepts
+- Analyze multiple viewpoints
+- Use complex language
+- Build an argument
+
+Speaking media:
+- Some prompts may use images.
+- Owner can upload/replace speaking images.
+- Example image: park/general image prompt.
+
+Student submission:
+- Browser recording if practical.
+- Upload fallback.
+- Allowed types: mp3, wav, m4a, webm.
+- Validate MIME type and file size.
+- Show actual validation/server errors.
+- Do not show fake generic connection errors.
+
+Owner can:
+- Add speaking prompt
+- Edit speaking prompt
+- Set phase
+- Set target level
+- Add image if needed
+- Add evaluation notes
+- Enable/disable prompt
+- Sort prompts
+- Preview as student
+
+Owner/Teacher manually reviews speaking.
+
+Speaking review should include:
+- fluency score
+- grammar score
+- vocabulary score
+- pronunciation score
+- depth/organization score
+- total score
+- suggested speaking level
+- teacher notes
+- recommended speaking focus
+
+==================================================
+PART 14 — ATTEMPT SNAPSHOT
+==================================================
+
+When a test attempt starts, generate and save a snapshot.
+
+The snapshot must include:
+- Selected listening script IDs
+- Selected reading text IDs
+- Selected writing prompt IDs
+- Selected speaking prompt IDs
+- Selected question IDs
+- Order shown to student
+- Points
+- Correct answers at the time of attempt
+- Audio URLs at the time of attempt
+- Passage text at the time of attempt
+- Prompt text at the time of attempt
+
+Reason:
+If Owner edits the question bank later, old attempts should remain reviewable and correct based on what the student actually saw.
+
+Do not recalculate old attempts from edited question bank without explicit Owner action.
+
+==================================================
+PART 15 — QUICK LEVEL CHECK
+==================================================
+
+Quick Check:
+- Reading only.
+- No registration.
+- Randomized.
+- Uses Quick Reading Bank or selected Reading Bank.
+- Around 12 minutes.
+- Instant preliminary CEFR result.
+- Result must clearly state it is reading-only.
+
+Routes:
+- /level-test/quick
+- /level-test/quick-result
+
+Old route support:
+- /leveltest/quick.php
+- /leveltest/quick-result.php
+
+Quick check result page shows:
+- Preliminary Result
+- CEFR level: A1, A2, B1, B2, C1, or C2
+- Score / total / percentage
+- Description in Arabic and English
+- Disclaimer:
+  “This is a preliminary estimate based on reading only. For your official CEFR placement, take the full assessment — it includes listening, writing, and speaking reviewed by Habiba.”
+- CTA:
+  - Start full assessment
+  - View pricing
+  - WhatsApp contact
+
+Quick Check tracking:
+- Can remain anonymous.
+- Store analytics event.
+- Optionally store anonymous attempt with secure token/session.
+
+==================================================
+PART 16 — THANK YOU PAGE
+==================================================
+
+After full test submission, show thank-you page.
+
+Content:
+- Thank You!
+- Test Submitted Successfully
+- Your answers have been saved.
+- Writing & Speaking are being reviewed by the teacher.
+- Full results within 48 hours.
+- Via WhatsApp / Email.
+- CTA: Back to Home
+- CTA: View Pricing
+- CTA: WhatsApp if configured
+
+Important:
+Do not show final level instantly for the full test unless Owner review is complete.
+
+==================================================
+PART 17 — OWNER/TEACHER REVIEW
+==================================================
+
+Owner pages:
+- /owner/free-level-tests
+- /owner/free-level-tests/[id]
+- /owner/free-level-test/questions
+- /owner/free-level-test/listening
+- /owner/free-level-test/reading
+- /owner/free-level-test/writing
+- /owner/free-level-test/speaking
+- /owner/free-level-test/quick-reading
+- /owner/free-level-test/settings
+
+Owner can:
+- View all full level test attempts
+- View quick check analytics/counts
+- Search/filter attempts by:
+  - name
+  - WhatsApp
+  - level
+  - date
+  - review status
+  - lead status
+  - existing student/new applicant
+- Open attempt details
+- View exact attempt snapshot
+- View listening answers and score
+- View reading answers and score
+- View writing answers
+- Listen to speaking recordings
+- View image prompt response if uploaded/recorded
+- Add teacher notes
+- Set writing score
+- Set speaking rubric scores
+- Set final level
+- Set recommended next step
+- Mark reviewed
+- Mark contacted
+- Copy WhatsApp follow-up message
+- Convert lead to checkout/onboarding if needed
+
+Lead statuses:
+- new
+- contacted
+- interested
+- booked
+- not_interested
+- reviewed
+- archived
+
+Review statuses:
+- pending_review
+- reviewed
+
+Important:
+Do not create student account automatically.
+Do not create paid onboarding automatically.
+Owner decides next step.
+
+==================================================
+PART 18 — QUESTION BANK MANAGEMENT
+==================================================
+
+Owner must have full control over the Free Level Test and Quick Level Check.
+
+Do not hardcode test content in a way that cannot be edited later.
+
+Owner can manage:
+- Listening scripts
+- Listening audio files
+- Listening questions
+- Reading passages
+- Reading questions
+- Writing prompts
+- Speaking prompts
+- Speaking images
+- Quick check reading questions
+- Correct answers
+- Points
+- Levels
+- Difficulty
+- Dialect/style
+- Topic/category
+- Active/inactive status
+- Sort order
+
+Question bank pages:
+- /owner/free-level-test/questions
+- /owner/free-level-test/listening
+- /owner/free-level-test/reading
+- /owner/free-level-test/writing
+- /owner/free-level-test/speaking
+- /owner/free-level-test/quick-reading
+
+Owner can:
+- Add item
+- Edit item
+- Disable item
+- Sort item
+- Upload/replace audio
+- Upload/replace image
+- Set correct answer
+- Set points
+- Set level
+- Set active/inactive
+- Preview item as student
+
+Important:
+Writing and Speaking prompts must be editable like MCQ/listening questions.
+Audio files and speaking images must be manageable.
+
+==================================================
+PART 19 — DATABASE / MODELS
+==================================================
+
+Use the current project PostgreSQL setup.
+Do not migrate database type in this phase.
+
+Create models or equivalent:
+
+FreeLevelTestAttempt:
+- id
+- secureToken
+- userId optional
+- existingStudentId optional
+- fullName
+- email
+- whatsapp
+- age
+- country
+- applicantType: existing_student / new_applicant
+- testType: full / quick
+- status
+- currentStep
+- deviceIdHash
+- ipHash
+- userAgentHash
+- listeningScore
+- listeningMaxScore
+- readingScore
+- readingMaxScore
+- listeningEstimatedLevel
+- readingEstimatedLevel
+- autoEstimatedLevel
+- writingTargetLevel
+- writingScore
+- speakingScore
+- finalLevel
+- recommendedNextStep
+- teacherNotes
+- leadStatus
+- reviewStatus
+- createdAt
+- submittedAt
+- reviewedAt
+
+FreeLevelTestQuestion:
+- id
+- bankType: full / quick
+- section: listening / reading / writing / speaking
+- level
+- difficulty
+- dialectStyle
+- topic
+- title
+- scriptText
+- audioUrl
+- imageUrl
+- passageText
+- promptText
+- questionText
+- options JSON
+- correctAnswer
+- points
+- active
+- sortOrder
+- metadata JSON
+- createdAt
+- updatedAt
+
+FreeLevelTestAudio:
+- id
+- level
+- scriptNumber
+- title
+- dialectStyle
+- topic
+- scriptText
+- audioUrl
+- originalFilename
+- mimeType
+- fileSize
+- active
+- missingAudio
+- createdAt
+- updatedAt
+
+FreeLevelTestReadingText:
+- id
+- level
+- textNumber
+- title
+- dialectStyle
+- topic
+- passageText
+- active
+- sortOrder
+- createdAt
+- updatedAt
+
+FreeLevelTestAttemptSnapshot:
+- id
+- attemptId
+- section
+- sourceEntityType
+- sourceEntityId
+- snapshotData JSON
+- displayOrder
+- createdAt
+
+FreeLevelTestAnswer:
+- id
+- attemptId
+- snapshotId
+- section
+- questionId
+- questionNumber
+- questionText
+- selectedOption
+- answerText
+- correctAnswer
+- isCorrect
+- pointsAwarded
+- maxPoints
+- metadata JSON
+- createdAt
+
+FreeLevelTestUpload:
+- id
+- attemptId
+- section
+- promptKey
+- fileUrl
+- originalFilename
+- mimeType
+- fileSize
+- createdAt
+
+FreeLevelTestWritingReview:
+- id
+- attemptId
+- task1Score
+- task2Score
+- grammarNotes
+- vocabularyNotes
+- coherenceNotes
+- taskAchievementNotes
+- suggestedWritingLevel
+- teacherFeedback
+- createdAt
+- updatedAt
+
+FreeLevelTestSpeakingReview:
+- id
+- attemptId
+- fluencyScore
+- grammarScore
+- vocabularyScore
+- pronunciationScore
+- depthOrganizationScore
+- totalScore
+- suggestedSpeakingLevel
+- teacherNotes
+- recommendedSpeakingFocus
+- createdAt
+- updatedAt
+
+FreeLevelTestSettings:
+- id
+- key
+- value
+- updatedAt
+
+==================================================
+PART 20 — SEED DATA FROM PROVIDED FILES
+==================================================
+
+Create seed/import scripts for the provided question bank files.
+
+Seed:
+Listening:
+- A2.txt
+- B1.txt
+- B2.txt
+- C1.txt
+- C2.txt
+
+Reading:
+- Reading A2.txt
+- Reading B1.txt
+- Reading B2.txt
+- Reading C1.txt
+- Reading C2.txt
+
+Speaking:
+- Speaking Section.odt
+
+Writing:
+- Writing Section.odt
+
+Important:
+- Parse/import these into database if practical.
+- If automatic parsing from ODT is hard, create structured seed objects manually from the content.
+- Do not lose questions/answers.
+- Keep original script/passage text.
+- Keep dialect/style/topic.
+- Keep correct answers.
+- Store all content in database, not hardcoded only.
+- Re-seeding should not duplicate items.
+- Use idempotent seed logic.
+
+Audio files:
+- The actual audio files may be uploaded later by Owner or copied into expected folders.
+- Seed expected URLs based on the filename convention used here.
+
+A2:
+Seed only:
+- a2_1.mp3
+- a2_2.mp3
+- a2_3.mp3
+- a2_4.mp3
+- a2_5.mp3
+- a2_6.mp3
+- a2_7.mp3
+- a2_8.mp3
+- a2_9.mp3
+
+Do not seed:
+- a2_10.mp3
+
+If A2.txt contains 10 scripts but only 9 audio files exist:
+- Import the 10th script as inactive or missing_audio.
+- Do not select it in random attempts.
+- Owner can upload/activate it later manually.
+
+For all levels:
+- Create active audio records only for available audio files.
+- Missing audio items must not be selected in active tests.
+- Owner dashboard must show missing audio warnings clearly.
+
+==================================================
+PART 21 — NOTIFICATIONS / EMAIL / WHATSAPP
+==================================================
+
+Owner notification:
+- New full free level test submitted
+- Writing/speaking waiting review
+- New quick check completed if storing leads
+- Audio upload failed if relevant
+
+Visitor follow-up:
+- If email is available, log/send “Your level test was submitted”
+- WhatsApp template for follow-up
+
+WhatsApp message after submission:
+Hi [Name], thank you for completing the Arabic placement test. Your listening and reading scores are ready, and I’m reviewing your writing and speaking. I’ll send your final level and recommended next step within 48 hours.
+
+WhatsApp message after review:
+Hi [Name], your Arabic level test has been reviewed. Your suggested level is [Final Level]. The recommended next step is: [Recommended Next Step]. You can book your first lesson here: [Pricing Link].
+
+Owner should have:
+- Copy WhatsApp message button
+- Open WhatsApp button
+
+==================================================
+PART 22 — ANALYTICS
+==================================================
+
+Track:
+- free_level_test_entry_view
+- free_level_test_register_start
+- free_level_test_start
+- free_level_test_listening_submit
+- free_level_test_reading_submit
+- free_level_test_full_submit
+- free_level_test_thank_you_view
+- quick_level_check_start
+- quick_level_check_submit
+- quick_level_check_result_view
+- quick_level_check_whatsapp_click
+- quick_level_check_pricing_click
+- level_test_audio_play
+- level_test_abandoned
+
+==================================================
+PART 23 — SECURITY
+==================================================
+
+Security:
+- Public cannot view other attempts.
+- Use secure tokens for any public result/review link.
+- Owner pages are protected.
+- Existing student can only start test as self.
+- Validate uploads.
+- Block executable files.
+- Do not expose raw private recordings publicly.
+- Rate limit or spam protection if practical.
+- Sanitize user input.
+- Do not hardcode WhatsApp number; use settings.
+- Store raw IP only if absolutely needed; prefer ipHash.
+- Do not expose correct answers before submission.
+- Prevent skipping steps.
+- Prevent changing attempt snapshot after test starts.
+
+==================================================
+PART 24 — UI / UX
+==================================================
+
+Public UI:
+- Clean and warm.
+- Not scary exam style.
+- Clear estimated time.
+- Progress indicator.
+- Mobile friendly.
+- Arabic RTL support.
+- English LTR support.
+- Light/dark mode.
+
+Full test UX:
+- Step indicator.
+- Save progress per step.
+- Clear instructions.
+- Audio player works.
+- Reading text is comfortable.
+- Writing textareas are large enough.
+- Speaking recorder has fallback upload.
+- Show actual errors.
+- On reload, show same questions.
+
+Quick check UX:
+- Fast.
+- No registration.
+- Clear preliminary result.
+- Strong CTA to full assessment or pricing.
+
+Owner UI:
+- Clear question bank management.
+- Easy upload/replace audio.
+- Preview every question/audio/text/prompt.
+- Clear pending review queue.
+- Filters.
+- Notes.
+- Final level override.
+- Audio count by level.
+- Missing audio warnings.
+
+==================================================
+PART 25 — ACCEPTANCE CRITERIA
+==================================================
+
+Phase 6A V2 is complete when:
+
+Randomization:
+- Full test creates a fixed attempt snapshot.
+- Refresh does not change questions.
+- New attempt tries to avoid repeated questions for same student/device/IP.
+- Owner can enable/disable randomization.
+- Owner can configure selection counts.
+
+Audio:
+- A2 works with exactly these files:
+  - a2_1.mp3 to a2_9.mp3
+- The system does not look for a2_10.mp3.
+- The system does not require two-digit filenames like a2_01.mp3.
+- Randomization selects 2 A2 audio blocks successfully.
+- Missing audio does not crash the test.
+- Owner dashboard shows available audio count per level.
+- Owner can upload a future a2_10.mp3 later if needed, but it is not required now.
+
+Full Free Placement Test:
+- Visitor can register with name + WhatsApp.
+- Existing student can start using student code.
+- Listening section randomly selects 10 audio scripts, 2 from each level by default.
+- Listening section has 30 questions.
+- Reading section randomly selects 5 reading texts, 1 from each level by default.
+- Reading section has 25 questions.
+- Writing Task 1 is selected from prompt bank.
+- Writing Task 2 is selected based on estimated level.
+- Speaking prompts come from structured speaking bank.
+- Student can submit speaking recordings/uploads.
+- Thank-you page appears after submission.
+- Owner can review full attempt.
+- Owner can see exact attempt snapshot.
+- Owner can set writing score, speaking score, final level, and notes.
+- Owner can copy WhatsApp follow-up.
+
+Quick Level Check:
+- Visitor can take randomized reading-only quick check without registration.
+- Visitor gets instant preliminary level.
+- Result page has disclaimer and CTA.
+- Quick check events are tracked.
+
+Question Bank:
+- Owner can manage listening scripts/questions/audio.
+- Owner can manage reading texts/questions.
+- Owner can manage writing prompts.
+- Owner can manage speaking prompts/images.
+- Owner can disable questions/prompts/audio.
+- Disabled items are not selected in new random attempts.
+
+Security:
+- Public cannot access other attempts.
+- Upload validation works.
+- Owner review pages are protected.
+- Correct answers are not exposed before submission.
+- No fake “connection error” for speaking submission.
+
+==================================================
+PART 26 — MANUAL TEST CHECKLIST
+==================================================
+
+Full Test:
+1. Open level test entry page.
+2. Start as new applicant.
+3. Register with name + WhatsApp only.
+4. Confirm attempt snapshot is created.
+5. Complete Listening.
+6. Confirm 10 audio blocks appear.
+7. Confirm 30 listening questions appear.
+8. Confirm A2 selection uses only a2_1.mp3 to a2_9.mp3.
+9. Confirm the system does not request a2_10.mp3.
+10. Refresh page and confirm same questions remain.
+11. Complete Reading.
+12. Confirm 5 reading passages appear.
+13. Confirm 25 reading questions appear.
+14. Confirm Writing Task 2 changes based on estimate.
+15. Complete Writing.
+16. Complete Speaking prompts.
+17. Upload/record speaking.
+18. Submit test.
+19. Confirm thank-you page.
+
+Owner Review:
+20. Log in as Owner.
+21. Open free level test attempts.
+22. Review the attempt.
+23. Confirm exact selected questions are visible.
+24. Listen to speaking recordings.
+25. Read writing answers.
+26. Add writing score.
+27. Add speaking rubric scores.
+28. Set final level.
+29. Copy WhatsApp message.
+30. Mark reviewed/contacted.
+
+Randomization:
+31. Start another attempt from same browser/device.
+32. Confirm system tries to show different questions.
+33. Confirm anti-repeat history is saved.
+34. Disable one listening script and confirm it is not selected again.
+35. Replace audio file and confirm preview works.
+
+Quick Check:
+36. Open quick level check.
+37. Complete 25 reading questions without registration.
+38. Confirm instant result.
+39. Confirm result says preliminary/reading-only.
+40. Click WhatsApp CTA.
+41. Click pricing CTA.
+
+Security:
+42. Try skipping to Reading before Listening and confirm blocked.
+43. Try opening another attempt publicly and confirm blocked.
+44. Upload invalid speaking file and confirm blocked.
+45. Confirm correct answers are not exposed before submission.
+46. Test mobile layout.
+
+Stop condition:
+Stop here. Test Phase 6A V2 before continuing.

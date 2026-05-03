@@ -1,0 +1,79 @@
+PHASE 4 — Checkout, Policy Agreement, Payment Status, and Thank You Page
+
+Goal:
+Build the checkout flow before payment and the thank-you page after payment.
+
+What to build:
+- Checkout page.
+- Policy agreement checkbox.
+- Payment redirect placeholder/integration structure.
+- Thank-you page.
+- Payment status rules.
+- Owner payment review page.
+
+Pages:
+- /checkout?plan=single|monthly|bundle
+- /thank-you?ref={checkoutReference}
+- /owner/payments
+- /owner/payments/[id]
+
+Checkout fields:
+- full_name
+- email
+- whatsapp
+- selected_plan
+- student_age
+- learner_type: adult / child / someone_else
+- main_goal: Speaking / Reading & Writing / Work Arabic / Kids Arabic / Emirati Dialect / Not sure yet
+- preferred_contact_method: WhatsApp / Email
+- policy agreement checkbox
+
+Policy text:
+“I agree to the Terms of Service, Refund Policy, Cancellation Policy, and Privacy Policy.”
+
+Payment rules:
+- payment_status starts as pending.
+- If Ziina/payment link is configured, redirect to it.
+- If payment link is missing, show clear setup message.
+- Do not mark payment as paid just because the user reaches thank-you page.
+- If no webhook/API verification exists, thank-you page sets status to pending_verification.
+- Owner can manually mark paid/failed/refunded.
+- Every status change goes to audit log.
+
+Database models:
+- CheckoutOrder or Purchase
+- PaymentRecord
+- Plan
+- AuditLog
+
+Thank-you page content:
+- Thank you for your payment!
+- Your Arabic learning journey has started 🎉
+- Explain payment may be pending verification.
+- Next steps:
+  1. Complete student form
+  2. Complete level check if required
+  3. Choose lesson time
+  4. Tutor prepares personalized first lesson
+- Button: Complete Student Form
+- Button: Choose Lesson Time disabled until form and level check are complete
+- Optional welcome video placeholder
+
+Acceptance criteria:
+- Checkout collects data.
+- Policy checkbox is required.
+- Checkout creates secure reference.
+- Payment status is not automatically marked paid.
+- Owner can manually update payment status.
+- Audit log records payment change.
+
+Manual test checklist:
+- Open checkout for each plan.
+- Submit without checkbox, confirm blocked.
+- Submit valid checkout.
+- Open thank-you page.
+- Confirm status pending_verification if no webhook.
+- Mark payment paid as Owner.
+
+Stop condition:
+Stop here. Test this phase before continuing.
