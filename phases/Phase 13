@@ -1,0 +1,62 @@
+PHASE 13 — Owner/Teacher Dashboard Core
+
+Goal:
+Build the central Owner/Teacher dashboard.
+
+Pages:
+- /owner/dashboard
+- /owner/students
+- /owner/students/[id]
+- /owner/parents
+- /owner/parents/[id]
+- /owner/payments
+- /owner/onboarding
+- /owner/calendar
+- /owner/homework
+- /owner/scenarios
+- /owner/reviews
+- /owner/materials
+- /owner/notifications
+
+Dashboard cards:
+- Active students
+- Active child learners
+- Pending payments
+- Pending level checks
+- Upcoming lessons today
+- Homework submitted
+- Scenarios submitted
+- Reviews pending correction
+- Students low on credits
+- AI weekly summaries due
+
+Student detail should show:
+- Profile
+- Level
+- Package balance
+- Upcoming/past lessons
+- Homework history
+- Scenarios
+- Reviews
+- Practice words
+- Common mistakes
+- Session notes
+- AI notes/summaries
+- Audit history related to student
+
+Acceptance criteria:
+- Owner can manage all core entities.
+- Dashboard stats are accurate.
+- Student details are useful.
+- No duplicate useless actions.
+- Empty states are clean.
+
+Manual test checklist:
+- Open dashboard.
+- Open student detail.
+- Open parent detail.
+- Check pending items.
+- Confirm mobile responsive.
+
+Stop condition:
+Stop here. Test this phase before continuing.
