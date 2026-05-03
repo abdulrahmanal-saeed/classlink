@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "322637531837",
+    "project_id": "mshabibanabil-1c41d",
+    "storage_bucket": "mshabibanabil-1c41d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:322637531837:android:55c8e42fc7528a78d7c5d4",
+        "android_client_info": {
+          "package_name": "com.mshabibanabil.habiba_teacher_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBayUask0aQytSCgtaCtrzvsbakjXa2iUo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
