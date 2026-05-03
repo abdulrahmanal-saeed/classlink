@@ -13,11 +13,24 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $isArabic = $lang === 'ar';
 
     $items = [
-        'owner_teacher' => ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
-        'student' => ['/student/dashboard', 'Student Dashboard', 'لوحة الطالب'],
-        'parent' => ['/parent/dashboard', 'Parent Dashboard', 'لوحة ولي الأمر'],
-        'academy_partner' => ['/academy/dashboard', 'Academy Dashboard', 'لوحة شريك الأكاديمية'],
+        'owner_teacher' => [
+            ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/settings', 'Settings Center', 'مركز الإعدادات'],
+            ['/owner/audit-log', 'Audit Log', 'سجل المراجعة'],
+            ['/owner/dev/seed-data', 'Dev Seed Data', 'بيانات تجريبية'],
+        ],
+        'student' => [
+            ['/student/dashboard', 'Student Dashboard', 'لوحة الطالب'],
+        ],
+        'parent' => [
+            ['/parent/dashboard', 'Parent Dashboard', 'لوحة ولي الأمر'],
+        ],
+        'academy_partner' => [
+            ['/academy/dashboard', 'Academy Dashboard', 'لوحة شريك الأكاديمية'],
+        ],
     ];
+
+    $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 
     ?>
     <!doctype html>
@@ -60,19 +73,18 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             <div class="foundation-card p-3">
               <div class="fw-bold mb-3">Navigation</div>
               <div class="list-group list-group-flush">
-                <?php foreach ($items as $role => $item): ?>
-                  <?php if ($role === $user['role']): ?>
-                    <a class="list-group-item list-group-item-action active" href="<?= $item[0] ?>">
-                      <?= $isArabic ? $item[2] : $item[1] ?>
-                    </a>
-                  <?php endif; ?>
+                <?php foreach (($items[$user['role']] ?? []) as $item): ?>
+                  <?php $isActive = $currentPath === $item[0]; ?>
+                  <a class="list-group-item list-group-item-action <?= $isActive ? 'active' : '' ?>" href="<?= $item[0] ?>">
+                    <?= $isArabic ? $item[2] : $item[1] ?>
+                  </a>
                 <?php endforeach; ?>
               </div>
             </div>
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 1</div>
+              <div class="badge text-bg-light border mb-3">Phase 2</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
