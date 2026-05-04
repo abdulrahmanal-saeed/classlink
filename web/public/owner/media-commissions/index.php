@@ -1,0 +1,13 @@
+<?php
+require_once __DIR__ . '/../../../../backend/php/core/Auth.php';
+require_once __DIR__ . '/../../../../backend/php/shared/MediaBuyer.php';
+require_once __DIR__ . '/../../../../web/components/layout/dashboard_shell.php';
+$user=require_role('owner_teacher');$message=$error=null;
+if($_SERVER['REQUEST_METHOD']==='POST'){try{media_update_commission_status((int)$_POST['commission_id'],$_POST['status'],$user,$_POST['reason']??null);$message='Commission updated.';}catch(Throwable $e){$error=$e->getMessage();}}
+$filter=(int)($_GET['media_buyer_id']??0);
+if($filter){$s=db()->prepare('SELECT cr.*, mbp.display_name FROM commission_records cr JOIN media_buyer_profiles mbp ON mbp.id=cr.media_buyer_id WHERE cr.media_buyer_id=:id ORDER BY cr.created_at DESC LIMIT 300');$s->execute([':id'=>$filter]);$rows=$s->fetchAll();}else{$rows=db()->query('SELECT cr.*, mbp.display_name FROM commission_records cr JOIN media_buyer_profiles mbp ON mbp.id=cr.media_buyer_id ORDER BY cr.created_at DESC LIMIT 300')->fetchAll();}
+ob_start();
+?>
+<p class="text-muted">Owner-only commission approval and payout control.</p><?php if($message):?><div class="alert alert-success"><?=htmlspecialchars($message,ENT_QUOTES,'UTF-8')?></div><?php endif;?><?php if($error):?><div class="alert alert-danger"><?=htmlspecialchars($error,ENT_QUOTES,'UTF-8')?></div><?php endif;?>
+<div class="foundation-card"><?php if(!$rows):?><div class="alert alert-light border">No commission records yet.</div><?php else:?><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Partner</th><th>Order</th><th>Package</th><th>Order</th><th>Commission</th><th>Status</th><th>Action</th></tr></thead><tbody><?php foreach($rows as $r):?><tr><td><?=htmlspecialchars($r['display_name'],ENT_QUOTES,'UTF-8')?></td><td class="ltr-safe"><?=htmlspecialchars($r['checkout_order_id'],ENT_QUOTES,'UTF-8')?></td><td><?=htmlspecialchars($r['package_name']??'-',ENT_QUOTES,'UTF-8')?></td><td><?=htmlspecialchars((string)$r['order_amount'],ENT_QUOTES,'UTF-8')?></td><td><?=htmlspecialchars((string)$r['commission_amount'],ENT_QUOTES,'UTF-8')?></td><td><span class="badge text-bg-light border"><?=htmlspecialchars($r['status'],ENT_QUOTES,'UTF-8')?></span></td><td><form method="post" class="d-flex gap-1"><input type="hidden" name="commission_id" value="<?=(int)$r['id']?>"><select class="form-select form-select-sm" name="status"><option>approved</option><option>rejected</option><option>paid</option><option>reversed</option><option>pending</option></select><button class="btn btn-sm btn-outline-brand">Save</button></form></td></tr><?php endforeach;?></tbody></table></div><?php endif;?></div>
+<?php $content=ob_get_clean();render_dashboard_shell($user,'Media Commissions',$content);
