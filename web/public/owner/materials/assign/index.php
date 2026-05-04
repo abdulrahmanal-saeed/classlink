@@ -1,0 +1,13 @@
+<?php
+require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
+require_once __DIR__ . '/../../../../../backend/php/shared/MaterialsLibrary.php';
+require_once __DIR__ . '/../../../../../web/components/layout/dashboard_shell.php';
+$user=require_role('owner_teacher');$id=(int)($_GET['id']??0);$m=material_find($id);$message=$error=null;
+if(!$m){http_response_code(404);render_dashboard_shell($user,'Material Not Found','<div class="alert alert-danger">Material not found.</div>');exit;}
+if($_SERVER['REQUEST_METHOD']==='POST'){try{material_assign($id,(int)$_POST['student_id'],$user,$_POST['notes']??null,$_POST['due_date']??null,!empty($_POST['required']));$message='Material assigned.';}catch(Throwable $e){$error=$e->getMessage();}}
+$students=db()->query('SELECT id, display_name, email FROM users WHERE role="student" AND status="active" ORDER BY display_name ASC')->fetchAll();
+ob_start();
+?>
+<div class="d-flex justify-content-between mb-4"><p class="text-muted">Assign material to a student.</p><a class="btn btn-outline-brand" href="/owner/materials/view?id=<?=$id?>">Back</a></div><?php if($message):?><div class="alert alert-success"><?=htmlspecialchars($message,ENT_QUOTES,'UTF-8')?></div><?php endif;?><?php if($error):?><div class="alert alert-danger"><?=htmlspecialchars($error,ENT_QUOTES,'UTF-8')?></div><?php endif;?>
+<form method="post" class="foundation-card"><h2 class="h5 fw-bold"><?=htmlspecialchars($m['title'],ENT_QUOTES,'UTF-8')?></h2><div class="mb-3"><label class="form-label">Student</label><select class="form-select" name="student_id" required><option value="">Choose</option><?php foreach($students as $s):?><option value="<?=(int)$s['id']?>"><?=htmlspecialchars($s['display_name'].' - '.$s['email'],ENT_QUOTES,'UTF-8')?></option><?php endforeach;?></select></div><div class="mb-3"><label class="form-label">Notes</label><textarea class="form-control" name="notes" rows="3"></textarea></div><div class="row g-3"><div class="col-md-6"><label class="form-label">Due date</label><input class="form-control" type="date" name="due_date"></div><div class="col-md-6"><div class="form-check mt-4"><input class="form-check-input" type="checkbox" name="required"><label class="form-check-label">Required</label></div></div></div><button class="btn btn-brand mt-3">Assign Material</button></form>
+<?php $content=ob_get_clean();render_dashboard_shell($user,'Assign Material',$content);
