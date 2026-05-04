@@ -2,12 +2,12 @@
 /**
  * Authentication helper for Phase 1.
  *
- * The project uses secure PHP sessions for the web dashboard in this phase.
- * JWT can be added later for Flutter API authentication when the mobile app starts.
+ * Phase 34 hardens sessions, login error behavior, and login rate limiting.
  */
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../shared/AuditLogger.php';
+require_once __DIR__ . '/../shared/Security.php';
 
 function auth_start_session(): void
 {
@@ -15,7 +15,7 @@ function auth_start_session(): void
         return;
     }
 
-    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+    $isHttps = security_is_https();
 
     session_name(getenv('SESSION_NAME') ?: 'hn_academy_session');
     session_set_cookie_params([
@@ -26,6 +26,10 @@ function auth_start_session(): void
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
+
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.cookie_httponly', '1');
+    if ($isHttps) ini_set('session.cookie_secure', '1');
 
     session_start();
 }
@@ -51,20 +55,32 @@ function auth_attempt(string $email, string $password): array
 {
     auth_start_session();
 
-    $statement = db()->prepare(
-        'SELECT id, email, password_hash, role, status, display_name FROM users WHERE email = :email LIMIT 1'
-    );
-    $statement->execute([':email' => strtolower(trim($email))]);
-    $user = $statement->fetch();
+    $normalizedEmail = strtolower(trim($email));
+    $fingerprint = security_client_fingerprint();
+    $rateIdentity = $normalizedEmail . '|' . $fingerprint;
 
-    if (!$user || $user['status'] !== 'active' || !password_verify($password, $user['password_hash'])) {
-        audit_log($user ? (int) $user['id'] : null, 'login_failed', 'user', $email);
+    if (!security_rate_limit_check('login', $rateIdentity, (int)(getenv('LOGIN_MAX_ATTEMPTS') ?: 8), (int)(getenv('LOGIN_WINDOW_SECONDS') ?: 900))) {
+        audit_log(null, 'login_rate_limited', 'user', $normalizedEmail);
         return [false, null, 'Invalid email or password.'];
     }
 
+    $statement = db()->prepare(
+        'SELECT id, email, password_hash, role, status, display_name FROM users WHERE email = :email LIMIT 1'
+    );
+    $statement->execute([':email' => $normalizedEmail]);
+    $user = $statement->fetch();
+
+    if (!$user || $user['status'] !== 'active' || !password_verify($password, $user['password_hash'])) {
+        security_rate_limit_record('login', $rateIdentity, (int)(getenv('LOGIN_WINDOW_SECONDS') ?: 900));
+        audit_log($user ? (int) $user['id'] : null, 'login_failed', 'user', $normalizedEmail);
+        return [false, null, 'Invalid email or password.'];
+    }
+
+    security_rate_limit_clear('login', $rateIdentity);
     session_regenerate_id(true);
     $_SESSION['user_id'] = (int) $user['id'];
     $_SESSION['role'] = $user['role'];
+    $_SESSION['login_at'] = time();
 
     audit_log((int) $user['id'], 'login_success', 'user', (string) $user['id']);
 
@@ -106,6 +122,7 @@ function role_home_path(string $role): string
 
 function require_role(string $role): array
 {
+    security_headers(false);
     $user = auth_user();
 
     if (!$user) {
@@ -130,5 +147,24 @@ function require_role(string $role): array
         }
     }
 
+    return $user;
+}
+
+function require_any_role(array $roles): array
+{
+    security_headers(false);
+    $user = auth_user();
+    if (!$user) {
+        header('Location: /login');
+        exit;
+    }
+    if (!in_array($user['role'], $roles, true)) {
+        audit_log((int)$user['id'], 'unauthorized_access', 'route', $_SERVER['REQUEST_URI'] ?? null, [
+            'required_any_role' => $roles,
+            'actual_role' => $user['role'],
+        ]);
+        header('Location: /unauthorized');
+        exit;
+    }
     return $user;
 }
