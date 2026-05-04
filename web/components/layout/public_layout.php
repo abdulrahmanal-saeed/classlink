@@ -60,6 +60,7 @@ function render_public_layout(string $title, string $description, string $conten
       </footer>
       <script src="/assets/js/media-tracking.js" defer></script>
       <script src="/assets/js/motion-polish.js" defer></script>
+      <script src="/assets/js/ux-polish.js" defer></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
     </html>
