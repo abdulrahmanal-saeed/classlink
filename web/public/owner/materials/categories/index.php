@@ -1,0 +1,13 @@
+<?php
+require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
+require_once __DIR__ . '/../../../../../backend/php/shared/MaterialsLibrary.php';
+require_once __DIR__ . '/../../../../../web/components/layout/dashboard_shell.php';
+$user=require_role('owner_teacher');$message=$error=null;
+if($_SERVER['REQUEST_METHOD']==='POST'){
+ try{db()->prepare('INSERT INTO material_categories (name,description,sort_order,active) VALUES (:n,:d,:s,:a) ON DUPLICATE KEY UPDATE description=VALUES(description),sort_order=VALUES(sort_order),active=VALUES(active)')->execute([':n'=>trim($_POST['name']??''),':d'=>trim($_POST['description']??''),':s'=>(int)($_POST['sort_order']??0),':a'=>!empty($_POST['active'])?1:0]);audit_log((int)$user['id'],'material_category_saved','material_category',trim($_POST['name']??''));$message='Category saved.';}catch(Throwable $e){$error=$e->getMessage();}}
+$cats=material_categories(false);ob_start();
+?>
+<div class="d-flex justify-content-between mb-4"><p class="text-muted">Manage material categories.</p><a class="btn btn-outline-brand" href="/owner/materials">Back</a></div><?php if($message):?><div class="alert alert-success"><?=htmlspecialchars($message,ENT_QUOTES,'UTF-8')?></div><?php endif;?><?php if($error):?><div class="alert alert-danger"><?=htmlspecialchars($error,ENT_QUOTES,'UTF-8')?></div><?php endif;?>
+<form method="post" class="foundation-card mb-4"><div class="row g-3"><div class="col-md-4"><label class="form-label">Name</label><input class="form-control" name="name" required></div><div class="col-md-4"><label class="form-label">Description</label><input class="form-control" name="description"></div><div class="col-md-2"><label class="form-label">Sort</label><input class="form-control" name="sort_order" type="number" value="0"></div><div class="col-md-2"><div class="form-check mt-4"><input class="form-check-input" type="checkbox" name="active" checked><label class="form-check-label">Active</label></div></div><div class="col-12"><button class="btn btn-brand">Save category</button></div></div></form>
+<div class="foundation-card"><div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Description</th><th>Sort</th><th>Active</th></tr></thead><tbody><?php foreach($cats as $c):?><tr><td><?=htmlspecialchars($c['name'],ENT_QUOTES,'UTF-8')?></td><td><?=htmlspecialchars($c['description']??'',ENT_QUOTES,'UTF-8')?></td><td><?=(int)$c['sort_order']?></td><td><?=(int)$c['active']?></td></tr><?php endforeach;?></tbody></table></div></div>
+<?php $content=ob_get_clean();render_dashboard_shell($user,'Material Categories',$content);
