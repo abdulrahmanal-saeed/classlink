@@ -1,40 +1,12 @@
 <?php
-/**
- * /owner/materials
- * Central owner course materials overview.
- */
-
 require_once __DIR__ . '/../../../../backend/php/core/Auth.php';
-require_once __DIR__ . '/../../../../backend/php/shared/OwnerDashboard.php';
+require_once __DIR__ . '/../../../../backend/php/shared/MaterialsLibrary.php';
 require_once __DIR__ . '/../../../../web/components/layout/dashboard_shell.php';
-
-$user = require_role('owner_teacher');
-$rows = owner_all_materials();
-
+$user=require_role('owner_teacher');
+$rows=material_list(['q'=>$_GET['q']??'', 'status'=>$_GET['status']??'', 'material_type'=>$_GET['material_type']??'', 'level'=>$_GET['level']??'', 'material_language'=>$_GET['material_language']??'']);
 ob_start();
 ?>
-<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-4">
-  <p class="text-muted mb-0">Course materials visible to students by level, global availability, or direct student assignment.</p>
-  <a class="btn btn-brand" href="/owner/materials/new">Create material</a>
-</div>
-<?php if (!$rows): ?>
-  <div class="alert alert-light border">No course materials yet.</div>
-<?php else: ?>
-  <div class="row g-3">
-    <?php foreach ($rows as $row): ?>
-      <div class="col-md-6">
-        <div class="status-box h-100">
-          <h2 class="h5 fw-bold"><?= htmlspecialchars($row['title'], ENT_QUOTES, 'UTF-8') ?></h2>
-          <div class="small text-muted mb-2"><?= htmlspecialchars($row['material_type'], ENT_QUOTES, 'UTF-8') ?> · <?= htmlspecialchars($row['level'] ?: 'All levels', ENT_QUOTES, 'UTF-8') ?></div>
-          <span class="badge text-bg-light border"><?= ((int) $row['is_active']) === 1 ? 'active' : 'inactive' ?></span>
-          <?php if (!empty($row['assigned_student_user_id'])): ?><span class="badge text-bg-info ms-1">student #<?= (int) $row['assigned_student_user_id'] ?></span><?php endif; ?>
-          <?php if (!empty($row['description'])): ?><p class="mt-2 mb-1"><?= nl2br(htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8')) ?></p><?php endif; ?>
-          <?php if (!empty($row['file_path'])): ?><div class="mt-2"><a href="<?= htmlspecialchars($row['file_path'], ENT_QUOTES, 'UTF-8') ?>" target="_blank">Open file/link</a></div><?php endif; ?>
-        </div>
-      </div>
-    <?php endforeach; ?>
-  </div>
-<?php endif; ?>
-<?php
-$content = ob_get_clean();
-render_dashboard_shell($user, 'Owner Materials', $content);
+<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-4"><p class="text-muted mb-1">Upload, create, assign, and track educational materials.</p><div class="d-flex gap-2 flex-wrap"><a class="btn btn-brand" href="/owner/materials/new">New Material</a><a class="btn btn-outline-brand" href="/owner/materials/categories">Categories</a><a class="btn btn-outline-brand" href="/owner/materials/analytics">Analytics</a></div></div>
+<form method="get" class="foundation-card mb-4"><div class="row g-3 align-items-end"><div class="col-md-4"><label class="form-label">Search</label><input class="form-control" name="q" value="<?=htmlspecialchars($_GET['q']??'',ENT_QUOTES,'UTF-8')?>"></div><div class="col-md-2"><label class="form-label">Type</label><select class="form-select" name="material_type"><option value="">All</option><?php foreach(['video_upload','external_video','audio_upload','pdf','powerpoint','document','image','external_link','text_article','html_file','mixed_page'] as $t):?><option value="<?=$t?>" <?=($_GET['material_type']??'')===$t?'selected':''?>><?=$t?></option><?php endforeach;?></select></div><div class="col-md-2"><label class="form-label">Status</label><select class="form-select" name="status"><option value="">All</option><?php foreach(['draft','published','hidden','archived'] as $s):?><option value="<?=$s?>" <?=($_GET['status']??'')===$s?'selected':''?>><?=$s?></option><?php endforeach;?></select></div><div class="col-md-2"><label class="form-label">Level</label><select class="form-select" name="level"><option value="">All</option><?php foreach(['A0','A1','A2','B1','B2','C1','C2','mixed','not_set'] as $l):?><option value="<?=$l?>" <?=($_GET['level']??'')===$l?'selected':''?>><?=$l?></option><?php endforeach;?></select></div><div class="col-md-2"><button class="btn btn-brand">Filter</button></div></div></form>
+<div class="foundation-card"><h2 class="h5 fw-bold">Materials</h2><?php if(!$rows):?><div class="alert alert-light border">No materials yet.</div><?php else:?><div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Title</th><th>Type</th><th>Category</th><th>Level</th><th>Status</th><th>Actions</th></tr></thead><tbody><?php foreach($rows as $m):?><tr><td><strong><?=htmlspecialchars($m['title'],ENT_QUOTES,'UTF-8')?></strong><br><small class="text-muted"><?=htmlspecialchars(mb_strimwidth($m['description']??'',0,80,'...'),ENT_QUOTES,'UTF-8')?></small></td><td><span class="badge text-bg-light border"><?=htmlspecialchars($m['material_type'],ENT_QUOTES,'UTF-8')?></span></td><td><?=htmlspecialchars($m['category_name']??'-',ENT_QUOTES,'UTF-8')?></td><td><?=htmlspecialchars($m['level'],ENT_QUOTES,'UTF-8')?></td><td><span class="badge text-bg-light border"><?=htmlspecialchars($m['status'],ENT_QUOTES,'UTF-8')?></span></td><td class="d-flex gap-1 flex-wrap"><a class="btn btn-sm btn-outline-brand" href="/owner/materials/view?id=<?=(int)$m['id']?>">View</a><a class="btn btn-sm btn-outline-brand" href="/owner/materials/edit?id=<?=(int)$m['id']?>">Edit</a><a class="btn btn-sm btn-outline-brand" href="/owner/materials/assign?id=<?=(int)$m['id']?>">Assign</a></td></tr><?php endforeach;?></tbody></table></div><?php endif;?></div>
+<?php $content=ob_get_clean();render_dashboard_shell($user,'Materials Library',$content);
