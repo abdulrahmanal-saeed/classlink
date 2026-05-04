@@ -71,7 +71,7 @@ INSERT INTO settings (setting_key, setting_value, setting_group, value_type, is_
 VALUES
 ('ai_enabled','1','ai','boolean',0),
 ('ai_provider','anthropic','ai','string',0),
-('ai_default_model','claude-3-5-sonnet-latest','ai','string',0),
+('ai_default_model','claude-sonnet-4-20250514','ai','string',0),
 ('ai_regenerate_limit_per_tool_per_day','3','ai','number',0),
 ('ai_estimated_cost_per_1k_tokens','0.0000','ai','number',0),
 ('ai_max_preview_tokens','2500','ai','number',0)
