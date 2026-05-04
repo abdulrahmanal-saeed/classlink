@@ -1,0 +1,11 @@
+<?php
+require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
+require_once __DIR__ . '/../../../../../backend/php/shared/MediaBuyer.php';
+require_once __DIR__ . '/../../../../../web/components/layout/dashboard_shell.php';
+$user=require_role('owner_teacher');$error=null;
+if($_SERVER['REQUEST_METHOD']==='POST'){try{$id=media_create_buyer($_POST,$user);header('Location: /owner/media-buyers/view?id='.$id);exit;}catch(Throwable $e){$error=$e->getMessage();}}
+ob_start();
+?>
+<p class="text-muted">Create a restricted media buyer account. Do not reuse Owner credentials.</p><?php if($error):?><div class="alert alert-danger"><?=htmlspecialchars($error,ENT_QUOTES,'UTF-8')?></div><?php endif;?>
+<form method="post" class="foundation-card"><div class="row g-3"><div class="col-md-6"><label class="form-label">Display name</label><input class="form-control" name="display_name" required></div><div class="col-md-6"><label class="form-label">Email</label><input class="form-control ltr-safe" type="email" name="email" required></div><div class="col-md-6"><label class="form-label">Temporary password</label><input class="form-control" name="password" placeholder="Leave blank to generate"></div><div class="col-md-6"><label class="form-label">Partner code</label><input class="form-control ltr-safe" name="partner_code" required></div><div class="col-md-4"><label class="form-label">Commission type</label><select class="form-select" name="commission_type"><option value="percentage">percentage</option><option value="fixed">fixed</option><option value="none">none</option></select></div><div class="col-md-4"><label class="form-label">Commission rate %</label><input class="form-control" type="number" step="0.01" name="commission_rate" value="10"></div><div class="col-md-4"><label class="form-label">Fixed amount</label><input class="form-control" type="number" step="0.01" name="fixed_amount" value="0"></div><div class="col-12"><label class="form-label">Notes</label><textarea class="form-control" name="notes" rows="3"></textarea></div><div class="col-12"><button class="btn btn-brand">Create Account</button></div></div></form>
+<?php $content=ob_get_clean();render_dashboard_shell($user,'Create Media Buyer',$content);
