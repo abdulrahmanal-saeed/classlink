@@ -10,14 +10,27 @@
 
 This is the main repository for building the Habiba Nabil Arabic Academy SaaS platform.
 
-The project includes a bilingual web platform and mobile app for student, parent, academy partner, homework, speaking scenario, level test, progress tracking, notification, and later payment workflows.
+The project includes a bilingual web platform and mobile app for student, parent, academy partner, homework, speaking scenario, level test, progress tracking, notification, and payment workflows.
+
+---
+
+## Production Security Notice / ملاحظة أمان قبل الإنتاج
+
+Phase 34 identified an important production blocker:
+
+- The current PHP database connection file `backend/php/config/db.php` still uses PDO MySQL environment variables.
+- If production must use Supabase PostgreSQL, the database connection layer must be migrated in a dedicated provider-migration phase before launch.
+- Do not mix MySQL and Supabase PostgreSQL in production.
+- Do not use Replit internal `@base` database.
+- Secrets must remain server-side only and must never be committed to GitHub.
 
 ---
 
 ## Approved Tech Stack / التقنيات المعتمدة
 
 - Backend: PHP
-- Database: MySQL
+- Production database target: Supabase PostgreSQL if explicitly configured for production
+- Current repository database connection implementation: PDO MySQL until migrated
 - Web Frontend: HTML5, CSS3, Bootstrap, JavaScript
 - Mobile App: Flutter
 - Firebase: supporting service only when needed
@@ -40,6 +53,7 @@ Firebase may be used for:
 - Student / الطالب
 - Parent / ولي الأمر
 - Academy Partner / شريك الأكاديمية
+- Media Buyer / Marketing Partner / شريك التسويق
 
 There is no separate Admin and Teacher in the current product direction. The same user is Owner/Teacher.
 
@@ -50,13 +64,14 @@ There is no separate Admin and Teacher in the current product direction. The sam
 ## Rejected Unless Explicitly Requested / مرفوض إلا لو اتطلب صراحة
 
 - Next.js
-- Supabase
 - Node.js
 - MongoDB
 - Prisma
 - React Native
 - Expo
 - Laravel
+
+Supabase is allowed only as the production PostgreSQL database target or supporting service if explicitly configured. Do not add Supabase Storage unless explicitly requested.
 
 ---
 
@@ -75,6 +90,22 @@ There is no separate Admin and Teacher in the current product direction. The sam
 
 ---
 
+## Security Rules / قواعد الأمان
+
+- Protected pages must call server-side role checks.
+- Frontend hiding buttons is never enough.
+- Student data must be isolated by student ownership checks.
+- Parent data must be isolated by linked-child checks.
+- Academy partner data must be isolated by partner ownership checks.
+- Media buyer data must be isolated by media buyer ownership checks.
+- Payment must never be marked paid from frontend redirect alone.
+- Uploads must validate MIME type, extension, size, and role.
+- Dangerous upload extensions are blocked.
+- AI keys, Ziina keys, Firebase service credentials, and database URLs must be server-side only.
+- Critical actions must write audit logs.
+
+---
+
 ## Documentation Files / ملفات التوثيق
 
 Project documentation lives inside the `docs/` folder:
@@ -85,6 +116,8 @@ Project documentation lives inside the `docs/` folder:
 - `docs/CODING_STANDARDS.md`
 - `docs/BRAND_GUIDELINES.md`
 - `docs/PHASES.md`
+- `docs/SECURITY_AUDIT_REPORT.md`
+- `docs/DEPLOYMENT_CHECKLIST.md`
 
 ---
 
@@ -93,9 +126,10 @@ Project documentation lives inside the `docs/` folder:
 Build a clean, bilingual SaaS platform for Arabic learning with:
 
 - PHP backend
-- MySQL database
+- Supabase PostgreSQL production database target once provider migration is complete
 - Flutter mobile app
 - Firebase support services
 - Arabic and English UI
 - Role-based dashboards
 - Clean feature-based code structure
+- Strong access control and production hardening
