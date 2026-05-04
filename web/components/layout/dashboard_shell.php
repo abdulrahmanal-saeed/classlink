@@ -16,6 +16,9 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $items = [
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/testimonials', 'Testimonials', 'التقييمات'],
+            ['/owner/testimonials/pending', 'Pending Testimonials', 'تقييمات قيد المراجعة'],
+            ['/owner/settings/testimonials', 'Testimonial Settings', 'إعدادات التقييمات'],
             ['/owner/jobs', 'Scheduled Jobs', 'المهام المجدولة'],
             ['/owner/jobs/logs', 'Job Logs', 'سجلات المهام'],
             ['/owner/settings/cron', 'Cron Settings', 'إعدادات كرون'],
@@ -63,6 +66,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         ],
         'student' => [
             ['/student/dashboard', 'Dashboard', 'لوحة الطالب'],
+            ['/student/testimonial', 'Leave a Testimonial', 'اترك تقييمًا'],
             ['/student/profile', 'Profile', 'الملف الشخصي'],
             ['/student/progress', 'Progress', 'التقدم'],
             ['/student/flashcards', 'Flashcards', 'بطاقات المراجعة'],
@@ -81,6 +85,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         ],
         'parent' => [
             ['/parent/dashboard', 'Dashboard', 'لوحة ولي الأمر'],
+            ['/parent/testimonial', 'Leave Parent Testimonial', 'اترك تقييم ولي أمر'],
             ['/parent/children', 'Children', 'الأطفال'],
             ['/parent/book', 'Book for Child', 'حجز للطفل'],
             ['/parent/referrals', 'Referrals', 'الترشيحات'],
