@@ -16,6 +16,10 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $items = [
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/materials', 'Materials Library', 'مكتبة المواد'],
+            ['/owner/materials/new', 'New Material', 'مادة جديدة'],
+            ['/owner/materials/categories', 'Material Categories', 'تصنيفات المواد'],
+            ['/owner/materials/analytics', 'Material Analytics', 'تحليلات المواد'],
             ['/owner/testimonials', 'Testimonials', 'التقييمات'],
             ['/owner/testimonials/pending', 'Pending Testimonials', 'تقييمات قيد المراجعة'],
             ['/owner/settings/testimonials', 'Testimonial Settings', 'إعدادات التقييمات'],
@@ -48,7 +52,6 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/owner/homework', 'Homework', 'الواجبات'],
             ['/owner/scenarios', 'Scenarios', 'المواقف الكلامية'],
             ['/owner/reviews', 'Reviews', 'المراجعات'],
-            ['/owner/materials', 'Materials', 'المواد التعليمية'],
             ['/owner/badges/settings', 'Badge Settings', 'إعدادات الشارات'],
             ['/owner/notifications', 'Notifications', 'الإشعارات'],
             ['/owner/level-checks', 'Paid Level Checks', 'اختبارات المستوى المدفوعة'],
@@ -66,6 +69,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         ],
         'student' => [
             ['/student/dashboard', 'Dashboard', 'لوحة الطالب'],
+            ['/student/materials', 'Materials', 'المواد التعليمية'],
             ['/student/testimonial', 'Leave a Testimonial', 'اترك تقييمًا'],
             ['/student/profile', 'Profile', 'الملف الشخصي'],
             ['/student/progress', 'Progress', 'التقدم'],
@@ -77,7 +81,6 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/student/homework', 'Homework', 'الواجبات'],
             ['/student/scenarios', 'Scenarios', 'المواقف الكلامية'],
             ['/student/reviews', 'Reviews', 'المراجعات'],
-            ['/student/materials', 'Materials', 'المواد التعليمية'],
             ['/student/practice-words', 'Practice Words', 'كلمات للمراجعة'],
             ['/student/session-notes', 'Session Notes', 'ملاحظات الحصص'],
             ['/student/notifications', 'Notifications', 'الإشعارات'],
