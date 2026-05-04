@@ -2,28 +2,36 @@
 
 ## Phase 34 Security Gate
 
-Do not launch production until every critical blocker below is resolved.
+Do not launch production until every critical security item below is resolved.
 
-## Critical Blockers
+## Database
 
-### 1. Database Provider
+Active database:
 
 ```text
-Production requirement: Supabase PostgreSQL
-Current repository implementation: PDO MySQL in backend/php/config/db.php
+MySQL / MariaDB
+```
+
+Current repository implementation:
+
+```text
+PDO MySQL in backend/php/config/db.php
 ```
 
 Required before launch:
 
 ```text
-Create a dedicated database-provider migration phase.
-Update db.php to use Supabase PostgreSQL / DATABASE_URL.
-Convert schema/migrations to PostgreSQL-compatible SQL.
-Run full regression tests.
+Configure Hostinger MySQL / MariaDB credentials in server .env.
 Do not use Replit internal @base database.
+Do not commit .env to GitHub.
+Verify migrations run successfully on the production MySQL database.
 ```
 
-### 2. Upload Endpoints
+---
+
+## Critical Security Items
+
+### 1. Upload Endpoints
 
 Required before launch:
 
@@ -34,7 +42,7 @@ Block dangerous extensions.
 Protect private uploads from public access.
 ```
 
-### 3. Route/API Ownership
+### 2. Route/API Ownership
 
 Required before launch:
 
@@ -45,6 +53,17 @@ Parent must only access linked child records.
 Academy Partner must only access own briefs.
 Media Buyer must only access own marketing data.
 Owner-only routes must require owner_teacher.
+```
+
+### 3. Payment Route Review
+
+Required before launch:
+
+```text
+Verify frontend redirect cannot mark payment as paid.
+Verify plan amount is calculated server-side.
+Verify checkout reference is secure.
+Verify Owner payment changes are audit logged.
 ```
 
 ---
@@ -71,9 +90,12 @@ FORCE_HTTPS=true
 Database:
 
 ```text
-DATABASE_URL=server_side_only
-DATABASE_URL_SESSIONPOOLER=server_side_only
-SUPABASE_DATABASE_URL=server_side_only
+DB_HOST=server_side_only
+DB_PORT=3306
+DB_NAME=server_side_only
+DB_USER=server_side_only
+DB_PASS=server_side_only
+DB_CHARSET=utf8mb4
 ```
 
 Secrets:
@@ -206,7 +228,7 @@ Network tab shows no secret values.
 Production launch is allowed only when:
 
 ```text
-Database provider blocker is resolved.
+MySQL production credentials are configured safely.
 All upload routes use UploadSecurity.php.
 All dynamic routes/API endpoints pass ownership tests.
 Payment cannot be faked.
