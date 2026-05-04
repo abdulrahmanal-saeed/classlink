@@ -15,6 +15,8 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $items = [
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/ai', 'AI Tools', 'أدوات الذكاء الاصطناعي'],
+            ['/owner/weekly-summaries', 'Weekly Summaries', 'الملخصات الأسبوعية'],
             ['/owner/calendar', 'Calendar', 'التقويم'],
             ['/owner/availability', 'Availability', 'أوقات التوفر'],
             ['/owner/bookings', 'Bookings', 'الحجوزات'],
@@ -36,8 +38,10 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/owner/settings', 'Settings Center', 'مركز الإعدادات'],
             ['/owner/settings/public-website', 'Public Website Settings', 'إعدادات الموقع العام'],
             ['/owner/cms/articles', 'CMS Articles', 'إدارة المقالات'],
+            ['/owner/cms/articles/generate', 'Generate Article', 'توليد مقال'],
             ['/owner/cms/videos', 'CMS Videos', 'إدارة الفيديوهات'],
             ['/owner/cms/testimonials', 'CMS Testimonials', 'إدارة التقييمات'],
+            ['/owner/ai/logs', 'AI Logs', 'سجلات الذكاء الاصطناعي'],
             ['/owner/audit-log', 'Audit Log', 'سجل المراجعة'],
             ['/owner/dev/seed-data', 'Dev Seed Data', 'بيانات تجريبية'],
         ],
@@ -128,7 +132,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 15</div>
+              <div class="badge text-bg-light border mb-3">Phase 16</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
