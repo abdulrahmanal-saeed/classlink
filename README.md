@@ -16,11 +16,11 @@ The project includes a bilingual web platform and mobile app for student, parent
 
 ## Production Security Notice / ملاحظة أمان قبل الإنتاج
 
-Phase 34 identified an important production blocker:
+Phase 34 security correction:
 
-- The current PHP database connection file `backend/php/config/db.php` still uses PDO MySQL environment variables.
-- If production must use Supabase PostgreSQL, the database connection layer must be migrated in a dedicated provider-migration phase before launch.
-- Do not mix MySQL and Supabase PostgreSQL in production.
+- Active database is MySQL / MariaDB.
+- The current PHP database connection file `backend/php/config/db.php` uses PDO MySQL and this is the approved direction for this project.
+- The earlier Supabase PostgreSQL note was sent by mistake and is not part of the current production plan.
 - Do not use Replit internal `@base` database.
 - Secrets must remain server-side only and must never be committed to GitHub.
 
@@ -29,8 +29,7 @@ Phase 34 identified an important production blocker:
 ## Approved Tech Stack / التقنيات المعتمدة
 
 - Backend: PHP
-- Production database target: Supabase PostgreSQL if explicitly configured for production
-- Current repository database connection implementation: PDO MySQL until migrated
+- Database: MySQL / MariaDB
 - Web Frontend: HTML5, CSS3, Bootstrap, JavaScript
 - Mobile App: Flutter
 - Firebase: supporting service only when needed
@@ -70,8 +69,8 @@ There is no separate Admin and Teacher in the current product direction. The sam
 - React Native
 - Expo
 - Laravel
-
-Supabase is allowed only as the production PostgreSQL database target or supporting service if explicitly configured. Do not add Supabase Storage unless explicitly requested.
+- Supabase PostgreSQL unless explicitly re-approved later
+- Supabase Storage unless explicitly requested
 
 ---
 
@@ -101,7 +100,7 @@ Supabase is allowed only as the production PostgreSQL database target or support
 - Payment must never be marked paid from frontend redirect alone.
 - Uploads must validate MIME type, extension, size, and role.
 - Dangerous upload extensions are blocked.
-- AI keys, Ziina keys, Firebase service credentials, and database URLs must be server-side only.
+- AI keys, Ziina keys, Firebase service credentials, and database credentials must be server-side only.
 - Critical actions must write audit logs.
 
 ---
@@ -126,7 +125,7 @@ Project documentation lives inside the `docs/` folder:
 Build a clean, bilingual SaaS platform for Arabic learning with:
 
 - PHP backend
-- Supabase PostgreSQL production database target once provider migration is complete
+- MySQL / MariaDB database
 - Flutter mobile app
 - Firebase support services
 - Arabic and English UI
