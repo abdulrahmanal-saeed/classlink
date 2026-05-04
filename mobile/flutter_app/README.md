@@ -1,13 +1,65 @@
-# Flutter App Placeholder
+# Habiba Nabil Mobile App
 
-## Arabic / عربي
+Flutter mobile app connected to the existing PHP and MySQL backend.
 
-هذا الفولدر مخصص لتطبيق Flutter الخاص بمنصة Habiba Nabil Arabic Academy.
+## Stack
 
-لن يتم بناء التطبيق بالكامل في Phase 0000. الهدف هنا فقط تثبيت مكان التطبيق داخل الريبو حتى نبدأه لاحقًا بشكل منظم.
+```text
+Backend: PHP + MySQL
+Mobile: Flutter
+Firebase: support services where needed
+```
 
-## English
+React Native and Expo are not used in this project because the agreed mobile stack is Flutter.
 
-This folder is reserved for the Flutter mobile app for Habiba Nabil Arabic Academy.
+## Phase 22 scope
 
-The full app will not be built in Phase 0000. This placeholder only reserves the correct repository location so later phases can start cleanly.
+```text
+Login
+Role-based routing
+Owner dashboard foundation
+Student dashboard foundation
+Parent dashboard foundation
+API client
+Mobile bearer token storage
+Firebase Messaging token registration foundation
+```
+
+## Run
+
+```bash
+flutter pub get
+flutter run --dart-define=BACKEND_BASE_URL=https://staging.mshabibanabil.com
+```
+
+## Firebase push setup
+
+Add the Firebase config files locally. Do not commit secrets.
+
+```text
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+```
+
+## APIs used
+
+```text
+POST /api/mobile/login
+GET /api/mobile/me
+POST /api/mobile/logout
+GET /api/mobile/dashboard
+POST /api/push/register-device
+```
+
+## Manual test
+
+```text
+Run Flutter app
+Login as Owner
+Open dashboard
+Logout
+Login as Student
+Open dashboard
+Configure Firebase
+Confirm push token registration
+```
