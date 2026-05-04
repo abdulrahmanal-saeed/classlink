@@ -16,6 +16,16 @@ body {
   color: var(--brand-text);
 }
 
+html[dir="rtl"] body,
+body.is-rtl {
+  text-align: right;
+}
+
+html[dir="ltr"] body,
+body.is-ltr {
+  text-align: left;
+}
+
 .app-shell {
   min-height: 100vh;
   display: flex;
@@ -78,8 +88,87 @@ body {
   padding: 12px 22px;
 }
 
+.btn-outline-brand.active,
+.btn-outline-brand:hover {
+  background: var(--brand-teal);
+  color: white;
+}
+
 .status-box {
   background: var(--brand-teal-soft);
   border-radius: 22px;
   padding: 24px;
+}
+
+/* Phase 23 RTL/LTR QA helpers */
+html[dir="rtl"] .dropdown-menu {
+  text-align: right;
+}
+
+html[dir="rtl"] .list-group,
+html[dir="rtl"] .table,
+html[dir="rtl"] .form-label,
+html[dir="rtl"] .form-control,
+html[dir="rtl"] .form-select,
+html[dir="rtl"] textarea {
+  text-align: right;
+}
+
+html[dir="ltr"] .table,
+html[dir="ltr"] .form-label,
+html[dir="ltr"] .form-control,
+html[dir="ltr"] .form-select,
+html[dir="ltr"] textarea {
+  text-align: left;
+}
+
+html[dir="rtl"] input[type="email"],
+html[dir="rtl"] input[type="url"],
+html[dir="rtl"] input[type="tel"],
+html[dir="rtl"] input[type="number"],
+html[dir="rtl"] code,
+html[dir="rtl"] pre,
+html[dir="rtl"] .text-code,
+html[dir="rtl"] .ltr-safe {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: isolate;
+}
+
+html[dir="rtl"] .table-responsive {
+  direction: rtl;
+}
+
+html[dir="rtl"] .table-responsive table {
+  direction: rtl;
+}
+
+html[dir="rtl"] .input-group > .form-control:not(:last-child),
+html[dir="rtl"] .input-group > .form-select:not(:last-child) {
+  border-top-right-radius: var(--bs-border-radius);
+  border-bottom-right-radius: var(--bs-border-radius);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+html[dir="rtl"] .input-group > .btn:last-child {
+  border-top-left-radius: var(--bs-border-radius);
+  border-bottom-left-radius: var(--bs-border-radius);
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bidi-isolate {
+  unicode-bidi: isolate;
+}
+
+@media (max-width: 768px) {
+  .foundation-card {
+    padding: 24px;
+    border-radius: 22px;
+  }
+
+  .table-responsive {
+    font-size: 0.92rem;
+  }
 }
