@@ -4,9 +4,10 @@ require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
 require_once __DIR__ . '/../../../../../backend/php/shared/LearningAssignments.php';
 require_once __DIR__ . '/../../../../../backend/php/shared/LearningEngagement.php';
 require_once __DIR__ . '/../../../../../backend/php/shared/Analytics.php';
+require_once __DIR__ . '/../../../../../backend/php/shared/PushNotifications.php';
 require_once __DIR__ . '/../../../../../web/components/layout/dashboard_shell.php';
 $user=require_role('student');$id=(int)($_GET['id']??0);$error=null;
-if($_SERVER['REQUEST_METHOD']==='POST'){try{$submissionId=learning_submit_review($id,(int)$user['id'],$_POST);engagement_log_activity((int)$user['id'],'review_taken','review_test',(string)$id,['submission_id'=>$submissionId]);analytics_track('review_submit',['role'=>'student','entity_type'=>'review','entity_id'=>$id,'metadata'=>['submission_id'=>$submissionId]],(int)$user['id']);header('Location: /student/reviews/result?id='.$id);exit;}catch(Throwable $e){$error=$e->getMessage();}}
+if($_SERVER['REQUEST_METHOD']==='POST'){try{$submissionId=learning_submit_review($id,(int)$user['id'],$_POST);engagement_log_activity((int)$user['id'],'review_taken','review_test',(string)$id,['submission_id'=>$submissionId]);analytics_track('review_submit',['role'=>'student','entity_type'=>'review','entity_id'=>$id,'metadata'=>['submission_id'=>$submissionId]],(int)$user['id']);push_send_to_owners('review_submitted','Review submitted',($user['display_name'] ?? 'Student').' submitted review/test #'.$id,'/owner/reviews/results?id='.$id,['review_id'=>$id,'submission_id'=>$submissionId,'student_id'=>(int)$user['id']]);header('Location: /student/reviews/result?id='.$id);exit;}catch(Throwable $e){$error=$e->getMessage();}}
 $test=learning_review_detail($id,(int)$user['id']);
 if(!$test){http_response_code(404);$content='<div class="alert alert-danger">Review not found.</div>';render_dashboard_shell($user,'Review Not Found',$content);exit;}
 ob_start();
