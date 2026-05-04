@@ -23,17 +23,35 @@ No database provider migration was performed.
 ### Status
 
 ```text
-NOT READY FOR PRODUCTION UNTIL CRITICAL BLOCKERS ARE RESOLVED
+SECURITY FOUNDATION IMPROVED — PRODUCTION STILL REQUIRES ROUTE/API OWNERSHIP AND UPLOAD ENDPOINT REVIEW
 ```
+
+### Database Clarification
+
+The active database for this project is:
+
+```text
+MySQL / MariaDB
+```
+
+The earlier Supabase PostgreSQL requirement was sent by mistake and has been removed from the production blocker list.
+
+Current database connection:
+
+```text
+backend/php/config/db.php uses PDO MySQL
+```
+
+This is now considered correct for the current project direction.
 
 ### Main Findings
 
-1. **Critical blocker:** The project instruction says the active production database must be Supabase PostgreSQL, but the current repository database connection file `backend/php/config/db.php` uses PDO MySQL variables and a MySQL DSN.
-2. Authentication had secure session basics, but needed login rate limiting and stricter session settings.
-3. Central upload validation was missing; a shared upload security helper was added.
-4. Central security headers, CSRF helpers, hashing helpers, and rate limiting helpers were missing; a shared security helper was added.
-5. `.env.example` had MySQL-first values and lacked placeholders for AI/upload/security limits; it was updated with safe placeholders and a production warning.
-6. README incorrectly documented MySQL as the approved database without the production Supabase PostgreSQL warning; it was updated.
+1. Authentication had secure session basics, but needed login rate limiting and stricter session settings.
+2. Central upload validation was missing; a shared upload security helper was added.
+3. Central security headers, CSRF helpers, hashing helpers, and rate limiting helpers were missing; a shared security helper was added.
+4. `.env.example` was updated with safe placeholders for MySQL, upload limits, AI, Firebase, Ziina, and security settings.
+5. README was corrected to document MySQL / MariaDB as the active database.
+6. Remaining production risks are route/API ownership checks and ensuring all upload endpoints adopt the new upload validator.
 
 ---
 
@@ -159,7 +177,7 @@ Updated:
 Added safe placeholders for:
 
 ```text
-Supabase PostgreSQL database URLs
+MySQL / MariaDB database credentials
 Security pepper
 Login rate limits
 Upload limits
@@ -178,56 +196,20 @@ Updated:
 README.md
 ```
 
-Added:
+Added/corrected:
 
 ```text
-Production security notice
-Database provider blocker warning
-Security rules
-Supabase PostgreSQL production target note
+MySQL / MariaDB active database note
 No Replit @base database warning
+Security rules
+Server-side secrets rule
 ```
 
 ---
 
-## Critical Production Blockers
+## Production Blockers Still Remaining
 
-### Blocker 1 — Database Provider Mismatch
-
-Requirement:
-
-```text
-The active database is Supabase PostgreSQL.
-The app must not use Replit internal @base database.
-Do not change database provider in this phase.
-```
-
-Finding:
-
-```text
-backend/php/config/db.php currently uses MySQL DSN:
-mysql:host={$host};port={$port};dbname={$name};charset={$charset}
-```
-
-Risk:
-
-```text
-Production may be deployed against the wrong database provider.
-Supabase PostgreSQL URLs in .env would not be used by current db.php.
-MySQL migrations are not PostgreSQL-compatible.
-```
-
-Required action before production:
-
-```text
-Create a dedicated database-provider migration phase.
-Update db.php to support Supabase PostgreSQL using DATABASE_URL / DATABASE_URL_SESSIONPOOLER.
-Convert or replace MySQL-specific migrations with PostgreSQL-compatible schema.
-Run full regression tests.
-Do not launch until resolved.
-```
-
-### Blocker 2 — Upload Routes Must Adopt UploadSecurity.php
+### Blocker 1 — Upload Routes Must Adopt UploadSecurity.php
 
 Finding:
 
@@ -247,7 +229,7 @@ Required action:
 Patch every upload route to call upload_security_validate before move_uploaded_file.
 ```
 
-### Blocker 3 — Route/API Ownership Audit Must Be Completed Page-by-Page
+### Blocker 2 — Route/API Ownership Audit Must Be Completed Page-by-Page
 
 Finding:
 
@@ -267,6 +249,22 @@ Required action:
 Audit each dynamic route and API endpoint.
 Ensure SQL queries include current user ownership conditions.
 Return 403 or safe redirect when ownership fails.
+```
+
+### Blocker 3 — Payment Route Review Before Production
+
+Finding:
+
+```text
+Payment security rules are defined, but checkout/thank-you/Ziina/Owner payment actions still need route-level review.
+```
+
+Required action:
+
+```text
+Verify user cannot fake paid status by changing URL.
+Verify plan amount is calculated server-side.
+Verify payment status changes are Owner-only and audit logged.
 ```
 
 ---
@@ -361,8 +359,7 @@ media_buyer_id linked to current user id
 
 | Secret | Required status | Audit status |
 |---|---|---|
-| DATABASE_URL | Server-side only | Placeholder added, connection not yet using it |
-| DATABASE_URL_SESSIONPOOLER | Server-side only | Placeholder added, connection not yet using it |
+| DB_HOST / DB_NAME / DB_USER / DB_PASS | Server-side only | Placeholder only in .env.example |
 | Ziina API token | Server-side only | Placeholder only |
 | AI API key | Server-side only | Placeholder only |
 | Firebase service account | Server-side only | Placeholder only |
@@ -587,7 +584,7 @@ Patch API endpoints to use these helpers.
 Before production launch:
 
 ```text
-Resolve database provider mismatch: Supabase PostgreSQL vs current PDO MySQL.
+Confirm MySQL / MariaDB production credentials are configured correctly.
 Set APP_ENV=production.
 Set APP_DEBUG=false.
 Use HTTPS only.
@@ -640,6 +637,7 @@ backend/php/core/Auth.php
 .env.example
 README.md
 docs/SECURITY_AUDIT_REPORT.md
+docs/DEPLOYMENT_CHECKLIST.md
 ```
 
 ---
@@ -647,13 +645,15 @@ docs/SECURITY_AUDIT_REPORT.md
 ## Final Security Decision
 
 ```text
-Do not launch production until critical blockers are resolved.
+Do not launch production until the remaining route/API/upload/payment security reviews are complete.
 ```
 
-Main blocker:
+Main remaining blockers:
 
 ```text
-Current repository database connection is PDO MySQL, while production requirement says Supabase PostgreSQL.
+Upload endpoints must adopt UploadSecurity.php.
+Dynamic routes and APIs must pass ownership checks.
+Payment routes must be verified against fake-paid scenarios.
 ```
 
-Stop here. Review this security report before continuing.
+Stop here. Review this corrected security report before continuing.
