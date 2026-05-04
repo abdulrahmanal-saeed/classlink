@@ -2,9 +2,10 @@
 /** /student/scenarios/view?id=... */
 require_once __DIR__ . '/../../../../../backend/php/core/Auth.php';
 require_once __DIR__ . '/../../../../../backend/php/shared/LearningAssignments.php';
+require_once __DIR__ . '/../../../../../backend/php/shared/LearningEngagement.php';
 require_once __DIR__ . '/../../../../../web/components/layout/dashboard_shell.php';
 $user=require_role('student');$id=(int)($_GET['id']??0);$error=null;
-if($_SERVER['REQUEST_METHOD']==='POST'){try{learning_submit_scenario($id,(int)$user['id'],$_POST);header('Location: /student/scenarios/result?id='.$id);exit;}catch(Throwable $e){$error=$e->getMessage();}}
+if($_SERVER['REQUEST_METHOD']==='POST'){try{$submissionId=learning_submit_scenario($id,(int)$user['id'],$_POST);engagement_log_activity((int)$user['id'],'scenario_submitted','scenario',(string)$id,['submission_id'=>$submissionId]);header('Location: /student/scenarios/result?id='.$id);exit;}catch(Throwable $e){$error=$e->getMessage();}}
 $scenario=learning_scenario_detail($id,(int)$user['id']);
 if(!$scenario){http_response_code(404);$content='<div class="alert alert-danger">Scenario not found.</div>';render_dashboard_shell($user,'Scenario Not Found',$content);exit;}
 ob_start();
