@@ -2,15 +2,16 @@
 /**
  * Shared dashboard shell.
  *
- * All role dashboards use this layout so navigation, profile dropdown,
- * language direction, and brand styling stay consistent.
+ * Phase 23 adds central localization, persistent language preference,
+ * Arabic RTL and English LTR support, and a language switcher.
  */
+
+require_once __DIR__ . '/../../../backend/php/shared/Localization.php';
 
 function render_dashboard_shell(array $user, string $title, string $content): void
 {
-    $lang = $_GET['lang'] ?? 'en';
-    $lang = in_array($lang, ['ar', 'en'], true) ? $lang : 'en';
-    $isArabic = $lang === 'ar';
+    $lang = l10n_current_language($user);
+    $isArabic = l10n_is_arabic($lang);
 
     $items = [
         'owner_teacher' => [
@@ -94,52 +95,59 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     ];
 
     $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $localizedTitle = $title;
 
     ?>
     <!doctype html>
-    <html lang="<?= htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') ?>" dir="<?= $isArabic ? 'rtl' : 'ltr' ?>">
+    <html lang="<?= htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') ?>" dir="<?= l10n_dir($lang) ?>">
     <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?> | Habiba Nabil</title>
+      <title><?= htmlspecialchars($localizedTitle, ENT_QUOTES, 'UTF-8') ?> | <?= htmlspecialchars(__('brand', $lang), ENT_QUOTES, 'UTF-8') ?></title>
       <meta name="robots" content="noindex, nofollow">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap<?= $isArabic ? '.rtl' : '' ?>.min.css" rel="stylesheet">
       <link href="/assets/css/app.css" rel="stylesheet">
+      <script src="/assets/js/i18n/en.js" defer></script>
+      <script src="/assets/js/i18n/ar.js" defer></script>
+      <script src="/assets/js/i18n/apply-i18n.js" defer></script>
     </head>
-    <body>
+    <body class="<?= $isArabic ? 'is-rtl' : 'is-ltr' ?>">
       <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-3">
             <div class="brand-mark">ض</div>
             <div>
-              <div class="fw-bold">Habiba Nabil Arabic Academy</div>
-              <div class="text-muted small">Role-based dashboard shell</div>
+              <div class="fw-bold"><?= htmlspecialchars(__('brand', $lang), ENT_QUOTES, 'UTF-8') ?></div>
+              <div class="text-muted small"><?= htmlspecialchars(__('role_based_dashboard', $lang), ENT_QUOTES, 'UTF-8') ?></div>
             </div>
           </div>
-          <div class="dropdown">
-            <button class="btn btn-outline-brand dropdown-toggle" type="button" data-bs-toggle="dropdown">
-              <?= htmlspecialchars($user['display_name'], ENT_QUOTES, 'UTF-8') ?>
-            </button>
-            <ul class="dropdown-menu">
-              <li><span class="dropdown-item-text small text-muted"><?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?></span></li>
-              <li><span class="dropdown-item-text small">Role: <?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?></span></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
-            </ul>
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <?= l10n_language_switcher($lang) ?>
+            <div class="dropdown">
+              <button class="btn btn-outline-brand dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <?= htmlspecialchars($user['display_name'], ENT_QUOTES, 'UTF-8') ?>
+              </button>
+              <ul class="dropdown-menu">
+                <li><span class="dropdown-item-text small text-muted ltr-safe"><?= htmlspecialchars($user['email'], ENT_QUOTES, 'UTF-8') ?></span></li>
+                <li><span class="dropdown-item-text small"><?= htmlspecialchars(__('role', $lang), ENT_QUOTES, 'UTF-8') ?>: <?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?></span></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="/logout"><?= htmlspecialchars(__('logout', $lang), ENT_QUOTES, 'UTF-8') ?></a></li>
+              </ul>
+            </div>
           </div>
         </div>
 
         <div class="row g-4">
           <aside class="col-lg-3">
             <div class="foundation-card p-3">
-              <div class="fw-bold mb-3">Navigation</div>
+              <div class="fw-bold mb-3"><?= htmlspecialchars(__('navigation', $lang), ENT_QUOTES, 'UTF-8') ?></div>
               <div class="list-group list-group-flush">
                 <?php foreach (($items[$user['role']] ?? []) as $item): ?>
                   <?php $isActive = $currentPath === $item[0] || str_starts_with($currentPath, $item[0] . '/'); ?>
-                  <a class="list-group-item list-group-item-action <?= $isActive ? 'active' : '' ?>" href="<?= $item[0] ?>">
+                  <a class="list-group-item list-group-item-action <?= $isActive ? 'active' : '' ?>" href="<?= $item[0] ?>?lang=<?= htmlspecialchars($lang, ENT_QUOTES, 'UTF-8') ?>">
                     <?= $isArabic ? $item[2] : $item[1] ?>
                   </a>
                 <?php endforeach; ?>
@@ -148,8 +156,8 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 21</div>
-              <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
+              <div class="badge text-bg-light border mb-3"><?= htmlspecialchars(__('phase', $lang), ENT_QUOTES, 'UTF-8') ?></div>
+              <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($localizedTitle, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
           </main>
