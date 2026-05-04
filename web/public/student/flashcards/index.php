@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../../../../backend/php/core/Auth.php';
 require_once __DIR__ . '/../../../../backend/php/shared/LearningEngagement.php';
+require_once __DIR__ . '/../../../../backend/php/shared/Analytics.php';
 require_once __DIR__ . '/../../../../web/components/layout/dashboard_shell.php';
 
 $user = require_role('student');
@@ -15,6 +16,7 @@ $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         engagement_review_flashcard((int) $user['id'], (int) $_POST['word_id'], $_POST['rating'] ?? 'almost');
+        analytics_track('flashcard_review', ['role' => 'student', 'entity_type' => 'practice_word', 'entity_id' => (int) $_POST['word_id'], 'metadata' => ['rating' => $_POST['rating'] ?? 'almost']], (int) $user['id']);
         $message = 'Flashcard reviewed. Next review date updated.';
     } catch (Throwable $exception) {
         $error = $exception->getMessage();
