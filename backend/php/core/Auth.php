@@ -99,6 +99,7 @@ function role_home_path(string $role): string
         'student' => '/student/dashboard',
         'parent' => '/parent/dashboard',
         'academy_partner' => '/academy/dashboard',
+        'media_buyer' => '/media/dashboard',
         default => '/unauthorized',
     };
 }
