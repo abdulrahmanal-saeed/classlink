@@ -24,6 +24,11 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/owner/packages', 'Packages & Credits', 'الباقات والأرصدة'],
             ['/owner/students', 'Students', 'الطلاب'],
             ['/owner/parents', 'Parents', 'أولياء الأمور'],
+            ['/owner/homework', 'Homework', 'الواجبات'],
+            ['/owner/scenarios', 'Scenarios', 'المواقف الكلامية'],
+            ['/owner/reviews', 'Reviews', 'المراجعات'],
+            ['/owner/materials', 'Materials', 'المواد التعليمية'],
+            ['/owner/notifications', 'Notifications', 'الإشعارات'],
             ['/owner/level-checks', 'Paid Level Checks', 'اختبارات المستوى المدفوعة'],
             ['/owner/free-level-test/attempts', 'Free Level Tests', 'اختبارات المستوى المجانية'],
             ['/owner/free-level-test/settings', 'Free Test Settings', 'إعدادات الاختبار المجاني'],
@@ -119,7 +124,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 12</div>
+              <div class="badge text-bg-light border mb-3">Phase 13</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
