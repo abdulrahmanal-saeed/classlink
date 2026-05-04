@@ -16,6 +16,9 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $items = [
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/media-buyers', 'Media Buyers', 'شركاء التسويق'],
+            ['/owner/media-buyers/new', 'Create Media Buyer', 'إنشاء شريك تسويق'],
+            ['/owner/media-commissions', 'Media Commissions', 'عمولات التسويق'],
             ['/owner/materials', 'Materials Library', 'مكتبة المواد'],
             ['/owner/materials/new', 'New Material', 'مادة جديدة'],
             ['/owner/materials/categories', 'Material Categories', 'تصنيفات المواد'],
@@ -99,6 +102,15 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/academy/dashboard', 'Academy Dashboard', 'لوحة شريك الأكاديمية'],
             ['/academy/briefs', 'Student Briefs', 'ملفات الطلاب'],
             ['/academy/briefs/new', 'Submit Brief', 'إرسال ملف طالب'],
+        ],
+        'media_buyer' => [
+            ['/media/dashboard', 'Media Dashboard', 'لوحة التسويق'],
+            ['/media/campaigns', 'Campaigns', 'الحملات'],
+            ['/media/links', 'Tracking Links', 'روابط التتبع'],
+            ['/media/orders', 'Attributed Orders', 'الطلبات المنسوبة'],
+            ['/media/commissions', 'Commissions', 'العمولات'],
+            ['/media/payouts', 'Payouts', 'المدفوعات'],
+            ['/media/settings', 'Partner Settings', 'إعدادات الشريك'],
         ],
     ];
 
