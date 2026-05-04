@@ -122,5 +122,13 @@ function require_role(string $role): array
         exit;
     }
 
+    if ($role === 'media_buyer') {
+        $agreementHelper = __DIR__ . '/../shared/MediaBuyerAgreement.php';
+        if (file_exists($agreementHelper)) {
+            require_once $agreementHelper;
+            media_agreement_redirect_if_needed($user);
+        }
+    }
+
     return $user;
 }
