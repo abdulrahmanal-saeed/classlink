@@ -28,6 +28,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
             ['/owner/scenarios', 'Scenarios', 'المواقف الكلامية'],
             ['/owner/reviews', 'Reviews', 'المراجعات'],
             ['/owner/materials', 'Materials', 'المواد التعليمية'],
+            ['/owner/badges/settings', 'Badge Settings', 'إعدادات الشارات'],
             ['/owner/notifications', 'Notifications', 'الإشعارات'],
             ['/owner/level-checks', 'Paid Level Checks', 'اختبارات المستوى المدفوعة'],
             ['/owner/free-level-test/attempts', 'Free Level Tests', 'اختبارات المستوى المجانية'],
@@ -43,6 +44,9 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
         'student' => [
             ['/student/dashboard', 'Dashboard', 'لوحة الطالب'],
             ['/student/profile', 'Profile', 'الملف الشخصي'],
+            ['/student/progress', 'Progress', 'التقدم'],
+            ['/student/flashcards', 'Flashcards', 'بطاقات المراجعة'],
+            ['/student/badges', 'Badges', 'الشارات'],
             ['/student/book', 'Book Lesson', 'حجز حصة'],
             ['/student/lessons', 'Lessons', 'حصصي'],
             ['/student/balance', 'Balance', 'رصيدي'],
@@ -124,7 +128,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 13</div>
+              <div class="badge text-bg-light border mb-3">Phase 15</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
