@@ -1,0 +1,98 @@
+-- Phase 24: Advanced Testimonials
+-- Run after Phase 23.
+
+CREATE TABLE IF NOT EXISTS testimonials (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  submitter_type ENUM('student','parent','public','owner') NOT NULL DEFAULT 'public',
+  student_user_id INT UNSIGNED NULL,
+  parent_user_id INT UNSIGNED NULL,
+  child_student_user_id INT UNSIGNED NULL,
+  source ENUM('student_dashboard','parent_dashboard','public_form','owner_manual_entry') NOT NULL DEFAULT 'public_form',
+  rating TINYINT UNSIGNED NULL,
+  testimonial_text TEXT NULL,
+  audio_url VARCHAR(255) NULL,
+  video_url VARCHAR(255) NULL,
+  media_type ENUM('text','audio','video','mixed') NOT NULL DEFAULT 'text',
+  display_name VARCHAR(190) NULL,
+  display_preference ENUM('full_name','first_name','anonymous','show_child_first_name','show_parent_first_name') NOT NULL DEFAULT 'first_name',
+  level ENUM('A0','A1','A2','B1','B2','C1','C2') NULL,
+  learning_goal VARCHAR(120) NULL,
+  child_learning_focus VARCHAR(120) NULL,
+  permission_to_publish TINYINT(1) NOT NULL DEFAULT 0,
+  status ENUM('pending_review','approved','rejected','archived') NOT NULL DEFAULT 'pending_review',
+  show_on_homepage TINYINT(1) NOT NULL DEFAULT 0,
+  show_on_testimonials_page TINYINT(1) NOT NULL DEFAULT 1,
+  featured TINYINT(1) NOT NULL DEFAULT 0,
+  sort_order INT NOT NULL DEFAULT 0,
+  owner_notes TEXT NULL,
+  public_text_override TEXT NULL,
+  approved_by_user_id INT UNSIGNED NULL,
+  approved_at DATETIME NULL,
+  rejected_at DATETIME NULL,
+  archived_at DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_testimonials_status (status, created_at),
+  INDEX idx_testimonials_public (status, permission_to_publish, show_on_testimonials_page, featured, sort_order),
+  INDEX idx_testimonials_submitter (submitter_type, student_user_id, parent_user_id),
+  CONSTRAINT fk_testimonial_student FOREIGN KEY (student_user_id) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT fk_testimonial_parent FOREIGN KEY (parent_user_id) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT fk_testimonial_child FOREIGN KEY (child_student_user_id) REFERENCES users(id) ON DELETE SET NULL,
+  CONSTRAINT fk_testimonial_approved_by FOREIGN KEY (approved_by_user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE testimonials
+  ADD COLUMN IF NOT EXISTS submitter_type ENUM('student','parent','public','owner') NOT NULL DEFAULT 'public' AFTER id,
+  ADD COLUMN IF NOT EXISTS student_user_id INT UNSIGNED NULL AFTER submitter_type,
+  ADD COLUMN IF NOT EXISTS parent_user_id INT UNSIGNED NULL AFTER student_user_id,
+  ADD COLUMN IF NOT EXISTS child_student_user_id INT UNSIGNED NULL AFTER parent_user_id,
+  ADD COLUMN IF NOT EXISTS source ENUM('student_dashboard','parent_dashboard','public_form','owner_manual_entry') NOT NULL DEFAULT 'public_form' AFTER child_student_user_id,
+  ADD COLUMN IF NOT EXISTS audio_url VARCHAR(255) NULL AFTER testimonial_text,
+  ADD COLUMN IF NOT EXISTS video_url VARCHAR(255) NULL AFTER audio_url,
+  ADD COLUMN IF NOT EXISTS media_type ENUM('text','audio','video','mixed') NOT NULL DEFAULT 'text' AFTER video_url,
+  ADD COLUMN IF NOT EXISTS display_preference ENUM('full_name','first_name','anonymous','show_child_first_name','show_parent_first_name') NOT NULL DEFAULT 'first_name' AFTER display_name,
+  ADD COLUMN IF NOT EXISTS level ENUM('A0','A1','A2','B1','B2','C1','C2') NULL AFTER display_preference,
+  ADD COLUMN IF NOT EXISTS learning_goal VARCHAR(120) NULL AFTER level,
+  ADD COLUMN IF NOT EXISTS child_learning_focus VARCHAR(120) NULL AFTER learning_goal,
+  ADD COLUMN IF NOT EXISTS permission_to_publish TINYINT(1) NOT NULL DEFAULT 0 AFTER child_learning_focus,
+  ADD COLUMN IF NOT EXISTS show_on_homepage TINYINT(1) NOT NULL DEFAULT 0 AFTER status,
+  ADD COLUMN IF NOT EXISTS show_on_testimonials_page TINYINT(1) NOT NULL DEFAULT 1 AFTER show_on_homepage,
+  ADD COLUMN IF NOT EXISTS featured TINYINT(1) NOT NULL DEFAULT 0 AFTER show_on_testimonials_page,
+  ADD COLUMN IF NOT EXISTS sort_order INT NOT NULL DEFAULT 0 AFTER featured,
+  ADD COLUMN IF NOT EXISTS owner_notes TEXT NULL AFTER sort_order,
+  ADD COLUMN IF NOT EXISTS public_text_override TEXT NULL AFTER owner_notes,
+  ADD COLUMN IF NOT EXISTS approved_by_user_id INT UNSIGNED NULL AFTER public_text_override,
+  ADD COLUMN IF NOT EXISTS approved_at DATETIME NULL AFTER approved_by_user_id,
+  ADD COLUMN IF NOT EXISTS rejected_at DATETIME NULL AFTER approved_at,
+  ADD COLUMN IF NOT EXISTS archived_at DATETIME NULL AFTER rejected_at;
+
+CREATE TABLE IF NOT EXISTS testimonial_media (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  testimonial_id BIGINT UNSIGNED NOT NULL,
+  media_type ENUM('audio','video') NOT NULL,
+  file_url VARCHAR(255) NOT NULL,
+  original_filename VARCHAR(255) NULL,
+  mime_type VARCHAR(120) NOT NULL,
+  file_size BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  duration_seconds INT UNSIGNED NULL,
+  status ENUM('private','public','removed') NOT NULL DEFAULT 'private',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_testimonial_media_testimonial (testimonial_id, media_type),
+  CONSTRAINT fk_testimonial_media_testimonial FOREIGN KEY (testimonial_id) REFERENCES testimonials(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO settings (setting_key, setting_value, setting_group, value_type, is_public)
+VALUES
+('testimonials_public_form_enabled','1','testimonials','boolean',1),
+('testimonials_from_students_enabled','1','testimonials','boolean',0),
+('testimonials_from_parents_enabled','1','testimonials','boolean',0),
+('testimonials_allow_audio','1','testimonials','boolean',0),
+('testimonials_allow_video','1','testimonials','boolean',0),
+('testimonials_require_publish_permission','1','testimonials','boolean',0),
+('testimonials_require_completed_lesson','0','testimonials','boolean',0),
+('testimonials_show_on_homepage','1','testimonials','boolean',1),
+('testimonials_show_page','1','testimonials','boolean',1),
+('testimonials_max_audio_mb','20','testimonials','number',0),
+('testimonials_max_video_mb','150','testimonials','number',0),
+('testimonials_default_status','pending_review','testimonials','string',0)
+ON DUPLICATE KEY UPDATE setting_group=VALUES(setting_group), value_type=VALUES(value_type), is_public=VALUES(is_public);
