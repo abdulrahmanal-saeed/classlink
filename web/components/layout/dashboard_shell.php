@@ -15,6 +15,9 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
     $items = [
         'owner_teacher' => [
             ['/owner/dashboard', 'Owner Dashboard', 'لوحة المالك'],
+            ['/owner/jobs', 'Scheduled Jobs', 'المهام المجدولة'],
+            ['/owner/jobs/logs', 'Job Logs', 'سجلات المهام'],
+            ['/owner/settings/cron', 'Cron Settings', 'إعدادات كرون'],
             ['/owner/analytics', 'Analytics', 'التحليلات'],
             ['/owner/analytics/marketing', 'Marketing Analytics', 'تحليلات التسويق'],
             ['/owner/analytics/students', 'Student Analytics', 'تحليلات الطلاب'],
@@ -145,7 +148,7 @@ function render_dashboard_shell(array $user, string $title, string $content): vo
           </aside>
           <main class="col-lg-9">
             <div class="foundation-card">
-              <div class="badge text-bg-light border mb-3">Phase 20</div>
+              <div class="badge text-bg-light border mb-3">Phase 21</div>
               <h1 class="hero-title h2 mb-3"><?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?></h1>
               <?= $content ?>
             </div>
