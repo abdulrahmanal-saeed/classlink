@@ -19,6 +19,7 @@ function render_public_layout(string $title, string $description, string $conten
       <meta name="robots" content="<?= $indexable ? 'index, follow' : 'noindex, nofollow' ?>">
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
       <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <link href="/assets/css/app.css" rel="stylesheet">
@@ -61,7 +62,8 @@ function render_public_layout(string $title, string $description, string $conten
       <script src="/assets/js/media-tracking.js" defer></script>
       <script src="/assets/js/motion-polish.js" defer></script>
       <script src="/assets/js/ux-polish.js" defer></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="/assets/js/performance.js" defer></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
     </body>
     </html>
     <?php
